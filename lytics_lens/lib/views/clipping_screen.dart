@@ -626,6 +626,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                                 _.companyUser[i]['firstName'],
                                             "recieverLastName": _.companyUser[i]
                                                 ['lastName'],
+                                            "time" : DateTime.now(),
                                           });
                                         }
                                       } else {
@@ -648,6 +649,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                             "recieverLastName":
                                                 _.searchcompanyUser[i]
                                                     ['lastName'],
+                                            "time" : DateTime.now(),
                                           });
                                         }
                                       }
