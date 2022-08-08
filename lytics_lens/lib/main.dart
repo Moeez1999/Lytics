@@ -20,6 +20,7 @@ void main() async {
   //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await initService();
+  
   AwesomeNotifications().initialize(
     // set the icon to null if you want to use the default app icon
     null,
