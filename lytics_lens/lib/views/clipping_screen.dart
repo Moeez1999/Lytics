@@ -104,132 +104,127 @@ class _ClippingScreenState extends State<ClippingScreen> {
     try {
       // var c = json.encode(clipController.sharingUser);
       String token = await storage.read("AccessToken");
-      if(audioFile == null)
-        {
-          if (storage.hasData("Url") == true) {
-            String url = storage.read("Url");
-            Map<String, String> h = {'Authorization': 'Bearer $token'};
-            var uri = Uri.parse(url + ApiData.createClipJob);
-            var res = http.MultipartRequest('POST', uri)
-              ..headers.addAll(h)
-              ..fields['id'] = widget.jobId
-              ..fields['title'] = clipController.title.text
-              ..fields['comments'] = clipController.des.text
-              ..fields['share'] = "true"
-              ..fields['sharing'] = json.encode(clipController.sharingUser)
-              ..files
-                  .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
-            var response = await res.send();
-            print('Check Response ${response.statusCode}');
-            var result = await response.stream.bytesToString();
-            Get.log('Check Response ${result}');
-            clipController.sharingUser.clear();
-            clipController.homeScreenController.isLoading.value = true;
-            await clipController.homeScreenController.getSharedJobs();
-            clipController.homeScreenController.isLoading.value = false;
-            Get.back();
-            clipController.isBottomLoading.value = false;
-            CustomSnackBar.showSnackBar(
-                title: "Job shared successfully",
-                message: "",
-                isWarning: false,
-                backgroundColor: CommonColor.greenColor);
-          }
-          else {
-            Map<String, String> h = {'Authorization': 'Bearer $token'};
-            var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
-            var res = http.MultipartRequest('POST', uri)
-              ..headers.addAll(h)
-              ..fields['id'] = widget.jobId
-              ..fields['title'] = clipController.title.text
-              ..fields['comments'] = clipController.des.text
-              ..fields['share'] = "true"
-              ..fields['sharing'] = json.encode(clipController.sharingUser)
-              ..files
-                  .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
-            var response = await res.send();
-            print('Check Response ${response.statusCode}');
-            var result = await response.stream.bytesToString();
-            Get.log('Check Response ${result}');
-            clipController.sharingUser.clear();
-            clipController.homeScreenController.isLoading.value = true;
-            await clipController.homeScreenController.getSharedJobs();
-            clipController.homeScreenController.isLoading.value = false;
-            Get.back();
-            clipController.isBottomLoading.value = false;
-            CustomSnackBar.showSnackBar(
+      if (audioFile == null) {
+        if (storage.hasData("Url") == true) {
+          String url = storage.read("Url");
+          Map<String, String> h = {'Authorization': 'Bearer $token'};
+          var uri = Uri.parse(url + ApiData.createClipJob);
+          var res = http.MultipartRequest('POST', uri)
+            ..headers.addAll(h)
+            ..fields['id'] = widget.jobId
+            ..fields['title'] = clipController.title.text
+            ..fields['comments'] = clipController.des.text
+            ..fields['share'] = "true"
+            ..fields['sharing'] = json.encode(clipController.sharingUser)
+            ..files.add(
+                await http.MultipartFile.fromPath('videoPath', vpath.path));
+          var response = await res.send();
+          print('Check Response ${response.statusCode}');
+          var result = await response.stream.bytesToString();
+          Get.log('Check Response ${result}');
+          clipController.sharingUser.clear();
+          clipController.homeScreenController.isLoading.value = true;
+          await clipController.homeScreenController.getSharedJobs();
+          clipController.homeScreenController.isLoading.value = false;
+          Get.back();
+          clipController.isBottomLoading.value = false;
+          CustomSnackBar.showSnackBar(
               title: "Job shared successfully",
               message: "",
               isWarning: false,
-              backgroundColor: CommonColor.greenColor,
-            );
-          }
+              backgroundColor: CommonColor.greenColor);
+        } else {
+          Map<String, String> h = {'Authorization': 'Bearer $token'};
+          var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
+          var res = http.MultipartRequest('POST', uri)
+            ..headers.addAll(h)
+            ..fields['id'] = widget.jobId
+            ..fields['title'] = clipController.title.text
+            ..fields['comments'] = clipController.des.text
+            ..fields['share'] = "true"
+            ..fields['sharing'] = json.encode(clipController.sharingUser)
+            ..files.add(
+                await http.MultipartFile.fromPath('videoPath', vpath.path));
+          var response = await res.send();
+          print('Check Response ${response.statusCode}');
+          var result = await response.stream.bytesToString();
+          Get.log('Check Response ${result}');
+          clipController.sharingUser.clear();
+          clipController.homeScreenController.isLoading.value = true;
+          await clipController.homeScreenController.getSharedJobs();
+          clipController.homeScreenController.isLoading.value = false;
+          Get.back();
+          clipController.isBottomLoading.value = false;
+          CustomSnackBar.showSnackBar(
+            title: "Job shared successfully",
+            message: "",
+            isWarning: false,
+            backgroundColor: CommonColor.greenColor,
+          );
         }
-      else
-        {
-          if (storage.hasData("Url") == true) {
-            String url = storage.read("Url");
-            Map<String, String> h = {'Authorization': 'Bearer $token'};
-            var uri = Uri.parse(url + ApiData.createClipJob);
-            var res = http.MultipartRequest('POST', uri)
-              ..headers.addAll(h)
-              ..fields['id'] = widget.jobId
-              ..fields['title'] = clipController.title.text
-              ..fields['comments'] = clipController.des.text
-              ..fields['share'] = "true"
-              ..fields['sharing'] = json.encode(clipController.sharingUser)
-              ..files
-                  .add(await http.MultipartFile.fromPath('audio', audioFile.path))
-              ..files
-                  .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
-            var response = await res.send();
-            print('Check Response ${response.statusCode}');
-            var result = await response.stream.bytesToString();
-            Get.log('Check Response ${result}');
-            clipController.sharingUser.clear();
-            clipController.homeScreenController.isLoading.value = true;
-            await clipController.homeScreenController.getSharedJobs();
-            clipController.homeScreenController.isLoading.value = false;
-            Get.back();
-            clipController.isBottomLoading.value = false;
-            CustomSnackBar.showSnackBar(
-                title: "Job shared successfully",
-                message: "",
-                isWarning: false,
-                backgroundColor: CommonColor.greenColor);
-          }
-          else {
-            Map<String, String> h = {'Authorization': 'Bearer $token'};
-            var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
-            var res = http.MultipartRequest('POST', uri)
-              ..headers.addAll(h)
-              ..fields['id'] = widget.jobId
-              ..fields['title'] = clipController.title.text
-              ..fields['comments'] = clipController.des.text
-              ..fields['share'] = "true"
-              ..fields['sharing'] = json.encode(clipController.sharingUser)
-              ..files
-                  .add(await http.MultipartFile.fromPath('audio', audioFile.path))
-              ..files
-                  .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
-            var response = await res.send();
-            print('Check Response ${response.statusCode}');
-            var result = await response.stream.bytesToString();
-            Get.log('Check Response ${result}');
-            clipController.sharingUser.clear();
-            clipController.homeScreenController.isLoading.value = true;
-            await clipController.homeScreenController.getSharedJobs();
-            clipController.homeScreenController.isLoading.value = false;
-            Get.back();
-            clipController.isBottomLoading.value = false;
-            CustomSnackBar.showSnackBar(
+      } else {
+        if (storage.hasData("Url") == true) {
+          String url = storage.read("Url");
+          Map<String, String> h = {'Authorization': 'Bearer $token'};
+          var uri = Uri.parse(url + ApiData.createClipJob);
+          var res = http.MultipartRequest('POST', uri)
+            ..headers.addAll(h)
+            ..fields['id'] = widget.jobId
+            ..fields['title'] = clipController.title.text
+            ..fields['comments'] = clipController.des.text
+            ..fields['share'] = "true"
+            ..fields['sharing'] = json.encode(clipController.sharingUser)
+            ..files
+                .add(await http.MultipartFile.fromPath('audio', audioFile.path))
+            ..files.add(
+                await http.MultipartFile.fromPath('videoPath', vpath.path));
+          var response = await res.send();
+          print('Check Response ${response.statusCode}');
+          var result = await response.stream.bytesToString();
+          Get.log('Check Response ${result}');
+          clipController.sharingUser.clear();
+          clipController.homeScreenController.isLoading.value = true;
+          await clipController.homeScreenController.getSharedJobs();
+          clipController.homeScreenController.isLoading.value = false;
+          Get.back();
+          clipController.isBottomLoading.value = false;
+          CustomSnackBar.showSnackBar(
               title: "Job shared successfully",
               message: "",
               isWarning: false,
-              backgroundColor: CommonColor.greenColor,
-            );
-          }
+              backgroundColor: CommonColor.greenColor);
+        } else {
+          Map<String, String> h = {'Authorization': 'Bearer $token'};
+          var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
+          var res = http.MultipartRequest('POST', uri)
+            ..headers.addAll(h)
+            ..fields['id'] = widget.jobId
+            ..fields['title'] = clipController.title.text
+            ..fields['comments'] = clipController.des.text
+            ..fields['share'] = "true"
+            ..fields['sharing'] = json.encode(clipController.sharingUser)
+            ..files
+                .add(await http.MultipartFile.fromPath('audio', audioFile.path))
+            ..files.add(
+                await http.MultipartFile.fromPath('videoPath', vpath.path));
+          var response = await res.send();
+          print('Check Response ${response.statusCode}');
+          var result = await response.stream.bytesToString();
+          Get.log('Check Response ${result}');
+          clipController.sharingUser.clear();
+          clipController.homeScreenController.isLoading.value = true;
+          await clipController.homeScreenController.getSharedJobs();
+          clipController.homeScreenController.isLoading.value = false;
+          Get.back();
+          clipController.isBottomLoading.value = false;
+          CustomSnackBar.showSnackBar(
+            title: "Job shared successfully",
+            message: "",
+            isWarning: false,
+            backgroundColor: CommonColor.greenColor,
+          );
         }
+      }
     } catch (e) {
       print("Error Uploading ${e.toString()}");
     }
@@ -459,12 +454,14 @@ class _ClippingScreenState extends State<ClippingScreen> {
         width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(vertical: height / 4),
         child: TrimSlider(
+          controller: _controller,
+          height: height,
+          horizontalMargin: height / 4,
+          child: TrimTimeline(
             controller: _controller,
-            height: height,
-            horizontalMargin: height / 4,
-            child: TrimTimeline(
-                controller: _controller,
-                margin: const EdgeInsets.only(top: 10))),
+            margin: const EdgeInsets.only(top: 10),
+          ),
+        ),
       )
     ];
   }
@@ -917,30 +914,23 @@ class _ClippingScreenState extends State<ClippingScreen> {
                           Get.back();
                           await _.sharing(widget.jobId);
                         } else {
-                          if(start != 0.0 ||
-                              end != _controller.video.value.duration.inSeconds )
-                            {
-                              if(_.title.text == '' && _.title.text.isEmpty)
-                                {
-                                  CustomSnackBar.showSnackBar(
-                                      title: "Job title is required",
-                                      message: "",
-                                      isWarning: true,
-                                      backgroundColor: CommonColor.greenColor);
-                                }
-                              else
-                                {
-                                  print("check ${_.sharingUser.toString()}");
-                                  Get.back();
-                                  _.searchContact.clear();
-                                  _.update();
-                                  exportVideo();
-                                }
+                          if (start != 0.0 ||
+                              end !=
+                                  _controller.video.value.duration.inSeconds) {
+                            if (_.title.text == '' && _.title.text.isEmpty) {
+                              CustomSnackBar.showSnackBar(
+                                  title: "Job title is required",
+                                  message: "",
+                                  isWarning: true,
+                                  backgroundColor: CommonColor.greenColor);
+                            } else {
+                              print("check ${_.sharingUser.toString()}");
+                              Get.back();
+                              _.searchContact.clear();
+                              _.update();
+                              exportVideo();
                             }
-                          else
-                            {
-
-                            }
+                          } else {}
                         }
                       },
                       child: Text(

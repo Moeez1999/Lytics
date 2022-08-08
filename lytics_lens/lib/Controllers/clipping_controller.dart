@@ -153,7 +153,7 @@ class ClippingController extends GetxController
         if (res.statusCode == 200) {
           sharingUser.clear();
           homeScreenController.isLoading.value = true;
-          await homeScreenController.getSharedJobs();
+          await homeScreenController.getReceiveJob();
           homeScreenController.isLoading.value = false;
           Get.back();
           isBottomLoading.value = false;

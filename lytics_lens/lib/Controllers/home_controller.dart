@@ -309,8 +309,8 @@ class HomeScreenController extends GetxController {
   void onReady() async {
     id = await storage.read('id');
     FlutterAppBadger.removeBadge();
-    await getSharedJobs();
     await getReceiveJob();
+    await getSharedJobs();
     // await getJobs(pageno.value);
     await sendDeviceToken();
 
@@ -631,10 +631,11 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> getSharedJobs() async {
+    job.clear();
     try {
       isSocketError.value = false;
       isDataFailed.value = false;
-      sharedJobs.clear();
+      // sharedJobs.clear();
       // update();
       if (storage.hasData("Url") == true) {
         String url = storage.read("Url");
@@ -648,7 +649,8 @@ class HomeScreenController extends GetxController {
           },
         );
         var data = json.decode(res.body);
-        sharedJobs.addAll(data);
+        job.addAll(data);
+        await getJobs(pageno.value);
       } else {
         String id = await storage.read('id');
         String token = await storage.read("AccessToken");
@@ -661,7 +663,8 @@ class HomeScreenController extends GetxController {
         );
         var data = json.decode(res.body);
         Get.log("Check ALL Shared Data ${res.body}");
-        sharedJobs.addAll(data);
+        job.addAll(data);
+        await getJobs(pageno.value);
       }
     } on SocketException catch (e) {
       print(e);
@@ -683,7 +686,7 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> getReceiveJob() async {
-    job.clear();
+    sharedJobs.clear();
     try {
       if (storage.hasData("Url") == true) {
         String url = storage.read("Url");
@@ -698,8 +701,7 @@ class HomeScreenController extends GetxController {
         );
         var data = json.decode(res.body);
         Get.log("Receiver Jobs $data");
-        job.addAll(data);
-        await getJobs(pageno.value);
+        sharedJobs.addAll(data);
       } else {
         String token = await storage.read("AccessToken");
         String id = await storage.read('id');
@@ -713,8 +715,7 @@ class HomeScreenController extends GetxController {
         );
         var data = json.decode(res.body);
         Get.log("Receiver Jobs $data");
-        job.addAll(data);
-        await getJobs(pageno.value);
+        sharedJobs.addAll(data);
       }
     } on SocketException catch (e) {
       print(e);
@@ -858,7 +859,7 @@ class HomeScreenController extends GetxController {
   }
 
   String getSharePerson(List r) {
-    print("True data  $r");
+    print("True data Reciver $r");
     List rec = [];
     for (int i = 0; i < r.length; i++) {
       if (id == r[i]['recieverId']) {
@@ -868,6 +869,19 @@ class HomeScreenController extends GetxController {
     }
     print("The data of reviever api is ${rec.toString()}");
     return rec.join(', ');
+  }
+
+  String getReceivedPerson(List r) {
+    print("True data  $r");
+    List sen = [];
+    for (int i = 0; i < r.length; i++) {
+      if (id == r[i]['senderId']) {
+        sen.add(
+            '${r[i]['recieverFirstName']} ${r[i]['recieverLastName']}');
+      }
+    }
+    print("The data of reviever api is ${sen.toString()}");
+    return sen.join(', ');
   }
 
   Future<void> getSingleJob(String jobId) async {
@@ -938,7 +952,7 @@ class HomeScreenController extends GetxController {
 
       print('Job Request is ${res.body}');
       tpageno.value = 1;
-      await getReceiveJob();
+      await sharedJobs();
       // await getJobs(1);
     } else {
       var res = await http.patch(
@@ -950,7 +964,7 @@ class HomeScreenController extends GetxController {
       );
       print('Job Request is ${res.body}');
       tpageno.value = 1;
-      await getReceiveJob();
+      await sharedJobs();
       // await getJobs(1);
     }
   }
@@ -988,7 +1002,7 @@ class HomeScreenController extends GetxController {
             },
           );
         }
-        await getSharedJobs();
+        await sharedJobs();
         isLoading.value = false;
       }
       else
@@ -1004,7 +1018,7 @@ class HomeScreenController extends GetxController {
           );
 
         }
-        await getSharedJobs();
+        await sharedJobs();
         isLoading.value = false;
       }
     }catch(e)
@@ -1032,7 +1046,7 @@ class HomeScreenController extends GetxController {
 
       print('Job Request is ${res.body}');
       // await getJobs(1);
-      await getReceiveJob();
+      await sharedJobs();
       Get.to(
         () => PlayerScreen(),
         arguments: {"id": id},
@@ -1048,7 +1062,7 @@ class HomeScreenController extends GetxController {
 
       print('Job Read Request is ${res.body}');
       // await getJobs(1);
-      await getReceiveJob();
+      await sharedJobs();
       Get.to(
         () => PlayerScreen(),
         arguments: {"id": id},

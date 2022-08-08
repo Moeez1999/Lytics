@@ -28,9 +28,9 @@ void main() async {
           channelGroupKey: 'basic_channel_group',
           channelKey: 'basic_channel',
           channelName: 'Basic notifications',
-          channelDescription: 'Notification channel for basic tests',
-          defaultColor: Color(0xFF9D50DD),
-          ledColor: Colors.white)
+          importance: NotificationImportance.High,
+          defaultColor: Color(0xff22B161),
+          channelDescription: 'Notification channel for basic tests',)
     ],
     // Channel groups are only visual and are not required
     channelGroups: [

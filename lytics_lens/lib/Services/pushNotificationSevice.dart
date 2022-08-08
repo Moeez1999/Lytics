@@ -44,11 +44,12 @@ class PushNotificationService {
       // var messagejobid = message.data["jobID"];
 
       (RemoteMessage message) {
-        // Get.to(ChatScreen());
         FlutterAppBadger.updateBadgeCount(message.data.length);
         print("Notification message Body ${message.data}");
+        print("Notification message Body ${message.notification!.title}");
+        print("Notification message Body ${message.notification!.body}");
         print("Notification message Body length${message.data.length}");
-        var messagejobid = message.data["jobID"];
+        // var messagejobid = message.data["jobID"];
         AwesomeNotifications().createNotification(
           content: NotificationContent(
               id: 1234,
@@ -82,7 +83,7 @@ class PushNotificationService {
       if (message.data["jobID"].toString().isNotEmpty ||
           message.data["jobID"].toString() != '') {
         print('JOB ID FOUND');
-        var messagejobid = message.data["jobID"];
+        // var messagejobid = message.data["jobID"];
       } else {
         print('Not Job Id Found');
       }
