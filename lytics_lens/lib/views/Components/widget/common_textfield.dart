@@ -192,7 +192,7 @@ class CommonTextField extends StatelessWidget {
       this.keyboardType = TextInputType.text,
       this.textInputAction = TextInputAction.done,
       this.maxLength,
-      this.maxLine  = 1,
+      this.maxLine = 1,
       this.readOnly,
       this.onTap,
       this.inputFormatters,
@@ -243,7 +243,7 @@ class CommonTextField extends StatelessWidget {
               : null,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: bordercolor ?? Color(0xff23b662),
+              color: bordercolor ?? Color(0xff1e985d).withOpacity(0.16),
             ),
             borderRadius: const BorderRadius.all(
               Radius.circular(6),
@@ -251,7 +251,7 @@ class CommonTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: bordercolor ?? Color(0xff23b662),
+              color: bordercolor ?? Color(0xff1e985d),
             ),
             borderRadius: const BorderRadius.all(
               Radius.circular(6),
@@ -274,7 +274,10 @@ class CommonTextField extends StatelessWidget {
           contentPadding: EdgeInsets.all(10.0),
           labelText: labelText,
           labelStyle: const TextStyle(
-              letterSpacing: 0.4, color: Colors.black, fontSize: 10.0),
+              letterSpacing: 0.4,
+              color: Colors.white,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500),
           border: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.transparent),
             borderRadius: BorderRadius.all(Radius.circular(5.0)),

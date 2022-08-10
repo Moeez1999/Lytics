@@ -136,7 +136,7 @@ class ChangePasswordScreen extends StatelessWidget {
                       isTextHidden: _.securetext,
                     ).marginOnly(left: 34, top: 15, right: 66),
                     MaterialButton(
-                      color: CommonColor.greenColorWithOpacity,
+                      color: Color(0xff109f4f),
                       shape: RoundedRectangleBorder(
                           side: BorderSide(
                             color: CommonColor.greenBorderColor,
@@ -156,15 +156,15 @@ class ChangePasswordScreen extends StatelessWidget {
                         }
                       },
                       child: Text(
-                        "UPDATE PASSWORD",
+                        "Update Password",
                         style: TextStyle(
-                            color: CommonColor.greenButtonTextColor,
+                            color: Colors.white,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w700,
                             fontFamily: 'Roboto'),
                       ),
-                      minWidth: 176,
-                      height: 45,
+                      minWidth: 154,
+                      height: 42,
                       //color: Color(0xff23B662),
                     ).marginOnly(top: 56),
                   ],

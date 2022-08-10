@@ -93,6 +93,8 @@ class LoginScreen extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       CommonTextField(
+                                        labelText: "Username",
+                                        
                                         fillcolor: Colors.transparent,
                                         controller: _.userNameController,
                                         hintText: 'Username',
@@ -153,7 +155,7 @@ class LoginScreen extends StatelessWidget {
                                 ),
                                 Container(
                                   //color: CommonColor.loginAndSendCodeButtonColor,
-                                  width: 162,
+                                  width: 125,
                                   height: 48,
                                   child: MaterialButton(
                                     shape: RoundedRectangleBorder(
@@ -175,16 +177,16 @@ class LoginScreen extends StatelessWidget {
                                           : "LOGIN",
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
-                                          color: Color(0xff2CE08E),
+                                          color: Colors.white,
                                           letterSpacing: 0.4,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.w700),
                                       maxLines: 2,
                                     ),
                                     minWidth: Get.width / 3,
-                                    height: 40,
+                                    height: 4,
                                     // color: Color.fromRGBO(72, 190, 235, 1),
-                                    color: Color(0xff23B662).withOpacity(0.1),
+                                    color: Color(0xff109f4f),
                                   ),
                                 ),
                                 SizedBox(
@@ -198,16 +200,16 @@ class LoginScreen extends StatelessWidget {
                                     },
                                     child: Text(
                                       _.remoteConfigService.remoteConfig
-                                              .getString('forgot')
+                                              .getString('login_forgot')
                                               .isNotEmpty
                                           ? _.remoteConfigService.remoteConfig
-                                              .getString('forgot')
+                                              .getString('login_forgot')
                                           : "Forgot Password?",
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
-                                          color: Color(0xFFD3D3D3),
+                                          color: Color(0xff109f4f),
                                           letterSpacing: 0.4,
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 13.0),
                                     ),
                                   ),
@@ -225,7 +227,7 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 5.0,
+                                  height: 9.0,
                                 ),
                                 GestureDetector(
                                   onTap: () {
@@ -239,7 +241,9 @@ class LoginScreen extends StatelessWidget {
                                             .getString('biometric')
                                         : "Use Biometric",
                                     textScaleFactor: 1.0,
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.7),
+                                    ),
                                   ),
                                 ),
                               ],

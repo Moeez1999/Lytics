@@ -1,10 +1,9 @@
-class PasswordValidationWidget{
-
+class PasswordValidationWidget {
   static String? isPasswordCompliant(String password,
       [int minLength = 8, int maxLength = 20]) {
     if (password.isEmpty) {
       // return false;
-      return 'This is required field';
+      return 'This is a required field';
     }
 
     var hasUppercase = password.contains(RegExp(r'[A-Z]'));

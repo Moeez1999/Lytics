@@ -68,7 +68,7 @@ class ForgotPassword extends StatelessWidget {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 25.0,
-                                  letterSpacing: 0.7,
+                                  letterSpacing: 0.8,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 textAlign: TextAlign.center),
@@ -77,7 +77,7 @@ class ForgotPassword extends StatelessWidget {
                             ),
                             Center(
                               child: Container(
-                                width: Get.width/2,
+                                width: Get.width / 1.5,
                                 height: 32,
                                 child: Text(
                                   _.remoteConfigService.remoteConfig
@@ -104,6 +104,7 @@ class ForgotPassword extends StatelessWidget {
                                 fillcolor: Colors.transparent,
                                 controller: _.emailController,
                                 hintText: 'Email Address',
+                                hintTextColor: Colors.white.withOpacity(0.7),
                                 textInputAction: TextInputAction.next,
                                 // ignore: body_might_complete_normally_nullable
                                 validator: (value) {
@@ -118,8 +119,8 @@ class ForgotPassword extends StatelessWidget {
                               height: 20.0,
                             ),
                             Container(
-                              width: 162,
-                              height: 48,
+                              width: 125,
+                              height: 42,
                               //color: CommonColor.loginAndSendCodeButtonColor,
                               child: MaterialButton(
                                 onPressed: () {
@@ -129,16 +130,17 @@ class ForgotPassword extends StatelessWidget {
                                 },
                                 child: Text(
                                   _.remoteConfigService.remoteConfig
-                                      .getString('send_code')
-                                      .isNotEmpty
-                                  ? _.remoteConfigService.remoteConfig
-                                      .getString('send_code') : "SEND CODE",
+                                          .getString('send_code')
+                                          .isNotEmpty
+                                      ? _.remoteConfigService.remoteConfig
+                                          .getString('send_code')
+                                      : "Send Code",
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
-                                      color: Color(0xff23B662),
-                                      fontSize: 16.0,
+                                      color: Colors.white,
+                                      fontSize: 15.0,
                                       letterSpacing: 0.4,
-                                      fontWeight: FontWeight.w700),
+                                      fontWeight: FontWeight.w500),
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.all(
@@ -149,13 +151,13 @@ class ForgotPassword extends StatelessWidget {
                                   ),
                                 ),
                                 // color: Color.fromRGBO(72, 190, 235, 1),
-                                color: Color(0xff23B662).withOpacity(0.1),
+                                color: Color(0xff109f4f),
                                 minWidth: Get.width / 3,
                                 height: 36,
                               ),
                             ),
                             SizedBox(
-                              height: 20.0,
+                              height: 42.0,
                             ),
                             Container(
                               width: Get.width / 2,
@@ -197,7 +199,8 @@ class ForgotPassword extends StatelessWidget {
                                 ),
                                 cursorColor: CommonColor.snackbarColour,
                                 animationDuration: Duration(milliseconds: 300),
-                                enableActiveFill: true,
+                                // enableActiveFill: true,
+
                                 errorAnimationController: _.errorController,
                                 controller: _.pin,
                                 keyboardType: TextInputType.number,
@@ -248,10 +251,11 @@ class ForgotPassword extends StatelessWidget {
                             Center(
                               child: Text(
                                 _.remoteConfigService.remoteConfig
-                                      .getString('code')
-                                      .isNotEmpty
-                                  ? _.remoteConfigService.remoteConfig
-                                      .getString('code') : 'ENTER CODE',
+                                        .getString('code')
+                                        .isNotEmpty
+                                    ? _.remoteConfigService.remoteConfig
+                                        .getString('code')
+                                    : 'ENTER CODE',
                                 textScaleFactor: 1.0,
                                 style: TextStyle(
                                   fontSize: 12.0,
@@ -279,7 +283,7 @@ class ForgotPassword extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ).marginOnly(left: 55.0, right: 30.0),
+                    ).marginOnly(left: 55.0, right: 45.0),
                   ),
                 ),
               ));

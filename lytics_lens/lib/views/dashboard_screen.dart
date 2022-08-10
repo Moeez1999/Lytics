@@ -11,8 +11,6 @@ import 'package:lytics_lens/views/search.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
-  
-  
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +156,7 @@ class Dashboard extends StatelessWidget {
           backgroundColor: Color.fromRGBO(27, 29, 40, 1),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(Icons.settings_outlined),
           label: 'Settings',
           backgroundColor: Color.fromRGBO(27, 29, 40, 1),
         ),

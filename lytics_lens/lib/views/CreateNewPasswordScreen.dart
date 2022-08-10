@@ -82,9 +82,8 @@ class CreateNewPasswordScreen extends StatelessWidget {
                   height: 26.0,
                 ),
                 Center(
-
                   child: Container(
-                    width: Get.width/1.7,
+                    width: Get.width / 1.7,
                     height: 34,
                     //color: Colors.amber,
                     child: Text(
@@ -93,7 +92,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                               .isNotEmpty
                           ? _.remoteConfigService.remoteConfig
                               .getString('new_password_detail')
-                          : "Your new password must be different\n from previously used passwords",
+                          : "Your new password must be different from previously used passwords",
                       textScaleFactor: 1.0,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -115,6 +114,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                         fillcolor: Colors.transparent,
                         controller: _.passwordController,
                         hintText: 'Enter New Password',
+                        hintTextColor: Colors.white.withOpacity(0.7),
                         textInputAction: TextInputAction.next,
                         inputFormatters: [
                           FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s"))
@@ -138,6 +138,8 @@ class CreateNewPasswordScreen extends StatelessWidget {
                         fillcolor: Colors.transparent,
                         controller: _.retypePasswordController,
                         hintText: 'Confirm password',
+                        hintTextColor: Colors.white.withOpacity(0.7),
+
                         textInputAction: TextInputAction.next,
                         inputFormatters: [
                           FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s"))
@@ -156,13 +158,13 @@ class CreateNewPasswordScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ).marginOnly(left: 40.0, right: 40.0),
+                ).marginOnly(left: 50.0, right: 50.0),
                 SizedBox(
                   height: 30,
                 ),
                 SizedBox(
-                  width: 162,
-                  height: 48,
+                  width: 125,
+                  height: 42,
                   child: MaterialButton(
                     onPressed: () {
                       if (_.passwordController.text ==
@@ -187,17 +189,16 @@ class CreateNewPasswordScreen extends StatelessWidget {
                     ),
                     minWidth: Get.width / 3,
                     height: 40,
-                    color: Colors.transparent,
+                    color: Color(0xff109f4f),
                     child: Text(
                       _.remoteConfigService.remoteConfig
-                          .getString('save')
-                          .isNotEmpty
-                      ? _.remoteConfigService.remoteConfig
-                          .getString('save')
-                      :  "SAVE",
+                              .getString('save')
+                              .isNotEmpty
+                          ? _.remoteConfigService.remoteConfig.getString('save')
+                          : "SAVE",
                       textScaleFactor: 1.0,
                       style: TextStyle(
-                          color: Color(0xff23B662),
+                          color: Colors.white,
                           fontSize: 12.0,
                           letterSpacing: 0.4,
                           fontWeight: FontWeight.bold),
