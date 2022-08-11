@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class CommonColor {
   static final Color greenColorWithOpacity = Color(0xff23B662).withOpacity(0.1);
-  static final Color cancelButtonColor = Color(0xff455177);
+  static final Color cancelButtonColor = Colors.white;
+  static final Color clearButtonColor = Color(0xff212a4a);
   static final Color transparent = Colors.transparent;
   static final Color whiteColor = Colors.white;
   static final Color greenTextColor = Color(0xff2dd276);
@@ -27,8 +28,11 @@ class CommonColor {
 // static final Color appBarColor=Color(0xff000425);
 // static final Color backgroundColour=Color(0xff0A0D29);
   static final Color greenColor = Color(0xff22b161);
+  static final Color newBorderColor = Color(0xffb7b7b7).withOpacity(0.16);
 
-  static final Color filterColor = Color(0xffffffff);
+
+
+  static final Color filterColor = Color(0xff000425);
   static final Color textFieldBorderColor = Color(0xffBDBDBD);
 
   static final Color registrationBackground = Color(0xff02083b);

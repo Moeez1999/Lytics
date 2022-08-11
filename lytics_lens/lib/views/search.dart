@@ -141,8 +141,8 @@ class SearchBarView extends StatelessWidget {
                                           width: Get.width,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(13.0),
-                                              topLeft: Radius.circular(13.0),
+                                              topRight: Radius.circular(22.0),
+                                              topLeft: Radius.circular(22.0),
                                             ),
                                             color: _.isShowList
                                                 ? Color(0xff131c3a)
@@ -157,13 +157,13 @@ class SearchBarView extends StatelessWidget {
                                                   borderRadius:
                                                       BorderRadius.only(
                                                     topRight:
-                                                        Radius.circular(13.0),
+                                                        Radius.circular(22.0),
                                                     bottomLeft:
-                                                        Radius.circular(13.0),
+                                                        Radius.circular(22.0),
                                                     topLeft:
-                                                        Radius.circular(13.0),
+                                                        Radius.circular(22.0),
                                                     bottomRight:
-                                                        Radius.circular(13.0),
+                                                        Radius.circular(22.0),
                                                   ),
                                                   color: Color(0xff455177),
                                                 ),
@@ -266,8 +266,7 @@ class SearchBarView extends StatelessWidget {
                                                             fontSize: 18,
                                                             fontWeight:
                                                                 FontWeight.w400,
-                                                            color: Color(
-                                                                0xffD3D3D3),
+                                                            color: Colors.white,
                                                           ),
                                                           enabledBorder:
                                                               OutlineInputBorder(

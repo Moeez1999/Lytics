@@ -26,7 +26,7 @@ class SearchField extends StatelessWidget {
       width: double.infinity,
       height: 38,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(13.0)),
+        borderRadius: BorderRadius.all(Radius.circular(22.0)),
         color: Color(0xff455177),
       ),
       child: Padding(

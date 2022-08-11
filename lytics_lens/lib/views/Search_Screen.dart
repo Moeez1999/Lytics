@@ -101,8 +101,10 @@ class SearchScreen extends StatelessWidget {
                           SearchField(
                             _.searchdata.value,
                             (c) {},
-                            _.searchjob.length == 0
+                            _.isLoading.value
                                 ? "Searching"
+                           : _.job.length == 0 && _.searchjob.length == 0
+                            ? "${_.searchjob.length} Results"
                                 : "${_.searchjob.length} Results",
                             (v) async {
                               // _.channellist.forEach((element) {
@@ -890,7 +892,7 @@ class SearchScreen extends StatelessWidget {
                               width: Get.width / 2.5,
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: CommonColor.filterColor,
+                                  color: CommonColor.newBorderColor,
                                 ),
                                 borderRadius: BorderRadius.circular(2.0),
                               ),
@@ -1010,7 +1012,8 @@ class SearchScreen extends StatelessWidget {
                                     height: 25,
                                     decoration: BoxDecoration(
                                         border: Border.all(
-                                            color: CommonColor.filterColor),
+                                          color: CommonColor.newBorderColor,
+                                        ),
                                         borderRadius:
                                             BorderRadius.circular(3.0)),
                                     width: Get.width / 3.0,
@@ -1117,7 +1120,7 @@ class SearchScreen extends StatelessWidget {
                                     height: 25,
                                     decoration: BoxDecoration(
                                         border: Border.all(
-                                            color: CommonColor.filterColor),
+                                            color: CommonColor.newBorderColor),
                                         borderRadius:
                                             BorderRadius.circular(3.0)),
                                     width: Get.width / 3.0,
@@ -1459,7 +1462,7 @@ class SearchScreen extends StatelessWidget {
                                           width: Get.width / 2.5,
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                              color: CommonColor.filterColor,
+                                              color: CommonColor.newBorderColor,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(2.0),
@@ -1530,6 +1533,7 @@ class SearchScreen extends StatelessWidget {
                               children: [
                                 Container(
                                   width: Get.width / 2.25,
+
                                   child: Text(
                                     'Guest',
                                     style: TextStyle(
@@ -1557,7 +1561,7 @@ class SearchScreen extends StatelessWidget {
                                           width: Get.width / 2.5,
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                              color: CommonColor.filterColor,
+                                              color: CommonColor.newBorderColor,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(2.0),
@@ -1632,14 +1636,16 @@ class SearchScreen extends StatelessWidget {
                   children: [
                     Container(
                       width: Get.width / 3,
+                      color: CommonColor.clearButtonColor,
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
+
+                            borderRadius: BorderRadius.circular(7.0)),
                         onPressed: () {
                           Get.back();
                         },
                         child: Text(
-                          "CANCEL",
+                          "Clear",
                           style: TextStyle(
                               letterSpacing: 0.4,
                               color: CommonColor.cancelButtonColor,
@@ -2482,7 +2488,7 @@ class SearchScreen extends StatelessWidget {
                   border: Border.all(
                       color: _.programType[i].check.value == true
                           ? CommonColor.greenColor
-                          : CommonColor.filterColor)),
+                          : CommonColor.newBorderColor)),
               child: Center(
                 child: Text(
                   "${_.programType[i].name}",
