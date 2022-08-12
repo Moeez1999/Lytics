@@ -62,23 +62,9 @@ class TrendingKeyword extends StatelessWidget {
             SizedBox(
               height: 20.0,
             ),
-            // Text(
-              
-            //   '$heading',
-            //   textAlign: TextAlign.center,
-            //   style: TextStyle(
-            //     fontSize: 13.0,
-            //     fontFamily: 'Roboto',
-            //     color: Color(0xffe8e8ea),
-            //     fontWeight: FontWeight.w400,
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: 10.0,
-            // ),
-            // showTrendingTopic(controller),
+            showTrendingTopic(controller),
           ],
-        ).marginOnly(left: 10.0, right: 10.0),
+        ).marginOnly(left: 0.0, right: 0.0),
       ),
     );
   }
@@ -99,13 +85,13 @@ class TrendingKeyword extends StatelessWidget {
             child: Container(
               height: 27,
               decoration: BoxDecoration(
-                border: Border.all(color: Color(0xff22B161)),
-                color: Color(0xff22B161).withOpacity(0.15),
-                borderRadius: BorderRadius.circular(5.0),
+                //border: Border.all(color: Color(0xff22B161)),
+                color: Color(0xff222452).withOpacity(0.55),
+                borderRadius: BorderRadius.circular(21.0),
               ),
               child: Center(
                 child: Text(
-                  "${_.alltopic[i].name}",
+                  "#${_.alltopic[i].name}",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -113,7 +99,7 @@ class TrendingKeyword extends StatelessWidget {
                       fontSize: 12.0,
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w400,
-                      color: Color(0xff38FF90)),
+                      color: Colors.white.withOpacity(0.79)),
                 ).marginOnly(left: 15.0, right: 15.0),
               ),
             ),

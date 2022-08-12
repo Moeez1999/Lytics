@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-
 // import 'package:lens_app/Views/Components/SearchBarTextField.dart';
-
 
 // import 'package:lens_app/views/Components/SelectVideoScreen.dart';
 
@@ -103,9 +101,9 @@ class SearchScreen extends StatelessWidget {
                             (c) {},
                             _.isLoading.value
                                 ? "Searching"
-                           : _.job.length == 0 && _.searchjob.length == 0
-                            ? "${_.searchjob.length} Results"
-                                : "${_.searchjob.length} Results",
+                                : _.job.length == 0 && _.searchjob.length == 0
+                                    ? "${_.searchjob.length} Results"
+                                    : "${_.searchjob.length} Results",
                             (v) async {
                               // _.channellist.forEach((element) {
                               //   element.check.value = false;
@@ -200,7 +198,7 @@ class SearchScreen extends StatelessWidget {
                                     subTitle:
                                         'Please check your spelling or try different keywords',
                                     heading: 'Trending Topics',
-                                  )
+                                  ).marginOnly(right: 30, left: 40)
                                 : Column(
                                     children: [
                                       // SizedBox(
@@ -504,13 +502,11 @@ class SearchScreen extends StatelessWidget {
                                                 ),
                                                 _.isMore.value
                                                     ? Center(
-                                                        child:
-                                                        Image.asset(
+                                                        child: Image.asset(
                                                           "assets/images/gif.gif",
                                                           height: 120.0,
                                                           width: 120.0,
                                                         ),
-
                                                       )
                                                     : SizedBox()
                                               ],
@@ -1469,7 +1465,9 @@ class SearchScreen extends StatelessWidget {
                                           ),
                                           child: Obx(
                                             () => Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Flexible(
                                                   child: Center(
@@ -1477,19 +1475,20 @@ class SearchScreen extends StatelessWidget {
                                                       _.filterHost.length == 0
                                                           ? 'Select Host'
                                                           : "${_.listToString(_.filterHost)}",
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                           fontFamily: 'Roboto',
-                                                          color:
-                                                              CommonColor.filterColor,
+                                                          color: CommonColor
+                                                              .filterColor,
                                                           fontSize: 12.0),
                                                     ).marginOnly(
                                                         left: 5.0, right: 5.0),
                                                   ),
                                                 ),
                                                 Image.asset(
-                                                    "assets/images/Vector.png")
+                                                        "assets/images/Vector.png")
                                                     .marginOnly(right: 8),
                                               ],
                                             ),
@@ -1522,9 +1521,7 @@ class SearchScreen extends StatelessWidget {
                                           //   doCallback: _.addhostdata,
                                           // ),
                                         ),
-
                                       )
-
                               ],
                             ),
                             Column(
@@ -1533,7 +1530,6 @@ class SearchScreen extends StatelessWidget {
                               children: [
                                 Container(
                                   width: Get.width / 2.25,
-
                                   child: Text(
                                     'Guest',
                                     style: TextStyle(
@@ -1568,25 +1564,28 @@ class SearchScreen extends StatelessWidget {
                                           ),
                                           child: Obx(
                                             () => Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Center(
                                                   child: Text(
                                                     _.filterGuests.length == 0
                                                         ? 'Select Guest'
                                                         : "${_.listToString(_.filterGuests)}",
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     maxLines: 1,
                                                     style: TextStyle(
                                                         fontFamily: 'Roboto',
-                                                        color:
-                                                            CommonColor.filterColor,
+                                                        color: CommonColor
+                                                            .filterColor,
                                                         fontSize: 12.0),
                                                   ).marginOnly(
                                                       left: 5.0, right: 5.0),
                                                 ),
                                                 Image.asset(
-                                                    "assets/images/Vector.png")
+                                                        "assets/images/Vector.png")
                                                     .marginOnly(right: 8),
                                               ],
                                             ),
@@ -1635,11 +1634,14 @@ class SearchScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: Get.width / 3,
-                      color: CommonColor.clearButtonColor,
+                      width: 64,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: CommonColor.clearButtonColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
-
                             borderRadius: BorderRadius.circular(7.0)),
                         onPressed: () {
                           Get.back();
@@ -1649,8 +1651,8 @@ class SearchScreen extends StatelessWidget {
                           style: TextStyle(
                               letterSpacing: 0.4,
                               color: CommonColor.cancelButtonColor,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500),
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w400),
                         ),
                         minWidth: 120,
                         height: 38,
@@ -1660,12 +1662,14 @@ class SearchScreen extends StatelessWidget {
                       width: 10.0,
                     ),
                     Container(
-                      width: Get.width / 3,
+                      width: 120,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: CommonColor.applyFilterButtonColor,
+                      ),
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: CommonColor.greenBorderColor,
-                            ),
                             borderRadius: BorderRadius.circular(5.0)),
                         onPressed: () async {
                           var diff = _.selecttoDate.value
@@ -1767,21 +1771,23 @@ class SearchScreen extends StatelessWidget {
                             }
                           }
                         },
-                        child: Text(
-                          "APPLY FILTER",
-                          style: TextStyle(
-                              letterSpacing: 0.4,
-                              color: CommonColor.greenColor,
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w500),
+                        child: Center(
+                          child: Text(
+                            "APPLY FILTER",
+                            style: TextStyle(
+                                letterSpacing: 0.4,
+                                color: CommonColor.filterColor,
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w400),
+                          ),
                         ),
                         minWidth: 120,
                         height: 38,
-                        color: CommonColor.greenColorWithOpacity,
+                        color: CommonColor.applyFilterButtonColor,
                       ),
                     ),
                   ],
-                ).marginOnly(top: 10.0, bottom: 10.0),
+                ).marginOnly(top: 48.0, bottom: 10.0),
               ],
             ).marginOnly(left: 15.0, right: 15.0),
           ),

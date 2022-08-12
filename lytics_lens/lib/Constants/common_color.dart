@@ -30,12 +30,11 @@ class CommonColor {
   static final Color greenColor = Color(0xff22b161);
   static final Color newBorderColor = Color(0xffb7b7b7).withOpacity(0.16);
 
-
-
-  static final Color filterColor = Color(0xff000425);
+  static final Color filterColor = Colors.white;
   static final Color textFieldBorderColor = Color(0xffBDBDBD);
 
   static final Color registrationBackground = Color(0xff02083b);
 
   static final Color hintTextColor = Color(0xffC4C4C4A3).withOpacity(0.64);
+  static final Color applyFilterButtonColor = Color(0xff455177);
 }
