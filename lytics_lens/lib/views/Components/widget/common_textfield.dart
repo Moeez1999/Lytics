@@ -273,9 +273,9 @@ class CommonTextField extends StatelessWidget {
               fontWeight: FontWeight.w300),
           contentPadding: EdgeInsets.all(10.0),
           labelText: labelText,
-          labelStyle: const TextStyle(
+          labelStyle: TextStyle(
               letterSpacing: 0.4,
-              color: Colors.white,
+              color: Colors.white.withOpacity(0.7),
               fontSize: 12.0,
               fontWeight: FontWeight.w500),
           border: const OutlineInputBorder(

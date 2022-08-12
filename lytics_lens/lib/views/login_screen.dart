@@ -94,7 +94,6 @@ class LoginScreen extends StatelessWidget {
                                     children: [
                                       CommonTextField(
                                         labelText: "Username",
-                                        
                                         fillcolor: Colors.transparent,
                                         controller: _.userNameController,
                                         hintText: 'Username',
@@ -127,6 +126,7 @@ class LoginScreen extends StatelessWidget {
                                           controller: _.passwordController,
                                           textInputAction: TextInputAction.done,
                                           hintText: 'Password',
+                                          labelText: "Password",
                                           hintTextColor:
                                               Colors.white.withOpacity(0.6),
                                           isTextHidden: _.securetext,

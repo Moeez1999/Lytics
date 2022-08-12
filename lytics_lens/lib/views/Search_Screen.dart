@@ -198,7 +198,7 @@ class SearchScreen extends StatelessWidget {
                                     subTitle:
                                         'Please check your spelling or try different keywords',
                                     heading: 'Trending Topics',
-                                  ).marginOnly(right: 30, left: 40)
+                                  ).marginOnly(right: 20, left: 40)
                                 : Column(
                                     children: [
                                       // SizedBox(

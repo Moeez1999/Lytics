@@ -19,21 +19,23 @@ class TrendingKeyword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Image.asset(
               "assets/images/new_logo.png",
               height: 89,
               width: 237,
             ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Center(
+            child: Text(
               '$title "$searchText"',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -43,10 +45,12 @@ class TrendingKeyword extends StatelessWidget {
                   fontSize: 24.0,
                   color: Colors.white),
             ),
-            SizedBox(
-              height: 20.0,
-            ),
-            SizedBox(
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Container(
+            child: SizedBox(
               width: Get.width / 2.0,
               child: Text(
                 '$subTitle',
@@ -59,13 +63,12 @@ class TrendingKeyword extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 20.0,
-            ),
-            showTrendingTopic(controller),
-          ],
-        ).marginOnly(left: 0.0, right: 0.0),
-      ),
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+        ],
+      ).marginOnly(left: 0.0, right: 0.0),
     );
   }
 
