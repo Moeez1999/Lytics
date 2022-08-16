@@ -236,9 +236,9 @@ class AccountScreen extends StatelessWidget {
             ],
           )),
       onTap: onTap,
-      splashColor: Color(0xff48beeb),
-      hoverColor: Color(0xff48beeb),
-      focusColor: Color(0xff48beeb),
+      splashColor: Colors.white,
+      hoverColor: Colors.white,
+      focusColor: Colors.white,
     ).marginOnly(bottom: 30.0);
   }
 
@@ -356,25 +356,25 @@ class AccountScreen extends StatelessWidget {
                         Get.back();
                       },
                       child: Text(
-                        "CANCEL",
+                        "Cancel",
                         textScaleFactor: 1.0,
                         style: TextStyle(
-                            color: CommonColor.cancelButtonColor,
+                            color: CommonColor.whiteColor,
                             fontSize: 16,
-                            fontWeight: FontWeight.w700),
+                            fontWeight: FontWeight.w400),
                       ),
-                      minWidth: Get.width / 3.5,
-                      height: 38,
+                      minWidth: 80,
+                      height: 42,
+                      color: Color(0xff212A4A),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.0)),
                     ),
                     SizedBox(
                       width: 8.0,
                     ),
                     MaterialButton(
-                      color: CommonColor.greenColorWithOpacity,
+                      color: CommonColor.newButtonColor,
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: Color(0xff23B662),
-                          ),
                           borderRadius: BorderRadius.circular(9.0)),
                       onPressed: () async {
                         print("check");
@@ -382,15 +382,15 @@ class AccountScreen extends StatelessWidget {
                         await _.logout();
                       },
                       child: Text(
-                        "LOGOUT",
+                        "Log Out",
                         textScaleFactor: 1.0,
                         style: TextStyle(
-                            color: CommonColor.greenButtonTextColor,
+                            color: CommonColor.whiteColor,
                             fontSize: 16,
-                            fontWeight: FontWeight.w700),
+                            fontWeight: FontWeight.w400),
                       ),
-                      minWidth: Get.width / 3.5,
-                      height: 38,
+                      minWidth: 123,
+                      height: 40,
                     ),
                   ],
                 ),

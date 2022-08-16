@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-
 // import 'package:lens_app/views/Components/searchtextfield.dart';
 
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/views/Search_Screen.dart';
 import 'package:lytics_lens/widget/headline_container.dart';
-
 
 import '../Controllers/searchbar_controller.dart';
 import '../widget/internetconnectivity_screen.dart';
@@ -72,7 +70,7 @@ class SearchBarView extends StatelessWidget {
                   ? InterConnectivity(
                       onPressed: () async {
                         await _.gettopic();
-                       // _.getHeadlines();
+                        // _.getHeadlines();
                       },
                     )
                   : SingleChildScrollView(
@@ -193,7 +191,7 @@ class SearchBarView extends StatelessWidget {
                                                             child: Image.asset(
                                                               "assets/images/search-green.png",
                                                               height: 20,
-                                                              width:20,
+                                                              width: 20,
                                                               fit: BoxFit.fill,
                                                             ))
                                                         .marginOnly(
@@ -203,11 +201,6 @@ class SearchBarView extends StatelessWidget {
                                                             right: 3.0),
                                                     Expanded(
                                                       child: TextFormField(
-                                                        inputFormatters: [
-                                                          FilteringTextInputFormatter
-                                                              .deny(RegExp(
-                                                                  r"\s\b|\b\s"))
-                                                        ],
                                                         cursorColor: CommonColor
                                                             .greenColor,
                                                         textAlignVertical:

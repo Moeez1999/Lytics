@@ -368,10 +368,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                     ),
                     MaterialButton(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(9.0),
-                        side: BorderSide(
-                          color: Color(0xff23B662),
-                        ),
+                        borderRadius: BorderRadius.circular(7.0),
                       ),
 
                       onPressed: () async {
@@ -384,16 +381,16 @@ class _ClippingScreenState extends State<ClippingScreen> {
                         "Share Clip",
                         textScaleFactor: 1.0,
                         style: TextStyle(
-                            color: Color(0xff2CE08E),
+                            color: CommonColor.whiteColor,
                             letterSpacing: 0.4,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w700),
                         maxLines: 2,
                       ),
-                      minWidth: Get.width / 3,
-                      height: 40,
+                      minWidth: 125,
+                      height: 35,
                       // color: Color.fromRGBO(72, 190, 235, 1),
-                      color: Color(0xff23B662).withOpacity(0.1),
+                      color: CommonColor.newButtonColor,
                     ),
                   ],
                 ),
@@ -569,24 +566,22 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                 ),
                               ),
                               MaterialButton(
-                                color: CommonColor.greenColorWithOpacity,
+                                color: CommonColor.newButtonColor,
                                 shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: Color(0xff23B662),
-                                    ),
-                                    borderRadius: BorderRadius.circular(9.0)),
+                                    borderRadius: BorderRadius.circular(7.0)),
                                 onPressed: () async {
                                   shareDialougebox(context, _);
                                 },
                                 child: Text(
-                                  "SHARE",
+                                  "Share",
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
-                                      color: CommonColor.greenButtonTextColor,
-                                      fontSize: 11,
+                                      color: CommonColor.whiteColor,
+                                      fontFamily: 'Roboto',
+                                      fontSize: 13,
                                       fontWeight: FontWeight.w700),
                                 ),
-                                minWidth: Get.width / 3.9,
+                                minWidth: 85,
                                 height: 33,
                               ).marginOnly(left: 13),
                             ],
@@ -626,7 +621,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                                 _.companyUser[i]['firstName'],
                                             "recieverLastName": _.companyUser[i]
                                                 ['lastName'],
-                                            "time" : DateTime.now(),
+                                            "time": DateTime.now(),
                                           });
                                         }
                                       } else {
@@ -649,7 +644,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                             "recieverLastName":
                                                 _.searchcompanyUser[i]
                                                     ['lastName'],
-                                            "time" : DateTime.now(),
+                                            "time": DateTime.now(),
                                           });
                                         }
                                       }
@@ -808,7 +803,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                 ),
                 Center(
                   child: MaterialButton(
-                    color: CommonColor.greenColorWithOpacity,
+                    color: CommonColor.newButtonColor,
                     shape: RoundedRectangleBorder(
                         side: BorderSide(
                           color: Color(0xff23B662),
@@ -821,12 +816,12 @@ class _ClippingScreenState extends State<ClippingScreen> {
                       "GOT IT",
                       textScaleFactor: 1.0,
                       style: TextStyle(
-                          color: CommonColor.greenButtonTextColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700),
+                          color: CommonColor.whiteColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400),
                     ),
-                    minWidth: Get.width / 3.5,
-                    height: 38,
+                    minWidth: 81,
+                    height: 30,
                   ).marginOnly(top: 18),
                 ),
               ],
@@ -885,26 +880,26 @@ class _ClippingScreenState extends State<ClippingScreen> {
                         Get.back();
                       },
                       child: Text(
-                        "CANCEL",
+                        "Discard",
                         textScaleFactor: 1.0,
                         style: TextStyle(
-                            color: CommonColor.cancelButtonColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700),
+                            color: CommonColor.whiteColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
                       ),
-                      minWidth: Get.width / 3.5,
-                      height: 38,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.0)),
+                      minWidth: 81,
+                      height: 30,
+                      color: CommonColor.clearButtonColor,
                     ),
                     SizedBox(
                       width: 8.0,
                     ),
                     MaterialButton(
-                      color: CommonColor.greenColorWithOpacity,
+                      color: CommonColor.newButtonColor,
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: Color(0xff23B662),
-                          ),
-                          borderRadius: BorderRadius.circular(9.0)),
+                          borderRadius: BorderRadius.circular(7.0)),
                       onPressed: () async {
                         print("Start Time $start");
                         print("End Time $audioFile");
@@ -936,15 +931,15 @@ class _ClippingScreenState extends State<ClippingScreen> {
                         }
                       },
                       child: Text(
-                        "SHARE",
+                        "Share",
                         textScaleFactor: 1.0,
                         style: TextStyle(
-                            color: CommonColor.greenButtonTextColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700),
+                            color: CommonColor.whiteColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
                       ),
-                      minWidth: Get.width / 3.5,
-                      height: 38,
+                      minWidth: 81,
+                      height: 30,
                     ),
                   ],
                 ),

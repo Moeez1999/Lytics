@@ -81,28 +81,29 @@ class Dashboard extends StatelessWidget {
                   children: [
                     MaterialButton(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(9.0)),
+                          borderRadius: BorderRadius.circular(7.0)),
                       onPressed: () async {
                         Get.back();
                       },
                       child: Text(
-                        "CANCEL",
+                        "Cancel",
                         textScaleFactor: 1.0,
                         style: TextStyle(
-                            color: CommonColor.cancelButtonColor, fontSize: 16),
+                            color: CommonColor.cancelButtonColor,
+                            fontSize: 16,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w400),
                       ),
-                      minWidth: Get.width / 3.5,
-                      height: 48,
+                      minWidth: 83,
+                      height: 35,
+                      color: CommonColor.clearButtonColor,
                     ),
                     SizedBox(
                       width: 8.0,
                     ),
                     MaterialButton(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(9.0),
-                        side: BorderSide(
-                          color: CommonColor.greenBorderColor,
-                        ),
+                        borderRadius: BorderRadius.circular(7.0),
                       ),
                       onPressed: () async {
                         if (Platform.isAndroid) {
@@ -115,11 +116,14 @@ class Dashboard extends StatelessWidget {
                         "Exit",
                         textScaleFactor: 1.0,
                         style: TextStyle(
-                            color: CommonColor.greenTextColor, fontSize: 16),
+                            color: CommonColor.cancelButtonColor,
+                            fontSize: 16,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w400),
                       ),
-                      minWidth: Get.width / 3.4,
-                      height: 40,
-                      color: CommonColor.greenColorWithOpacity,
+                      minWidth: 125,
+                      height: 35,
+                      color: CommonColor.newButtonColor,
                     ),
                   ],
                 )

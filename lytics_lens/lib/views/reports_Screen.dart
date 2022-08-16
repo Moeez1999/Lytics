@@ -671,7 +671,7 @@ class ReportsScreen extends StatelessWidget {
                               width: Get.width / 2.5,
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: CommonColor.filterColor,
+                                  color: CommonColor.newBorderColor,
                                 ),
                                 borderRadius: BorderRadius.circular(2.0),
                               ),
@@ -798,36 +798,37 @@ class ReportsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: Get.width / 3,
+                      width: 63,
                       child: MaterialButton(
+                        color: CommonColor.clearButtonColor,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
+                            borderRadius: BorderRadius.circular(7.0)),
                         onPressed: () {
                           Get.back();
                         },
                         child: Text(
-                          "CANCEL",
+                          "Clear",
                           style: TextStyle(
                               letterSpacing: 0.4,
-                              color: CommonColor.cancelButtonColor,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w700),
+                              color: CommonColor.whiteColor,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w400),
                         ),
-                        minWidth: 120,
-                        height: 38,
+                        minWidth: 63,
+                        height: 30,
                       ),
                     ),
                     SizedBox(
                       width: 10.0,
                     ),
                     Container(
-                      width: Get.width / 3,
+                      width: 102,
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          side: BorderSide(
-                            color: CommonColor.greenBorderColor,
-                          ),
+                          borderRadius: BorderRadius.circular(7.0),
+                          // side: BorderSide(
+                          //   color: CommonColor.greenBorderColor,
+                          // ),
                         ),
                         onPressed: () async {
                           // _.viewFilterData();
@@ -870,16 +871,16 @@ class ReportsScreen extends StatelessWidget {
                           }
                         },
                         child: Text(
-                          "APPLY FILTER",
+                          "Apply Filter",
                           style: TextStyle(
                               letterSpacing: 0.4,
-                              color: CommonColor.greenColor,
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w500),
+                              color: CommonColor.whiteColor,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w400),
                         ),
-                        minWidth: 120,
-                        height: 38,
-                        color: CommonColor.greenColorWithOpacity,
+                        minWidth: 102,
+                        height: 30,
+                        color: CommonColor.applyFilterButtonColor,
                       ),
                     ),
                   ],
@@ -1397,7 +1398,7 @@ class ReportsScreen extends StatelessWidget {
                       border: Border.all(
                           color: _.alldatelist1[i].check.value == true
                               ? CommonColor.greenColor
-                              : CommonColor.filterColor)),
+                              : CommonColor.newBorderColor)),
                   child: Center(
                     child: Text(
                       "${_.alldatelist1[i].name}",
@@ -2079,7 +2080,7 @@ class ReportsScreen extends StatelessWidget {
                                     width: Get.width / 2.5,
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: CommonColor.filterColor,
+                                        color: CommonColor.newBorderColor,
                                       ),
                                       borderRadius: BorderRadius.circular(2.0),
                                     ),
@@ -2218,7 +2219,7 @@ class ReportsScreen extends StatelessWidget {
                                   width: Get.width / 2.5,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: CommonColor.filterColor,
+                                      color: CommonColor.newBorderColor,
                                     ),
                                     borderRadius: BorderRadius.circular(2.0),
                                   ),
@@ -2344,37 +2345,36 @@ class ReportsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: Get.width / 3,
+                      width: 63,
                       child: MaterialButton(
+                        color: CommonColor.clearButtonColor,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
+                          side: BorderSide(color: CommonColor.clearButtonColor),
+                          borderRadius: BorderRadius.circular(7.0),
                         ),
                         onPressed: () {
                           Get.back();
                         },
                         child: Text(
-                          "CANCEL",
+                          "Clear",
                           style: TextStyle(
                               letterSpacing: 0.4,
-                              color: CommonColor.cancelButtonColor,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w700),
+                              color: CommonColor.whiteColor,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w400),
                         ),
-                        minWidth: 120,
-                        height: 38,
+                        minWidth: 63,
+                        height: 30,
                       ),
                     ),
                     SizedBox(
                       width: 10.0,
                     ),
                     Container(
-                      width: Get.width / 3,
+                      width: 125,
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          side: BorderSide(
-                            color: CommonColor.greenBorderColor,
-                          ),
+                          borderRadius: BorderRadius.circular(7.0),
                         ),
                         onPressed: () async {
                           // Get.back();
@@ -2392,16 +2392,16 @@ class ReportsScreen extends StatelessWidget {
                           }
                         },
                         child: Text(
-                          "APPLY Filter",
+                          "Apply Filter",
                           style: TextStyle(
                               letterSpacing: 0.4,
-                              color: CommonColor.greenButtonTextColor,
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w700),
+                              color: CommonColor.whiteColor,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w400),
                         ),
-                        minWidth: 120,
-                        height: 38,
-                        color: CommonColor.greenColorWithOpacity,
+                        minWidth: 102,
+                        height: 30,
+                        color: CommonColor.applyFilterButtonColor,
                       ),
                     ),
                   ],
@@ -2578,7 +2578,7 @@ class ReportsScreen extends StatelessWidget {
                       border: Border.all(
                           color: _.alldatelist[i].check.value == true
                               ? Color(0xff22B161)
-                              : Colors.white)),
+                              : CommonColor.newBorderColor)),
                   child: Center(
                     child: Row(
                       children: [
@@ -3052,7 +3052,7 @@ class ReportsScreen extends StatelessWidget {
                       border: Border.all(
                           color: _.programType[i].check.value == true
                               ? Color(0xff22B161)
-                              : Colors.white)),
+                              : CommonColor.newBorderColor)),
                   child: Center(
                     child: Text(
                       "${_.programType[i].name}",
@@ -3107,7 +3107,7 @@ class ReportsScreen extends StatelessWidget {
                       border: Border.all(
                           color: _.programType1[i].check.value == true
                               ? CommonColor.greenColor
-                              : CommonColor.filterColor)),
+                              : CommonColor.newBorderColor)),
                   child: Center(
                     child: Text(
                       "${_.programType1[i].name}",

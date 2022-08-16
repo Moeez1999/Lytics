@@ -24,10 +24,11 @@ class PlayerScreen extends StatelessWidget {
         init: VideoController(),
         builder: (_) {
           return Scaffold(
+            extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: true,
             backgroundColor: Theme.of(context).primaryColor,
             appBar: AppBar(
-              backgroundColor: CommonColor.appBarColor,
+              backgroundColor: Colors.transparent,
               elevation: 0.0,
               leading: GestureDetector(
                 onTap: () {
@@ -75,30 +76,30 @@ class PlayerScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        height: 210,
+                        height: 235,
                         width: Get.width,
                         child: Stack(
                           children: [
                             Container(
-                              height: 210,
+                              height: 235,
                               width: Get.width,
                               child: CachedNetworkImage(
                                 imageUrl: _.imagePathLast,
                                 placeholder: (c, e) => Lottie.asset(
                                     "assets/images/imgload.json",
-                                    height: 210,
+                                    height: 235,
                                     width: Get.width,
                                     fit: BoxFit.cover),
                                 errorWidget: (c, e, r) => Lottie.asset(
                                     "assets/images/imgload.json",
                                     fit: BoxFit.cover),
-                                height: 210,
+                                height: 235,
                                 width: Get.width,
                                 fit: BoxFit.cover,
                               ),
                             ),
                             Container(
-                              height: 210,
+                              height: 235,
                               width: Get.width,
                               color: Color.fromARGB(189, 0, 0, 0),
                             ),
@@ -116,13 +117,14 @@ class PlayerScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       // Player Container
+
                       _.source.toLowerCase() == 'tv' ||
                               _.source.toLowerCase() == 'online'
                           ? Column(
                               children: [
                                 Container(
                                   color: CommonColor.backgroundColour,
-                                  height: 210,
+                                  height: 235,
                                   width: Get.width,
                                   child: BetterPlayer(
                                     controller: _.betterPlayerController,
@@ -178,31 +180,43 @@ class PlayerScreen extends StatelessWidget {
                                       ],
                                     ).marginOnly(top: 10.0),
                                     Container(
+                                      width: 36,
                                       decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: _.source.toLowerCase() ==
+                                                      'tv'
+                                                  ? Color(0xff00FFD9)
+                                                  : _.source.toLowerCase() ==
+                                                          'online'
+                                                      ? Color(0xff76D14B)
+                                                      : Color(0xffffd9)),
                                           borderRadius: BorderRadius.only(
                                             bottomLeft: Radius.circular(2.0),
                                             bottomRight: Radius.circular(2.0),
                                           ),
-                                          color: _.source.toLowerCase() == 'tv'
-                                              ? Color(0xff00FFD9)
-                                              : _.source.toLowerCase() ==
-                                                      'online'
-                                                  ? Color(0xff76D14B)
-                                                  : Color(0xffffd9)),
-                                      child: Text(
-                                        '${_.source.toUpperCase()}',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 10.0,
-                                          letterSpacing: 0.4,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'Roboto',
-                                        ),
-                                      ).paddingOnly(
-                                          left: 8.0,
-                                          right: 7.0,
-                                          top: 5.0,
-                                          bottom: 4.0),
+                                          color: Colors.transparent),
+                                      child: Center(
+                                        child: Text(
+                                          '${_.source.toUpperCase()}',
+                                          style: TextStyle(
+                                            color:
+                                                _.source.toLowerCase() == 'tv'
+                                                    ? Color(0xff00FFD9)
+                                                    : _.source.toLowerCase() ==
+                                                            'online'
+                                                        ? Color(0xff76D14B)
+                                                        : Color(0xffffd9),
+                                            fontSize: 10.0,
+                                            letterSpacing: 0.4,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Roboto',
+                                          ),
+                                        ).paddingOnly(
+                                            left: 8.0,
+                                            right: 7.0,
+                                            top: 5.0,
+                                            bottom: 4.0),
+                                      ),
                                     )
                                   ],
                                 ).marginOnly(left: 15.0, right: 15.0),
@@ -1613,25 +1627,23 @@ class PlayerScreen extends StatelessWidget {
                                 ),
                               ),
                               MaterialButton(
-                                color: CommonColor.greenColorWithOpacity,
+                                color: CommonColor.newButtonColor,
                                 shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: Color(0xff23B662),
-                                    ),
-                                    borderRadius: BorderRadius.circular(9.0)),
+                                    borderRadius: BorderRadius.circular(7.0)),
                                 onPressed: () async {
                                   shareDialougebox(context, _);
                                 },
                                 child: Text(
-                                  "SHARE",
+                                  "Share Clip",
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
-                                      color: CommonColor.greenButtonTextColor,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w700),
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Roboto'),
                                 ),
-                                minWidth: Get.width / 3.9,
-                                height: 33,
+                                minWidth: 125,
+                                height: 35,
                               ).marginOnly(left: 13),
                             ],
                           ),
@@ -1850,12 +1862,9 @@ class PlayerScreen extends StatelessWidget {
                 ),
                 Center(
                   child: MaterialButton(
-                    color: CommonColor.greenColorWithOpacity,
+                    color: CommonColor.newButtonColor,
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Color(0xff23B662),
-                        ),
-                        borderRadius: BorderRadius.circular(9.0)),
+                        borderRadius: BorderRadius.circular(7.0)),
                     onPressed: () async {
                       Get.back();
                     },
@@ -1863,12 +1872,12 @@ class PlayerScreen extends StatelessWidget {
                       "GOT IT",
                       textScaleFactor: 1.0,
                       style: TextStyle(
-                          color: CommonColor.greenButtonTextColor,
+                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w700),
                     ),
-                    minWidth: Get.width / 3.5,
-                    height: 38,
+                    minWidth: 80,
+                    height: 30,
                   ).marginOnly(top: 18),
                 ),
               ],
