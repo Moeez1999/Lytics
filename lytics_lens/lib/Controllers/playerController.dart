@@ -288,12 +288,11 @@ class VideoController extends GetxController {
           isComment = true;
           update();
         }
-
-        videoPath = source.toString() == 'websites'
+        sourcevideoPath = source.toString() == 'websites'
             ? 'http://checkk'
             : data["videoPath"];
+        videoPath = sourcevideoPath.split('http://103.31.81.34/Videos/').last;
         await urlToFile(data["videoPath"]);
-
         if (data['audio'] == null) {
           audioPath = '';
         } else {
@@ -323,6 +322,7 @@ class VideoController extends GetxController {
         if (data['segments'].toString().length == 2) {
           hashTags = [];
         } else {
+          print("HashTag is ${data['segments'][0]['hashtags']}");
           hashTags = data['segments'][0]['hashtags'];
         }
 
@@ -392,6 +392,8 @@ class VideoController extends GetxController {
               'Authorization': "Bearer $token",
             });
         var data = json.decode(res.body);
+        print("User id is $senderId");
+        Get.log("Sharing Job data is ${data['sharing']}");
         // print("All Data $data");
         Get.log("All Data $data");
         print("English Data ${data['translation']}");
@@ -400,8 +402,6 @@ class VideoController extends GetxController {
         source = data["source"];
         channel = data['channel'];
         comment = data["comments"];
-
-       
 
         sourcevideoPath = source.toString() == 'websites'
             ? 'http://checkk'

@@ -113,6 +113,12 @@ class ClippingController extends GetxController
             .toLowerCase()
             .contains(v.toLowerCase())) {
           searchcompanyUser.add(e);
+        } else if (e['firstName']
+            .toString()
+            .toLowerCase()
+            .contains(v.split(' ').first.toLowerCase()) &&
+            e['lastName'].toString().toLowerCase().contains(v.split(' ').last.toLowerCase())) {
+          searchcompanyUser.add(e);
         }
       });
     }

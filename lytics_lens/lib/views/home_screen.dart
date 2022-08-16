@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lytics_lens/Controllers/home_controller.dart';
@@ -188,17 +187,16 @@ class HomeScreen extends StatelessWidget {
                                     title: "Delete",
                                     onTap: (CompletionHandler
                                     handler) async {
-                                      if(_.getReceivedPerson(_.job[index]['sharing']) == '')
-                                        {
-                                          _.getSingleJob(
-                                              _.job[index]['id']);
-                                        }
-                                      else
-                                        {
-                                          _.getDeleteJob(
-                                              _.sharedJobs[index]['sharing'],
-                                              _.sharedJobs[index]['id']);
-                                        }
+                                      if (_.getReceivedPerson(
+                                          _.job[index]['sharing']) == '') {
+                                        _.getSingleJob(
+                                            _.job[index]['id']);
+                                      }
+                                      else {
+                                        _.getDeleteJob(
+                                            _.sharedJobs[index]['sharing'],
+                                            _.sharedJobs[index]['id']);
+                                      }
                                       //<------------ Shared  JOB ---------->
 
                                       // _.job.removeAt(index);
@@ -279,25 +277,32 @@ class HomeScreen extends StatelessWidget {
                                       isShare: _.searchjob
                                           .length ==
                                           0
-                                          ? _.getReceivedPerson(_.job[index]['sharing']) == ''
+                                          ? _.getReceivedPerson(
+                                          _.job[index]['sharing']) == ''
                                           ? false
                                           : true
-                                          : _.getReceivedPerson(_.searchjob[index]
-                                      ['sharing']) == ''
+                                          : _.getReceivedPerson(
+                                          _.searchjob[index]
+                                          ['sharing']) == ''
                                           ? false
                                           : true,
-                                      receiverName: _
-                                          .searchjob
-                                          .length ==
-                                          0
-                                          ? _.getReceivedPerson(_.job[index]
-                                      ['sharing'])
-                                          : _.getReceivedPerson(_.searchjob[index]
-                                      ['sharing']),
+                                      receiverName: '',
+                                      //     .searchjob
+                                      //     .length ==
+                                      //     0
+                                      //     ? _.getReceivedPerson(_.job[index]
+                                      // ['sharing'])
+                                      //     : _.getReceivedPerson(
+                                      //     _.searchjob[index]
+                                      //     ['sharing']),
                                       id: _.id,
                                       isClipped: _.searchjob.length == 0
-                                          ? _.job[index]['share'] != null ? true : false
-                                          : _.searchjob[index]['share'] != null ? true : false,
+                                          ? _.job[index]['share'] != null
+                                          ? true
+                                          : false
+                                          : _.searchjob[index]['share'] != null
+                                          ? true
+                                          : false,
                                       isAudio: _.searchjob.length == 0
                                           ?
                                       _.job[index]['audio'] == null
@@ -482,7 +487,7 @@ class HomeScreen extends StatelessWidget {
       color: Color(0xff000425),
       child: Obx(
             () {
-          return _.isLoading.value
+          return _.isLoading1.value
               ? Center(
             child: Image.asset(
               "assets/images/gif.gif",
@@ -493,12 +498,12 @@ class HomeScreen extends StatelessWidget {
               : _.isSocketError.value
               ? InterConnectivity(
             onPressed: () {
-              _.getSharedJobs();
+              _.getReceiveJob();
             },
           )
               : _.isDataFailed.value
               ? TapToLoad(onPressed: () {
-            _.getSharedJobs();
+            _.getReceiveJob();
           })
               : _.isSearchData.value
               ? Column(
@@ -519,6 +524,7 @@ class HomeScreen extends StatelessWidget {
                       fit: BoxFit.contain),
                 ),
               ),
+
               Text(
                 'No Result Found',
                 style: TextStyle(
@@ -551,8 +557,7 @@ class HomeScreen extends StatelessWidget {
                     },
                     child: RefreshIndicator(
                         onRefresh: () => _.getReceiveJob(),
-                        child:
-                        _.sharedJobs.length == 0 ? Center(
+                        child: _.sharedJobs.length == 0 ? Center(
                           child: Text("No Job Shared", style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
@@ -624,10 +629,8 @@ class HomeScreen extends StatelessWidget {
                                         .searchjob[index]['thumbnailPath']}"
                                         : "${ApiData.thumbnailPath +
                                         _.searchjob[index]['thumbnailPath']}",
-                                    isShare: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.getSharePerson(_.job[index]
+                                    isShare: _.searchjob.length == 0
+                                        ? _.getSharePerson(_.sharedJobs[index]
                                     ['sharing']) == ''
                                         ? false
                                         : true
@@ -639,11 +642,14 @@ class HomeScreen extends StatelessWidget {
                                         .searchjob
                                         .length ==
                                         0
-                                        ? _.getSharePerson(_.job[index]
+                                        ? _.getSharePerson(_.sharedJobs[index]
                                     ['sharing'])
                                         : _.getSharePerson(_.searchjob[index]
                                     ['sharing']),
-                                    title: _.searchjob
+                                    title: _.sharedJobs[index]['share'] != null || _.sharedJobs[index]['audio'] != null
+                                    ? _.sharedJobs[index]['title']
+                                    :
+                                    _.searchjob
                                         .length ==
                                         0
                                         ? _.sharedJobs[index]
@@ -667,8 +673,10 @@ class HomeScreen extends StatelessWidget {
                                         : _.getTopicString(
                                         _.searchjob[index]
                                         ['segments']),
-                                    isClipped: _.sharedJobs[index]['share'] != null ? true : false,
-                                    isAudio: _.sharedJobs[index]['audio'] == null
+                                    isClipped: _.sharedJobs[index]['share'] !=
+                                        null ? true : false,
+                                    isAudio: _.sharedJobs[index]['audio'] ==
+                                        null
                                         ? false
                                         : true,
                                     guests: _.searchjob

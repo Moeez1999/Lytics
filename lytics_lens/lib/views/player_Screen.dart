@@ -705,12 +705,14 @@ class PlayerScreen extends StatelessWidget {
                                                                       child:
                                                                           Directionality(
                                                                         textDirection:
+
                                                                             TextDirection.ltr,
                                                                         child:
                                                                             Text(
                                                                           '${_.transcriptionText}',
                                                                           style:
                                                                               TextStyle(
+
                                                                             fontSize:
                                                                                 13.0,
                                                                             letterSpacing:
@@ -766,6 +768,7 @@ class PlayerScreen extends StatelessWidget {
                                                         child:
                                                             SingleChildScrollView(
                                                           child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
                                                               CommonTextField3(
                                                                 inputFormatters: [
@@ -793,6 +796,7 @@ class PlayerScreen extends StatelessWidget {
                                                                       TextDirection
                                                                           .ltr,
                                                                   child: Wrap(
+                                                                    alignment: WrapAlignment.start,
                                                                     clipBehavior:
                                                                         Clip.none,
                                                                     children: [
@@ -837,7 +841,7 @@ class PlayerScreen extends StatelessWidget {
                                                                                 letterSpacing: 0.4,
                                                                                 fontWeight: FontWeight.w400,
                                                                               ),
-                                                                              textAlign: TextAlign.center,
+                                                                              textAlign: TextAlign.start,
                                                                             ),
                                                                           ),
                                                                         )
@@ -904,6 +908,8 @@ class PlayerScreen extends StatelessWidget {
                                                           ),
                                                         ),
                                                         Spacer(),
+                                                        _.source.toLowerCase() == 'website' || _.source.toLowerCase() == 'print' || _.source.toLowerCase() == 'blog'
+                                                        ? SizedBox() :
                                                         _.isAudio
                                                             ? GestureDetector(
                                                                 onTap: () {
@@ -949,6 +955,9 @@ class PlayerScreen extends StatelessWidget {
                                                                             20),
                                                               )
                                                             : SizedBox(),
+                                                        _.source.toLowerCase() == 'website' || _.source.toLowerCase() == 'print' || _.source.toLowerCase() == 'blog'
+                                                        ? SizedBox()
+                                                        :
                                                         _.isComment
                                                             ? GestureDetector(
                                                                 onTap: () {

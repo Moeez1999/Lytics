@@ -310,7 +310,7 @@ class CommonContainer extends StatelessWidget {
                           width: 5.0,
                         ),
                         SizedBox(
-                          width: Get.width / 10,
+                          width:receiverName == '' ? 0 : Get.width / 10,
                           child: Text(
                             '$receiverName',
                             maxLines: 1,

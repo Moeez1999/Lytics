@@ -18,6 +18,7 @@ class HomeScreenController extends GetxController {
   final controller = Get.put(AccountController());
 
   var isLoading = true.obs;
+  var isLoading1 = true.obs;
 
   String id = '';
 
@@ -317,6 +318,7 @@ class HomeScreenController extends GetxController {
     update();
 
     isLoading.value = false;
+    isLoading1.value = false;
     super.onReady();
   }
 
@@ -686,6 +688,7 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> getReceiveJob() async {
+    isLoading1.value = true;
     sharedJobs.clear();
     try {
       if (storage.hasData("Url") == true) {
@@ -702,6 +705,7 @@ class HomeScreenController extends GetxController {
         var data = json.decode(res.body);
         Get.log("Receiver Jobs $data");
         sharedJobs.addAll(data);
+        isLoading1.value = false;
       } else {
         String token = await storage.read("AccessToken");
         String id = await storage.read('id');
@@ -716,13 +720,14 @@ class HomeScreenController extends GetxController {
         var data = json.decode(res.body);
         Get.log("Receiver Jobs $data");
         sharedJobs.addAll(data);
+        isLoading1.value = false;
       }
     } on SocketException catch (e) {
       print(e);
-      isLoading.value = false;
+      isLoading1.value = false;
       isSocketError.value = true;
     } catch (e) {
-      isLoading.value = false;
+      isLoading1.value = false;
       isDataFailed.value = true;
     }
   }
@@ -880,7 +885,7 @@ class HomeScreenController extends GetxController {
             '${r[i]['recieverFirstName']} ${r[i]['recieverLastName']}');
       }
     }
-    print("The data of reviever api is ${sen.toString()}");
+    print("The data of Sender api is ${sen.toString()}");
     return sen.join(', ');
   }
 

@@ -203,11 +203,7 @@ class SearchBarView extends StatelessWidget {
                                                             right: 3.0),
                                                     Expanded(
                                                       child: TextFormField(
-                                                        inputFormatters: [
-                                                          FilteringTextInputFormatter
-                                                              .deny(RegExp(
-                                                                  r"\s\b|\b\s"))
-                                                        ],
+
                                                         cursorColor: CommonColor
                                                             .greenColor,
                                                         textAlignVertical:

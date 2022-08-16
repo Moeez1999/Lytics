@@ -102,6 +102,15 @@ class _ClippingScreenState extends State<ClippingScreen> {
 
   Future<void> sendData(File vpath) async {
     try {
+      print("Start Time ${start.toString()}");
+      print("Start Time ${end.toString()}");
+      print("Start Time ${widget.jobId}");
+      var st = start.toStringAsFixed(2);
+      var ed = end.toStringAsFixed(2);
+      var s = '$st-$st';
+      var e = '$ed-$ed';
+      print("Start Time $s");
+      print("Start Time $e");
       // var c = json.encode(clipController.sharingUser);
       String token = await storage.read("AccessToken");
       if (audioFile == null) {
@@ -114,6 +123,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
             ..fields['id'] = widget.jobId
             ..fields['title'] = clipController.title.text
             ..fields['comments'] = clipController.des.text
+            ..fields['startDuration'] = s.toString()
+            ..fields['endDuration'] = e.toString()
             ..fields['share'] = "true"
             ..fields['sharing'] = json.encode(clipController.sharingUser)
             ..files.add(
@@ -121,18 +132,28 @@ class _ClippingScreenState extends State<ClippingScreen> {
           var response = await res.send();
           print('Check Response ${response.statusCode}');
           var result = await response.stream.bytesToString();
-          Get.log('Check Response ${result}');
-          clipController.sharingUser.clear();
-          clipController.homeScreenController.isLoading.value = true;
-          await clipController.homeScreenController.getSharedJobs();
-          clipController.homeScreenController.isLoading.value = false;
-          Get.back();
-          clipController.isBottomLoading.value = false;
-          CustomSnackBar.showSnackBar(
-              title: "Job shared successfully",
-              message: "",
-              isWarning: false,
-              backgroundColor: CommonColor.greenColor);
+          if(response.statusCode == 200)
+            {
+
+              Get.log('Check Response ${result}');
+              clipController.sharingUser.clear();
+              clipController.homeScreenController.isLoading.value = true;
+              await clipController.homeScreenController.getSharedJobs();
+              clipController.homeScreenController.isLoading.value = false;
+              Get.back();
+              clipController.isBottomLoading.value = false;
+              CustomSnackBar.showSnackBar(
+                  title: "Job shared successfully",
+                  message: "",
+                  isWarning: false,
+                  backgroundColor: CommonColor.greenColor);
+            }
+          else
+            {
+              Get.back();
+              clipController.isBottomLoading.value = false;
+            }
+
         } else {
           Map<String, String> h = {'Authorization': 'Bearer $token'};
           var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
@@ -142,6 +163,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
             ..fields['title'] = clipController.title.text
             ..fields['comments'] = clipController.des.text
             ..fields['share'] = "true"
+            ..fields['startDuration'] = s.toString()
+            ..fields['endDuration'] = e.toString()
             ..fields['sharing'] = json.encode(clipController.sharingUser)
             ..files.add(
                 await http.MultipartFile.fromPath('videoPath', vpath.path));
@@ -149,18 +172,25 @@ class _ClippingScreenState extends State<ClippingScreen> {
           print('Check Response ${response.statusCode}');
           var result = await response.stream.bytesToString();
           Get.log('Check Response ${result}');
-          clipController.sharingUser.clear();
-          clipController.homeScreenController.isLoading.value = true;
-          await clipController.homeScreenController.getSharedJobs();
-          clipController.homeScreenController.isLoading.value = false;
-          Get.back();
-          clipController.isBottomLoading.value = false;
-          CustomSnackBar.showSnackBar(
-            title: "Job shared successfully",
-            message: "",
-            isWarning: false,
-            backgroundColor: CommonColor.greenColor,
-          );
+          if(response.statusCode == 200)
+          {
+            clipController.sharingUser.clear();
+            clipController.homeScreenController.isLoading.value = true;
+            await clipController.homeScreenController.getSharedJobs();
+            clipController.homeScreenController.isLoading.value = false;
+            Get.back();
+            clipController.isBottomLoading.value = false;
+            CustomSnackBar.showSnackBar(
+                title: "Job shared successfully",
+                message: "",
+                isWarning: false,
+                backgroundColor: CommonColor.greenColor);
+          }
+          else
+          {
+            Get.back();
+            clipController.isBottomLoading.value = false;
+          }
         }
       } else {
         if (storage.hasData("Url") == true) {
@@ -172,6 +202,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
             ..fields['id'] = widget.jobId
             ..fields['title'] = clipController.title.text
             ..fields['comments'] = clipController.des.text
+            ..fields['startDuration'] = s.toString()
+            ..fields['endDuration'] = e.toString()
             ..fields['share'] = "true"
             ..fields['sharing'] = json.encode(clipController.sharingUser)
             ..files
@@ -201,6 +233,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
             ..fields['id'] = widget.jobId
             ..fields['title'] = clipController.title.text
             ..fields['comments'] = clipController.des.text
+            ..fields['startDuration'] = s.toString()
+            ..fields['endDuration'] = e.toString()
             ..fields['share'] = "true"
             ..fields['sharing'] = json.encode(clipController.sharingUser)
             ..files
@@ -229,6 +263,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
       print("Error Uploading ${e.toString()}");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -626,7 +661,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                                 _.companyUser[i]['firstName'],
                                             "recieverLastName": _.companyUser[i]
                                                 ['lastName'],
-                                            "time" : DateTime.now(),
+                                            "time" : DateTime.now().toString(),
                                           });
                                         }
                                       } else {
@@ -649,7 +684,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                             "recieverLastName":
                                                 _.searchcompanyUser[i]
                                                     ['lastName'],
-                                            "time" : DateTime.now(),
+                                            "time" : DateTime.now().toString(),
                                           });
                                         }
                                       }

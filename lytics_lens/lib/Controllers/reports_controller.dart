@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -465,11 +466,16 @@ class ReportsController extends GetxController {
         print('Programtype Response $response');
         responseprogramtyperesult.addAll(response['results']);
         responseprogramtyperesult.forEach((element) {
-          responseprogramlist
-              .add({'id': element['name'], 'name': element['name']});
-          programTypefilter.add(element['name']);
-          programTypefilterdata
-              .add({'id': element['name'], 'name': element['name']});
+          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training')
+            {}
+          else
+            {
+              responseprogramlist
+                  .add({'id': element['name'], 'name': element['name']});
+              programTypefilter.add(element['name']);
+              programTypefilterdata
+                  .add({'id': element['name'], 'name': element['name']});
+            }
           // programTypesList.add({"id": element['name'], "name": element['name']});
         });
         update();
@@ -488,11 +494,16 @@ class ReportsController extends GetxController {
         print('Programtype Response $response');
         responseprogramtyperesult.addAll(response['results']);
         responseprogramtyperesult.forEach((element) {
-          responseprogramlist
-              .add({'id': element['name'], 'name': element['name']});
-          programTypefilter.add(element['name']);
-          programTypefilterdata
-              .add({'id': element['name'], 'name': element['name']});
+          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training'){}
+          else
+            {
+              responseprogramlist
+                  .add({'id': element['name'], 'name': element['name']});
+              programTypefilter.add(element['name']);
+              programTypefilterdata
+                  .add({'id': element['name'], 'name': element['name']});
+            }
+
           // programTypesList.add({"id": element['name'], "name": element['name']});
         });
         update();
@@ -616,8 +627,13 @@ class ReportsController extends GetxController {
         print('Chanel Response $response');
         responseresult.addAll(response['results']);
         responseresult.forEach((element) {
-          responsechannellist.add(element['name']);
-          filterchannellist.add(element['name']);
+          if(element['name'].toString().isLowerCase == 'all')
+            {}
+          else
+            {
+              responsechannellist.add(element['name']);
+              filterchannellist.add(element['name']);
+            }
         });
         update();
         channelsAll.add({'id': 'All Channels', 'name': 'All Channels'});
@@ -644,8 +660,13 @@ class ReportsController extends GetxController {
         // log('Chanel Response $response');
         responseresult.addAll(response['results']);
         responseresult.forEach((element) {
-          responsechannellist.add(element['name']);
-          filterchannellist.add(element['name']);
+          if(element['name'].toString().isLowerCase == 'all')
+            {}
+          else
+            {
+              responsechannellist.add(element['name']);
+              filterchannellist.add(element['name']);
+            }
         });
         reverse = responsechannellist.reversed.toList();
         channelsAll.add({'id': 'All Channels', 'name': 'All Channels'});
