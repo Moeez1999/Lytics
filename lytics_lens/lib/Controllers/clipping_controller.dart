@@ -81,12 +81,20 @@ class ClippingController extends GetxController
               'Authorization': "Bearer $token",
             });
         var data = json.decode(res.body);
+        companyUser.add({
+          "id" : "everyone",
+          "firstName" : "Everyone",
+          "lastName" : "Everyone",
+        });
         data['users'].forEach((e) {
           companyUser.add(e);
         });
         Get.log("Company data from base url is $data");
         isLoading = false;
         update();
+        companyUser.forEach((element) {
+          print("Check User Data $element");
+        });
       }
     } on SocketException catch (e) {
       print('Inter Connection Failed');

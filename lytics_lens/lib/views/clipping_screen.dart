@@ -685,8 +685,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                                       size: 40,
                                                     )
                                                   : Text(
-                                                      _
-                                                          .namesSplit(
+                                                      _.namesSplit(
                                                               '${_.companyUser[i]['firstName']} ${_.companyUser[i]['lastName']}')
                                                           .toUpperCase(),
                                                       style: TextStyle(
@@ -713,8 +712,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                                       size: 40,
                                                     )
                                                   : Text(
-                                                      _
-                                                          .namesSplit(
+                                                      _.namesSplit(
                                                               '${_.searchcompanyUser[i]['firstName']} ${_.searchcompanyUser[i]['lastName']}')
                                                           .toUpperCase(),
                                                       style: TextStyle(
