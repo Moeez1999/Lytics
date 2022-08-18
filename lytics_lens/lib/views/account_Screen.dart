@@ -145,7 +145,7 @@ class AccountScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'v2.0.1',
+                          'Ver 2.0.2',
                           textScaleFactor: 1.0,
                           style: TextStyle(
                               fontSize: 11.0,
@@ -158,11 +158,6 @@ class AccountScreen extends StatelessWidget {
                         //   height: 15,
                         //   width: 15,
                         // ).marginOnly(bottom: 7),
-                        Icon(
-                          Icons.info_outline_rounded,
-                          color: Colors.white,
-                          size: 15,
-                        ).marginOnly(bottom: 8, left: 3),
                       ],
                     ),
                   )

@@ -650,6 +650,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                       }
                                     });
                                   },
+
+                                  //------------Code for contacts UI
                                   child: Row(
                                     children: [
                                       Container(

@@ -65,6 +65,7 @@ class ClippingController extends GetxController
           'Authorization': "Bearer $token",
         });
         var data = json.decode(res.body);
+
         data['users'].forEach((e) {
           companyUser.add(e);
         });
@@ -81,6 +82,8 @@ class ClippingController extends GetxController
               'Authorization': "Bearer $token",
             });
         var data = json.decode(res.body);
+                //companyUser.add("Everyone");
+
         data['users'].forEach((e) {
           companyUser.add(e);
         });

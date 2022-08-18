@@ -1316,8 +1316,9 @@ class PlayerScreen extends StatelessWidget {
   }
 
   Widget showHashTags(_, String source) {
+    print("Lenght of hashtags in if condition" + _.hashTags.length.toString());
+   // print("Lenght of unique hashtags is " + _.uniqueHashTags.lenght.toString());
     List<Widget> g = [];
-    if (source.toLowerCase() == 'tv') {
       for (int i = 0; i < _.hashTags.length; i++) {
         g.add(FittedBox(
           fit: BoxFit.fill,
@@ -1344,36 +1345,6 @@ class PlayerScreen extends StatelessWidget {
           ),
         ).marginAll(5.0));
       }
-    } else {
-      for (int i = 0; i < _.hashTags.length; i++) {
-        _.hashTags.forEach((e) {
-          g.add(FittedBox(
-            fit: BoxFit.fill,
-            child: Container(
-              height: 27,
-              decoration: BoxDecoration(
-                color: Color(0xff393D63),
-                border: Border.all(color: Color(0xff000000).withOpacity(0.1)),
-                borderRadius: BorderRadius.circular(14.0),
-              ),
-              child: Center(
-                child: Text(
-                  "$e",
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 12.0,
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white),
-                ).marginOnly(left: 15.0, right: 15.0),
-              ),
-            ),
-          ).marginAll(5.0));
-        });
-      }
-    }
 
     return Wrap(
       // alignment: WrapAlignment.center,

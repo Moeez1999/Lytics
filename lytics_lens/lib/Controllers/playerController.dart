@@ -54,6 +54,7 @@ class VideoController extends GetxController {
 
 //--------------------------------------------------------
   var arrg;
+  var uniqueHashTags;
   var videoURL;
   RxBool startTimer = false.obs;
   RxBool showBack = false.obs;
@@ -401,14 +402,12 @@ class VideoController extends GetxController {
         channel = data['channel'];
         comment = data["comments"];
 
-       
-
         sourcevideoPath = source.toString() == 'websites'
             ? 'http://checkk'
             : data["videoPath"];
         videoPath = sourcevideoPath.split('http://172.168.1.131/Videos/').last;
         await urlToFile(videoPath);
-         if (data["comments"] == null || data["comments"]=='') {
+        if (data["comments"] == null || data["comments"] == '') {
           isComment = false;
           update();
         } else {
@@ -417,7 +416,6 @@ class VideoController extends GetxController {
         }
         if (data['audio'] == null) {
           audioPath = '';
-
         } else {
           audioPath = data["audio"];
           isAudio = true;
