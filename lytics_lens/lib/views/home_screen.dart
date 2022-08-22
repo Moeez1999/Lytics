@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       init: HomeScreenController(),
       builder: (_) {
         return DefaultTabController(
-          length: 2,
+          length: 3,
           child: Scaffold(
             // backgroundColor: Color(0xFF2D2F3A),
             appBar: PreferredSize(
@@ -34,6 +34,9 @@ class HomeScreen extends StatelessWidget {
                       text: "Alerts",
                     ),
                     Tab(
+                      text: "My Library",
+                    ),
+                    Tab(
                       text: "Shared",
                     ),
                   ],
@@ -41,13 +44,15 @@ class HomeScreen extends StatelessWidget {
                 elevation: 0.0,
                 backgroundColor: Color(0xff000425),
                 titleSpacing: 0.0,
+
               ),
             ),
             // bottomNavigationBar: GlobalBottomNav(),
             // drawer: Drawer(),
             body: TabBarView(
+
               physics: NeverScrollableScrollPhysics(),
-              children: [bodyData(context, _), bodyData1(context, _)],
+              children: [bodyData(context, _),Text("Hello"),bodyData1(context, _)],
             ),
           ),
         );
@@ -184,7 +189,9 @@ class HomeScreen extends StatelessWidget {
                                 key: ObjectKey(_.job[index]),
                                 trailingActions: <
                                     SwipeAction>[
+
                                   SwipeAction(
+
                                     title: "Delete",
                                     onTap: (CompletionHandler
                                     handler) async {
@@ -206,6 +213,7 @@ class HomeScreen extends StatelessWidget {
                                     },
                                     color: Colors.red,
                                   ),
+
                                 ],
                                 child: Column(
                                   children: [
@@ -901,4 +909,9 @@ class HomeScreen extends StatelessWidget {
                   child: Text("hi")),
             ));
   }
+
+  // Widget showArchivedJobs(BuildContext context){
+  //   return
+  //
+  // }
 }
