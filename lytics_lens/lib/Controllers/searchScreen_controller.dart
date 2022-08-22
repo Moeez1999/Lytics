@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:lytics_lens/Constants/app_strrings.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
+import 'package:lytics_lens/Controllers/playerController.dart';
 import 'package:lytics_lens/views/player_Screen.dart';
 import 'package:lytics_lens/widget/common_snackbar.dart';
 import 'package:lytics_lens/Models/alltopicmodel.dart';
@@ -1427,6 +1428,7 @@ class SearchController extends GetxController {
 
       print('Job Request is ${res.body}');
       await getFilterJobs(searchdata.value.text, 1);
+      Get.delete<VideoController>();
       Get.to(
         () => PlayerScreen(),
         arguments: {"id": id},
@@ -1441,6 +1443,7 @@ class SearchController extends GetxController {
       );
       print('Job Read Request is ${res.body}');
       await getFilterJobs(searchdata.value.text, 1);
+      Get.delete<VideoController>();
       Get.to(
         () => PlayerScreen(),
         arguments: {"id": id},

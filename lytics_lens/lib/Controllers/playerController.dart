@@ -127,6 +127,8 @@ class VideoController extends GetxController {
 
   @override
   void onInit() async {
+    // Get.delete<VideoController>();
+    // Get.put(VideoController());
     senderId = await storage.read('id');
     senderFirstName = await storage.read('firstName');
     senderLastName = await storage.read('lastName');
@@ -186,7 +188,6 @@ class VideoController extends GetxController {
     // });
     urduText = data.join(" ");
     englishText = translationlist.join("");
-
     print("VIDEO LINK $videoPath");
     betterPlayerController = BetterPlayerController(
       BetterPlayerConfiguration(
@@ -292,7 +293,7 @@ class VideoController extends GetxController {
             ? 'http://checkk'
             : data["videoPath"];
         videoPath = sourcevideoPath.split('http://103.31.81.34/Videos/').last;
-        await urlToFile(data["videoPath"]);
+        // await urlToFile(data["videoPath"]);
         if (data['audio'] == null) {
           audioPath = '';
         } else {
@@ -407,7 +408,7 @@ class VideoController extends GetxController {
             ? 'http://checkk'
             : data["videoPath"];
         videoPath = sourcevideoPath.split('http://172.168.1.131/Videos/').last;
-        await urlToFile(videoPath);
+        // await urlToFile(videoPath);
          if (data["comments"] == null || data["comments"]=='') {
           isComment = false;
           update();

@@ -9,6 +9,7 @@ import 'package:lytics_lens/widget/common_container.dart';
 import 'package:lytics_lens/widget/taptoLoad.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
+import '../Controllers/playerController.dart';
 import '../widget/internetconnectivity_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -137,10 +138,7 @@ class HomeScreen extends StatelessWidget {
                       }
                     },
                     child: RefreshIndicator(
-                        onRefresh: () async {
-                          await _.getSharedJobs();
-                          await _.getReceiveJob();
-                        },
+                        onRefresh: () => _.getJobs(1),
                         child: ListView.separated(
                             shrinkWrap: true,
                             itemCount: _.searchjob.length == 0
@@ -226,6 +224,7 @@ class HomeScreen extends StatelessWidget {
                                               ['id'],
                                             );
                                           } else {
+                                            Get.delete<VideoController>();
                                             Get.to(
                                                   () =>
                                                   PlayerScreen(),
@@ -256,6 +255,7 @@ class HomeScreen extends StatelessWidget {
                                               ['id'],
                                             );
                                           } else {
+                                            Get.delete<VideoController>();
                                             Get.to(
                                                   () =>
                                                   PlayerScreen(),

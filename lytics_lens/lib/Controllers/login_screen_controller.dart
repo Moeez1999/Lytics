@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:lytics_lens/Constants/app_strrings.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Constants/constants.dart';
+import 'package:lytics_lens/Controllers/home_controller.dart';
 import 'package:lytics_lens/widget/common_snackbar.dart';
 import 'package:lytics_lens/Services/internetcheck.dart';
 import 'package:lytics_lens/utils/api.dart';
@@ -122,6 +123,7 @@ class LoginScreenController extends GetxController {
             await storage.write("lastName", userdata['lastName']);
             await storage.write("company_id", userdata['company']['id']);
             print('Password is Storage ${storage.read('pass')}');
+            Get.delete<HomeScreenController>();
             Get.offAll(() => Dashboard());
           } else {
             await storage.write("id", userdata['id']);
@@ -161,6 +163,7 @@ class LoginScreenController extends GetxController {
             await storage.write("lastName", userdata['lastName']);
             await storage.write("company_id", userdata['company']['id']);
             print('Password is Storage ${storage.read('pass')}');
+            Get.delete<HomeScreenController>();
             Get.offAll(() => Dashboard());
           } else {
             await storage.write("id", userdata['id']);
@@ -168,6 +171,7 @@ class LoginScreenController extends GetxController {
             await storage.write("lastName", userdata['lastName']);
             await storage.write("email", userNameController.text);
             await storage.write("company_id", userdata['company']['id']);
+            Get.delete<HomeScreenController>();
             Get.offAll(() => Dashboard());
           }
         }

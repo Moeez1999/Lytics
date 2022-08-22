@@ -6,6 +6,7 @@ class ApiData {
   static const login = "/auth/login";
 
   static const jobs = "/jobs";
+  static const alertJobs = "/jobs/alertJobs";
 
   static const shareJobs = "/jobs/shareJob/";
 

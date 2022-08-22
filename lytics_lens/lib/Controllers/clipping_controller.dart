@@ -15,6 +15,7 @@ class ClippingController extends GetxController
 {
   bool isLoading = true;
   var isBottomLoading = false.obs;
+  var isScreenLoading = true.obs;
   final storage = new GetStorage();
   TextEditingController title = TextEditingController();
   TextEditingController des = TextEditingController();

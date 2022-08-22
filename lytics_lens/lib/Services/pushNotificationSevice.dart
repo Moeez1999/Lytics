@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Constants/constants.dart';
+import 'package:lytics_lens/Controllers/global_controller.dart';
 import 'package:lytics_lens/utils/api.dart';
 import 'package:lytics_lens/views/player_Screen.dart';
 
@@ -13,6 +14,9 @@ class PushNotificationService {
   final FirebaseMessaging _fcm;
 
   final storage = new GetStorage();
+
+
+  GlobalController _ = Get.find<GlobalController>();
 
   PushNotificationService(this._fcm);
 
@@ -62,7 +66,6 @@ class PushNotificationService {
                   ? '${storage.read("Url").toString()}/uploads/${message.data["thumbnailPath"]}'
                   : '${ApiData.thumbnailPath + message.data["thumbnailPath"]}'),
         );
-
         Get.snackbar(
             "${message.notification!.title}", "${message.notification!.body}",
             backgroundColor: CommonColor.snackbarColour, onTap: (value) {
@@ -71,6 +74,10 @@ class PushNotificationService {
           // var messagejobid = message.data["jobID"];
           // var messagejobid = message.data["jobID"];
         });
+        if(message.data["jobID"] != '')
+          {
+            // _.getSingleJob(message.data["jobID"]);
+          }
       },
     );
 

@@ -14,6 +14,7 @@ import 'package:lytics_lens/Views/player_Screen.dart';
 import 'package:lytics_lens/views/Components/searchfield.dart';
 import '../Constants/app_strrings.dart';
 import '../Constants/common_color.dart';
+import '../Controllers/playerController.dart';
 import '../Controllers/searchScreen_controller.dart';
 import '../Controllers/searchbar_controller.dart';
 import '../Models/channel.dart';
@@ -304,6 +305,7 @@ class SearchScreen extends StatelessWidget {
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
                                                                     : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}");
                                                       } else {
+                                                        Get.delete<VideoController>();
                                                         Get.to(
                                                           () => PlayerScreen(),
                                                           arguments: {
@@ -356,6 +358,7 @@ class SearchScreen extends StatelessWidget {
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
                                                                     : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}");
                                                       } else {
+                                                        Get.delete<VideoController>();
                                                         Get.to(
                                                           () => PlayerScreen(),
                                                           arguments: {

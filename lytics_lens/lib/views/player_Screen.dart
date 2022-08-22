@@ -31,7 +31,7 @@ class PlayerScreen extends StatelessWidget {
               elevation: 0.0,
               leading: GestureDetector(
                 onTap: () {
-                  _.betterPlayerController.dispose();
+                  // _.betterPlayerController.dispose();
                   Get.back();
                 },
                 child: Icon(
@@ -322,10 +322,13 @@ class PlayerScreen extends StatelessWidget {
                                       //------------Add share icon---------------
                                       InkWell(
                                         onTap: () async {
-                                          Get.to(() => ClippingScreen(
-                                                file: _.videoFilePath!,
-                                                jobId: _.jobId,
-                                              ));
+                                          _.betterPlayerController.pause();
+                                          Get.to(
+                                            () => ClippingScreen(
+                                              fileurl: _.videoPath,
+                                              jobId: _.jobId,
+                                            ),
+                                          );
                                           // _.betterPlayerController
                                           //     .pause();
                                           // shareVideoWithContact(
@@ -705,14 +708,12 @@ class PlayerScreen extends StatelessWidget {
                                                                       child:
                                                                           Directionality(
                                                                         textDirection:
-
                                                                             TextDirection.ltr,
                                                                         child:
                                                                             Text(
                                                                           '${_.transcriptionText}',
                                                                           style:
                                                                               TextStyle(
-
                                                                             fontSize:
                                                                                 13.0,
                                                                             letterSpacing:
@@ -768,7 +769,9 @@ class PlayerScreen extends StatelessWidget {
                                                         child:
                                                             SingleChildScrollView(
                                                           child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               CommonTextField3(
                                                                 inputFormatters: [
@@ -796,7 +799,9 @@ class PlayerScreen extends StatelessWidget {
                                                                       TextDirection
                                                                           .ltr,
                                                                   child: Wrap(
-                                                                    alignment: WrapAlignment.start,
+                                                                    alignment:
+                                                                        WrapAlignment
+                                                                            .start,
                                                                     clipBehavior:
                                                                         Clip.none,
                                                                     children: [
@@ -908,104 +913,113 @@ class PlayerScreen extends StatelessWidget {
                                                           ),
                                                         ),
                                                         Spacer(),
-                                                        _.source.toLowerCase() == 'website' || _.source.toLowerCase() == 'print' || _.source.toLowerCase() == 'blog'
-                                                        ? SizedBox() :
-                                                        _.isAudio
-                                                            ? GestureDetector(
-                                                                onTap: () {
-                                                                  _.betterPlayerController
-                                                                      .pause();
-                                                                  _.audioplay(_
-                                                                      .audioPath);
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  height: 34,
-                                                                  width: 34,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    gradient:
-                                                                        LinearGradient(
-                                                                      begin: Alignment
-                                                                          .topRight,
-                                                                      end: Alignment
-                                                                          .bottomLeft,
-                                                                      colors: [
-                                                                        Color(
-                                                                            0xff22B161),
-                                                                        Color(
-                                                                            0xff35B7A5),
-                                                                        Color(
-                                                                            0xff48BEEB),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  child: Center(
-                                                                    child: Obx(
-                                                                        () =>
+                                                        _.source.toLowerCase() ==
+                                                                    'website' ||
+                                                                _.source.toLowerCase() ==
+                                                                    'print' ||
+                                                                _.source.toLowerCase() ==
+                                                                    'blog'
+                                                            ? SizedBox()
+                                                            : _.isAudio
+                                                                ? GestureDetector(
+                                                                    onTap: () {
+                                                                      _.betterPlayerController
+                                                                          .pause();
+                                                                      _.audioplay(
+                                                                          _.audioPath);
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          34,
+                                                                      width: 34,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        shape: BoxShape
+                                                                            .circle,
+                                                                        gradient:
+                                                                            LinearGradient(
+                                                                          begin:
+                                                                              Alignment.topRight,
+                                                                          end: Alignment
+                                                                              .bottomLeft,
+                                                                          colors: [
+                                                                            Color(0xff22B161),
+                                                                            Color(0xff35B7A5),
+                                                                            Color(0xff48BEEB),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Center(
+                                                                        child: Obx(() =>
                                                                             Icon(
                                                                               _.isPlay.value == false ? Icons.play_arrow_outlined : Icons.stop,
                                                                               color: Colors.white,
                                                                             )),
-                                                                  ),
-                                                                ).marginOnly(
-                                                                        top:
-                                                                            20),
-                                                              )
-                                                            : SizedBox(),
-                                                        _.source.toLowerCase() == 'website' || _.source.toLowerCase() == 'print' || _.source.toLowerCase() == 'blog'
-                                                        ? SizedBox()
-                                                        :
-                                                        _.isComment
-                                                            ? GestureDetector(
-                                                                onTap: () {
-                                                                  print("comment added " +
-                                                                      _.comment);
-                                                                  showCommentDialouge(
-                                                                      context,
-                                                                      _);
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  height: 34,
-                                                                  width: 34,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    gradient:
-                                                                        LinearGradient(
-                                                                      begin: Alignment
-                                                                          .topRight,
-                                                                      end: Alignment
-                                                                          .bottomLeft,
-                                                                      colors: [
-                                                                        Color(
-                                                                            0xff22B161),
-                                                                        Color(
-                                                                            0xff35B7A5),
-                                                                        Color(
-                                                                            0xff48BEEB),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  child: Center(
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .comment,
-                                                                      size: 15,
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
-                                                                  ),
-                                                                ).marginOnly(
-                                                                        top: 20,
-                                                                        left:
-                                                                            7),
-                                                              )
-                                                            : SizedBox(),
+                                                                      ),
+                                                                    ).marginOnly(
+                                                                            top:
+                                                                                20),
+                                                                  )
+                                                                : SizedBox(),
+                                                        _.source.toLowerCase() ==
+                                                                    'website' ||
+                                                                _.source.toLowerCase() ==
+                                                                    'print' ||
+                                                                _.source.toLowerCase() ==
+                                                                    'blog'
+                                                            ? SizedBox()
+                                                            : _.isComment
+                                                                ? GestureDetector(
+                                                                    onTap: () {
+                                                                      print("comment added " +
+                                                                          _.comment);
+                                                                      showCommentDialouge(
+                                                                          context,
+                                                                          _);
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          34,
+                                                                      width: 34,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        shape: BoxShape
+                                                                            .circle,
+                                                                        gradient:
+                                                                            LinearGradient(
+                                                                          begin:
+                                                                              Alignment.topRight,
+                                                                          end: Alignment
+                                                                              .bottomLeft,
+                                                                          colors: [
+                                                                            Color(0xff22B161),
+                                                                            Color(0xff35B7A5),
+                                                                            Color(0xff48BEEB),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .comment,
+                                                                          size:
+                                                                              15,
+                                                                          color:
+                                                                              Colors.white,
+                                                                        ),
+                                                                      ),
+                                                                    ).marginOnly(
+                                                                            top:
+                                                                                20,
+                                                                            left:
+                                                                                7),
+                                                                  )
+                                                                : SizedBox(),
                                                       ],
                                                     ).marginOnly(bottom: 16),
                                                     Text(

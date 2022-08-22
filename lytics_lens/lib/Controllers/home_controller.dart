@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:lytics_lens/Constants/constants.dart';
 import 'package:lytics_lens/Controllers/account_controller.dart';
+import 'package:lytics_lens/Controllers/playerController.dart';
 import 'package:lytics_lens/Models/jobsmodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:lytics_lens/utils/api.dart';
@@ -70,239 +71,6 @@ class HomeScreenController extends GetxController {
 
   @override
   void onInit() async {
-    // if (Get.isRegistered<NetworkController>()) {
-    //   networkController = Get.find<NetworkController>();
-    // } else {
-    //   networkController = Get.put(NetworkController());
-    // }
-    // storage.hasData("isOnboard") == false
-    //     ? Future.delayed(
-    //         Duration.zero,
-    //         () => Get.defaultDialog(
-    //             contentPadding: EdgeInsets.all(0),
-    //             title: '',
-    //             content: Column(
-    //               crossAxisAlignment: CrossAxisAlignment.center,
-    //               children: [
-    //                 Text(
-    //                   "The Following Tabs Represent The Source Of Information",
-    //                   style: TextStyle(
-    //                       color: Colors.white,
-    //                       fontWeight: FontWeight.w400,
-    //                       fontSize: 12),
-    //                 ).marginOnly( left: 8, right: 6),
-    //                 SizedBox(
-    //                   height: 10,
-    //                 ),
-    //                 // Image.asset("assets/images/onboarding1.png"),
-    //                 showSourceOfInfoContainer(),
-    //                 Row(
-    //                   mainAxisAlignment: MainAxisAlignment.center,
-    //                   children: [
-    //                     Container(
-    //                       height: 3,
-    //                       width: 12,
-    //                       decoration: BoxDecoration(
-    //                           borderRadius: BorderRadius.all(
-    //                             Radius.circular(56),
-    //                           ),
-    //                           color: Colors.white),
-    //                     ),
-    //                     // SizedBox(
-    //                     //   width: 4,
-    //                     // ),
-    //                     // Container(
-    //                     //   height: 5,
-    //                     //   width: 5,
-    //                     //   decoration: BoxDecoration(
-    //                     //       borderRadius: BorderRadius.all(
-    //                     //         Radius.circular(56),
-    //                     //       ),
-    //                     //       color: Colors.white.withOpacity(0.3)),
-    //                     // ),
-    //                   ],
-    //                 ).marginOnly(top: 30, bottom: 13),
-    //                 Row(
-    //                   mainAxisAlignment: MainAxisAlignment.end,
-    //                   children: [
-    //                     // InkWell(
-    //                     //   onTap: () async {
-    //                     //     Get.back();
-    //                     //     await storage.write("isOnboard", "true");
-    //                     //   },
-    //                     //   child: Text(
-    //                     //     "Skip",
-    //                     //     style: TextStyle(
-    //                     //         color: Colors.white,
-    //                     //         fontWeight: FontWeight.w400,
-    //                     //         fontSize: 9),
-    //                     //   ),
-    //                     // ),
-    //                     // Spacer(),
-    //                     InkWell(
-    //                       onTap: () async{
-    //                          await storage.write("isOnboard", "true");
-    //                         Get.back();
-    //                         // Get.defaultDialog(
-    //                         //     backgroundColor: Color(0xff0F162E),
-    //                         //     radius: 5,
-    //                         //     contentPadding: EdgeInsets.all(0),
-    //                         //     title: '',
-    //                         //     content: Column(
-    //                         //         crossAxisAlignment:
-    //                         //             CrossAxisAlignment.center,
-    //                         //         children: [
-    //                         //           Text(
-    //                         //             "The Following Icons Represent",
-    //                         //             style: TextStyle(
-    //                         //                 color: Colors.white,
-    //                         //                 fontWeight: FontWeight.w400,
-    //                         //                 fontSize: 9),
-    //                         //           ),
-    //                         //           SizedBox(
-    //                         //             height: 40,
-    //                         //           ),
-    //                         //           Row(
-    //                         //             mainAxisAlignment:
-    //                         //                 MainAxisAlignment.spaceAround,
-    //                         //             children: [
-    //                         //               Column(
-    //                         //                 crossAxisAlignment:
-    //                         //                     CrossAxisAlignment.start,
-    //                         //                 children: [
-    //                         //                   infoContainer(
-    //                         //                       "assets/images/fb.png",
-    //                         //                       "facebook"),
-    //                         //                   SizedBox(
-    //                         //                     height: 15,
-    //                         //                   ),
-    //                         //                   infoContainer(
-    //                         //                       "assets/images/twitter.png",
-    //                         //                       "Twitter"),
-    //                         //                 ],
-    //                         //               ),
-    //                         //               Column(
-    //                         //                 crossAxisAlignment:
-    //                         //                     CrossAxisAlignment.start,
-    //                         //                 children: [
-    //                         //                   infoContainer(
-    //                         //                       "assets/images/international.png",
-    //                         //                       "International"),
-    //                         //                   SizedBox(
-    //                         //                     height: 15,
-    //                         //                   ),
-    //                         //                   infoContainer(
-    //                         //                       "assets/images/local.png",
-    //                         //                       "Local"),
-    //                         //                 ],
-    //                         //               ),
-    //                         //               Column(
-    //                         //                 crossAxisAlignment:
-    //                         //                     CrossAxisAlignment.start,
-    //                         //                 children: [
-    //                         //                   infoContainer(
-    //                         //                       "assets/images/news.png",
-    //                         //                       "News"),
-    //                         //                   SizedBox(
-    //                         //                     height: 15,
-    //                         //                   ),
-    //                         //                   infoContainer(
-    //                         //                       "assets/images/opinion.png",
-    //                         //                       "Opinion")
-    //                         //                 ],
-    //                         //               ),
-    //                         //             ],
-    //                         //           ),
-    //                         //           Row(
-    //                         //             mainAxisAlignment:
-    //                         //                 MainAxisAlignment.center,
-    //                         //             children: [
-    //                         //               Container(
-    //                         //                 height: 5,
-    //                         //                 width: 5,
-    //                         //                 decoration: BoxDecoration(
-    //                         //                     borderRadius: BorderRadius.all(
-    //                         //                       Radius.circular(56),
-    //                         //                     ),
-    //                         //                     color: Colors.white
-    //                         //                         .withOpacity(0.3)),
-    //                         //               ),
-    //                         //               SizedBox(
-    //                         //                 width: 4,
-    //                         //               ),
-    //                         //               Container(
-    //                         //                 height: 3,
-    //                         //                 width: 12,
-    //                         //                 decoration: BoxDecoration(
-    //                         //                     borderRadius: BorderRadius.all(
-    //                         //                       Radius.circular(56),
-    //                         //                     ),
-    //                         //                     color: Colors.white),
-    //                         //               ),
-    //                         //             ],
-    //                         //           ).marginOnly(top: 30, bottom: 30),
-    //                         //           Row(
-    //                         //             children: [
-    //                         //               // InkWell(
-    //                         //               //   onTap: () async {
-    //                         //               //     await storage.write(
-    //                         //               //         "isOnboard", "true");
-    //                         //               //     Get.back();
-    //                         //               //     Get.back();
-    //                         //               //   },
-    //                         //               //   child: Text(
-    //                         //               //     "Skip",
-    //                         //               //     style: TextStyle(
-    //                         //               //         color: Colors.white,
-    //                         //               //         fontWeight: FontWeight.w400,
-    //                         //               //         fontSize: 9),
-    //                         //               //   ),
-    //                         //               // ),
-    //                         //               Spacer(),
-    //                         //               InkWell(
-    //                         //                 onTap: () async {
-    //                         //                   Get.back();
-    //                         //                   Get.back();
-    //                         //                   await storage.write(
-    //                         //                       "isOnboard", "true");
-    //                         //                 },
-    //                         //                 child: Container(
-    //                         //                   height: 30,
-    //                         //                   width: 30,
-    //                         //                   decoration: BoxDecoration(
-    //                         //                       borderRadius:
-    //                         //                           BorderRadius.all(
-    //                         //                         Radius.circular(84),
-    //                         //                       ),
-    //                         //                       color: Colors.white),
-    //                         //                   child: Icon(Icons.arrow_forward,
-    //                         //                       color: Colors.black),
-    //                         //                 ),
-    //                         //               ),
-    //                         //             ],
-    //                         //           ).marginSymmetric(horizontal: 14)
-    //                         //         ]));
-    //                       },
-    //                       child: Container(
-    //                         height: 30,
-    //                         width: 30,
-    //                         decoration: BoxDecoration(
-    //                             borderRadius: BorderRadius.all(
-    //                               Radius.circular(84),
-    //                             ),
-    //                             color: Colors.white),
-    //                         child:
-    //                             Icon(Icons.arrow_forward, color: Colors.black),
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ).marginSymmetric(horizontal: 14)
-    //               ],
-    //             ),
-    //             backgroundColor: Color(0xff0F162E),
-    //             radius: 5))
-    //     : SizedBox();
-
     super.onInit();
   }
 
@@ -311,8 +79,8 @@ class HomeScreenController extends GetxController {
     id = await storage.read('id');
     FlutterAppBadger.removeBadge();
     await getReceiveJob();
-    await getSharedJobs();
-    // await getJobs(pageno.value);
+    // await getSharedJobs();
+    await getJobs(pageno.value);
     await sendDeviceToken();
 
     update();
@@ -495,7 +263,7 @@ class HomeScreenController extends GetxController {
       if (storage.hasData("Url") == true) {
         if (p == 1) {
           isLoading.value = true;
-          // job.clear();
+          job.clear();
           tpageno.value = 1;
           print("Page No is $p");
           String url = storage.read("Url");
@@ -505,7 +273,7 @@ class HomeScreenController extends GetxController {
           print("Bearer $token");
           var res = await http.get(
             Uri.parse(
-                '$url${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+                '$url${ApiData.alertJobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
             headers: {
               'Authorization': 'Bearer $token',
               "Content-type": 'application/json',
@@ -533,7 +301,7 @@ class HomeScreenController extends GetxController {
             print("Bearer $token");
             var res = await http.get(
               Uri.parse(
-                  '$url${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+                  '$url${ApiData.alertJobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
               headers: {
                 'Authorization': 'Bearer $token',
                 "Content-type": 'application/json',
@@ -561,7 +329,7 @@ class HomeScreenController extends GetxController {
         print("Bearer $token");
         if (p == 1) {
           isLoading.value = true;
-          // job.clear();
+          job.clear();
           update();
           tpageno.value = 1;
           print("Page No is $p");
@@ -569,14 +337,14 @@ class HomeScreenController extends GetxController {
           print("Bearer $token");
           var res = await http.get(
             Uri.parse(
-                '${ApiData.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+                '${ApiData.baseUrl}${ApiData.alertJobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
             headers: {
               'Authorization': 'Bearer $token',
               "Content-type": 'application/json',
             },
           );
-          print('Home Api ${res.body}');
           var data = json.decode(res.body);
+          Get.log('Home Api $data');
           if (p == 1) {
             totalPages = data['totalPages'];
             update();
@@ -584,7 +352,6 @@ class HomeScreenController extends GetxController {
           print('Total Pages ${data['totalPages']}');
           print('Total Pages ${tpageno.value}');
           job.addAll(data['results']);
-
           // job.assignAll(List.from(job.reversed));
           // job.toList().sort((b ,a) => b['programDate'].compareTo(a))
           // job.sort((a,b) => a['programDate'].compareTo(b['programDate']));
@@ -598,7 +365,7 @@ class HomeScreenController extends GetxController {
             print("Bearer $token");
             var res = await http.get(
               Uri.parse(
-                  '${ApiData.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+                  '${ApiData.baseUrl}${ApiData.alertJobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
               headers: {
                 'Authorization': 'Bearer $token',
                 "Content-type": 'application/json',
@@ -664,9 +431,9 @@ class HomeScreenController extends GetxController {
           },
         );
         var data = json.decode(res.body);
-        Get.log("Check ALL Shared Data ${res.body}");
+        // Get.log("Check ALL Shared Data ${res.body}");
         job.addAll(data);
-        await getJobs(pageno.value);
+        // await getJobs(pageno.value);
       }
     } on SocketException catch (e) {
       print(e);
@@ -703,7 +470,7 @@ class HomeScreenController extends GetxController {
           },
         );
         var data = json.decode(res.body);
-        Get.log("Receiver Jobs $data");
+        // Get.log("Receiver Jobs $data");
         sharedJobs.addAll(data);
         isLoading1.value = false;
       } else {
@@ -718,7 +485,7 @@ class HomeScreenController extends GetxController {
           },
         );
         var data = json.decode(res.body);
-        Get.log("Receiver Jobs $data");
+        // Get.log("Receiver Jobs $data");
         sharedJobs.addAll(data);
         isLoading1.value = false;
       }
@@ -735,7 +502,7 @@ class HomeScreenController extends GetxController {
   void reset() {
     searchController.text = '';
     update();
-    getJobs(1);
+    // getJobs(1);
   }
 
   int searchForNews(String _data) {
@@ -817,7 +584,7 @@ class HomeScreenController extends GetxController {
     String topic3string = "";
 
     String topic = "";
-    Get.log('Segments $segment');
+    // Get.log('Segments $segment');
     //_.job[index]['segments'][0]['topics']['topic1']
     segment.forEach((element) {
       print('Segment is ${element['topics']['topic2']}');
@@ -901,7 +668,7 @@ class HomeScreenController extends GetxController {
         'Authorization': "Bearer $token",
       });
       var data = json.decode(res.body);
-      Get.log('Check Data $data');
+      // Get.log('Check Data $data');
 
       data['escalations'].forEach((e) {
         escalation.add(e);
@@ -914,7 +681,7 @@ class HomeScreenController extends GetxController {
             'Authorization': "Bearer $token",
           });
       var data = json.decode(res.body);
-      Get.log('Check Data $data');
+      // Get.log('Check Data $data');
 
       data['escalations'].forEach((e) {
         escalation.add(e);
@@ -957,8 +724,8 @@ class HomeScreenController extends GetxController {
 
       print('Job Request is ${res.body}');
       tpageno.value = 1;
-      await sharedJobs();
-      // await getJobs(1);
+      // await sharedJobs();
+      await getJobs(1);
     } else {
       var res = await http.patch(
         Uri.parse(ApiData.baseUrl + ApiData.singleJob + id),
@@ -969,8 +736,8 @@ class HomeScreenController extends GetxController {
       );
       print('Job Request is ${res.body}');
       tpageno.value = 1;
-      await sharedJobs();
-      // await getJobs(1);
+      // await sharedJobs();
+      await getJobs(1);
     }
   }
 
@@ -1007,7 +774,7 @@ class HomeScreenController extends GetxController {
             },
           );
         }
-        await sharedJobs();
+        await getJobs(1);
         isLoading.value = false;
       }
       else
@@ -1015,15 +782,15 @@ class HomeScreenController extends GetxController {
         for(int i =0 ; i < sharingId.length ; i++)
         {
           print("Job Type Id is ${sharingId[i]['_id']}");
-          await http.patch(
+          var d = await http.patch(
             Uri.parse(ApiData.baseUrl + ApiData.deleteSharedJob + sharingId[i]['_id']),
             headers: {
               'Authorization': "Bearer $token",
             },
           );
-
+          print("Check Data is delete${d.body}");
         }
-        await sharedJobs();
+        await getJobs(1);
         isLoading.value = false;
       }
     }catch(e)
@@ -1050,8 +817,9 @@ class HomeScreenController extends GetxController {
       );
 
       print('Job Request is ${res.body}');
-      // await getJobs(1);
-      await sharedJobs();
+      await getJobs(1);
+      // await sharedJobs();
+      Get.delete<VideoController>();
       Get.to(
         () => PlayerScreen(),
         arguments: {"id": id},
@@ -1066,8 +834,9 @@ class HomeScreenController extends GetxController {
       );
 
       print('Job Read Request is ${res.body}');
-      // await getJobs(1);
-      await sharedJobs();
+      await getJobs(1);
+      // await sharedJobs();
+      Get.delete<VideoController>();
       Get.to(
         () => PlayerScreen(),
         arguments: {"id": id},

@@ -1,9 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
+
+// import 'dart:math';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:helpers/helpers.dart' show OpacityTransition;
+import 'package:http/http.dart';
+import 'package:lottie/lottie.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/clipping_controller.dart';
 import 'package:lytics_lens/utils/api.dart';
@@ -14,12 +21,13 @@ import 'package:video_editor/video_editor.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ClippingScreen extends StatefulWidget {
-  const ClippingScreen({Key? key, required this.file, required this.jobId})
+  const ClippingScreen({Key? key, required this.fileurl, required this.jobId})
       : super(key: key);
 
-  final File file;
+  final String fileurl;
   final String jobId;
 
   @override
@@ -37,18 +45,57 @@ class _ClippingScreenState extends State<ClippingScreen> {
   final storage = new GetStorage();
   dynamic start;
   dynamic end;
+  double progress = 0.0;
+  File? videoFilePath;
   dynamic duration;
   Codec _codec = Codec.aacMP4;
   String _mPath = '${DateTime.now().millisecondsSinceEpoch.toString()}.mp4';
 
+  FlutterSoundPlayer? mPlayer = FlutterSoundPlayer();
+  bool mPlayerIsInited = false;
+  RxBool isPlay = false.obs;
+
   final recorder = FlutterSoundRecorder();
+
+  // <--------- Player ------------->
+
+  late BetterPlayerController betterPlayerController;
 
   @override
   void initState() {
-    _controller = VideoEditorController.file(widget.file,
-        maxDuration: const Duration(seconds: 30))
-      ..initialize().then((_) => setState(() {}));
-    initRecorder();
+    mPlayer!.openPlayer().then((value) {
+      setState(() {
+        mPlayerIsInited = true;
+      });
+    });
+    betterPlayerController = BetterPlayerController(
+      BetterPlayerConfiguration(
+        // showPlaceholderUntilPlay: true,
+        aspectRatio: 16 / 9,
+        looping: false,
+        autoDispose: true,
+        autoPlay: false,
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+            enableAudioTracks: false,
+            enablePip: false,
+            enableOverflowMenu: false,
+            enablePlayPause: false,
+            enableProgressBar: false,
+            enableFullscreen: false,
+            forwardSkipTimeInMilliseconds: 10000,
+            backwardSkipTimeInMilliseconds: 10000,
+            progressBarPlayedColor: Colors.orange,
+            progressBarBufferedColor: Color(0xff676767),
+            progressBarBackgroundColor: Color(0xff676767)),
+        fit: BoxFit.cover,
+      ),
+      betterPlayerDataSource: BetterPlayerDataSource(
+        BetterPlayerDataSourceType.network,
+        widget.fileurl,
+      ),
+    );
+    setState(() {});
+    urlToFile();
     super.initState();
   }
 
@@ -58,7 +105,92 @@ class _ClippingScreenState extends State<ClippingScreen> {
     _isExporting.dispose();
     _controller.dispose();
     recorder.closeRecorder();
+    mPlayer!.closePlayer();
+    mPlayer = null;
     super.dispose();
+  }
+
+  Future<void> urlToFile() async {
+    clipController.isScreenLoading.value = true;
+    setState(() {
+      progress = 0.0;
+    });
+    final request = Request('GET', Uri.parse(widget.fileurl));
+    final StreamedResponse response = await Client().send(request);
+    final contentLength = response.contentLength;
+    setState(() {
+      progress = 0.000001;
+    });
+    List<int> bytes = [];
+    var rng = new Random();
+    final file = await getFile((rng.nextInt(100)).toString() + '.mp4');
+    response.stream.listen(
+      (List<int> newBytes) {
+        bytes.addAll(newBytes);
+        final downloadedLength = bytes.length;
+        setState(() {
+          progress = downloadedLength.toDouble() / (contentLength ?? 1);
+        });
+        print("progress: $progress");
+      },
+      onDone: () async {
+        setState(() {
+          progress = 1;
+        });
+        await file.writeAsBytes(bytes);
+        _controller = VideoEditorController.file(file,
+            maxDuration: const Duration(seconds: 30))
+          ..initialize().then((_) => setState(() {}));
+        initRecorder();
+        betterPlayerController.pause();
+        clipController.isScreenLoading.value = false;
+      },
+      onError: (e) {
+        debugPrint(e);
+        clipController.isScreenLoading.value = false;
+      },
+      cancelOnError: true,
+    );
+  }
+
+  Future<File> getFile(String filename) async {
+    final dir = await getTemporaryDirectory();
+    // final dir = await getApplicationDocumentsDirectory();
+    return File("${dir.path}/$filename");
+  }
+
+  void audioplay(String p) {
+    try {
+      isPlay.value = true;
+      mPlayer!
+          .startPlayer(
+            fromURI: p,
+            whenFinished: () {
+              isPlay.value = false;
+            },
+          )
+          .then((value) {});
+    } catch (e) {
+      print("Audio Play Error is ${e.toString()}");
+    }
+  }
+
+  void stopPlayer() {
+    isPlay.value = false;
+    try {
+      mPlayer!.stopPlayer().then((value) {});
+    } catch (e) {
+      print("Audio Stop Error is ${e.toString()}");
+    }
+  }
+
+  void pausePlayer() {
+    isPlay.value = false;
+    try {
+      mPlayer!.pausePlayer().then((value) {});
+    } catch (e) {
+      print("Audio Stop Error is ${e.toString()}");
+    }
   }
 
   Future<void> record() async {
@@ -132,28 +264,23 @@ class _ClippingScreenState extends State<ClippingScreen> {
           var response = await res.send();
           print('Check Response ${response.statusCode}');
           var result = await response.stream.bytesToString();
-          if(response.statusCode == 200)
-            {
-
-              Get.log('Check Response ${result}');
-              clipController.sharingUser.clear();
-              clipController.homeScreenController.isLoading.value = true;
-              await clipController.homeScreenController.getSharedJobs();
-              clipController.homeScreenController.isLoading.value = false;
-              Get.back();
-              clipController.isBottomLoading.value = false;
-              CustomSnackBar.showSnackBar(
-                  title: "Job shared successfully",
-                  message: "",
-                  isWarning: false,
-                  backgroundColor: CommonColor.greenColor);
-            }
-          else
-            {
-              Get.back();
-              clipController.isBottomLoading.value = false;
-            }
-
+          if (response.statusCode == 200) {
+            Get.log('Check Response ${result}');
+            clipController.sharingUser.clear();
+            clipController.homeScreenController.isLoading.value = true;
+            await clipController.homeScreenController.getJobs(1);
+            clipController.homeScreenController.isLoading.value = false;
+            Get.back();
+            clipController.isBottomLoading.value = false;
+            CustomSnackBar.showSnackBar(
+                title: "Job shared successfully",
+                message: "",
+                isWarning: false,
+                backgroundColor: CommonColor.greenColor);
+          } else {
+            Get.back();
+            clipController.isBottomLoading.value = false;
+          }
         } else {
           Map<String, String> h = {'Authorization': 'Bearer $token'};
           var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
@@ -172,11 +299,10 @@ class _ClippingScreenState extends State<ClippingScreen> {
           print('Check Response ${response.statusCode}');
           var result = await response.stream.bytesToString();
           Get.log('Check Response ${result}');
-          if(response.statusCode == 200)
-          {
+          if (response.statusCode == 200) {
             clipController.sharingUser.clear();
             clipController.homeScreenController.isLoading.value = true;
-            await clipController.homeScreenController.getSharedJobs();
+            await clipController.homeScreenController.getJobs(1);
             clipController.homeScreenController.isLoading.value = false;
             Get.back();
             clipController.isBottomLoading.value = false;
@@ -185,9 +311,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                 message: "",
                 isWarning: false,
                 backgroundColor: CommonColor.greenColor);
-          }
-          else
-          {
+          } else {
             Get.back();
             clipController.isBottomLoading.value = false;
           }
@@ -216,7 +340,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
           Get.log('Check Response ${result}');
           clipController.sharingUser.clear();
           clipController.homeScreenController.isLoading.value = true;
-          await clipController.homeScreenController.getSharedJobs();
+          await clipController.homeScreenController.getJobs(1);
           clipController.homeScreenController.isLoading.value = false;
           Get.back();
           clipController.isBottomLoading.value = false;
@@ -247,7 +371,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
           Get.log('Check Response ${result}');
           clipController.sharingUser.clear();
           clipController.homeScreenController.isLoading.value = true;
-          await clipController.homeScreenController.getSharedJobs();
+          await clipController.homeScreenController.getJobs(1);
           clipController.homeScreenController.isLoading.value = false;
           Get.back();
           clipController.isBottomLoading.value = false;
@@ -264,184 +388,303 @@ class _ClippingScreenState extends State<ClippingScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CommonColor.backgroundColour,
-      appBar: AppBar(
-        backgroundColor: CommonColor.appBarColor,
-        elevation: 0.0,
-      ),
-      body: _controller.initialized
-          ? SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
+        backgroundColor: CommonColor.backgroundColour,
+        appBar: AppBar(
+          backgroundColor: CommonColor.appBarColor,
+          elevation: 0.0,
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CropGridViewer(
-                          controller: _controller,
-                          showGrid: false,
-                        ),
-                        AnimatedBuilder(
-                          animation: _controller.video,
-                          builder: (_, __) => OpacityTransition(
-                            visible: !_controller.isPlaying,
-                            child: GestureDetector(
-                              onTap: _controller.video.play,
-                              child: Container(
-                                width: 40,
-                                height: 40,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
+                    clipController.isScreenLoading.value
+                        ? Container(
+                            color: CommonColor.backgroundColour,
+                            height: 210,
+                            width: Get.width,
+                            child: BetterPlayer(
+                              controller: betterPlayerController,
+                            ),
+                          )
+                        : CropGridViewer(
+                            controller: _controller,
+                            showGrid: false,
+                          ),
+                    clipController.isScreenLoading.value
+                        ? SizedBox()
+                        : AnimatedBuilder(
+                            animation: _controller.video,
+                            builder: (_, __) => OpacityTransition(
+                              visible: !_controller.isPlaying,
+                              child: GestureDetector(
+                                onTap: _controller.video.play,
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.play_arrow,
+                                      color: Colors.black),
                                 ),
-                                child: const Icon(Icons.play_arrow,
-                                    color: Colors.black),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Clip Video",
-                          style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.0,
-                              color: Colors.white),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showClipInformation(context);
-                          },
-                          child: Icon(
-                            Icons.info_outline,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ).marginOnly(left: 20.0, right: 20.0),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Divider(
-                      height: 2,
-                      color: Colors.white,
-                    ).marginOnly(left: 20.0, right: 20.0),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    CommonTextField(
-                      fillcolor: Colors.transparent,
-                      controller: clipController.title,
-                      hintText: 'Add Title (required)',
-                      maxLength: 60,
-                      hintTextColor: Colors.white.withOpacity(0.6),
-                      textInputAction: TextInputAction.next,
-                    ).marginOnly(left: 20.0, right: 20.0),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: Get.width / 1.5,
-                          child: CommonTextField(
-                            fillcolor: Colors.transparent,
-                            controller: clipController.des,
-                            hintText: 'Add Description',
-                            maxLine: 5,
-                            hintTextColor: Colors.white.withOpacity(0.6),
-                            textInputAction: TextInputAction.next,
-                          ),
-                        ),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: () async {
-                            if (recorder.isRecording) {
-                              await stop();
-                            } else {
-                              await record();
-                            }
-                            setState(() {});
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 41,
-                            width: 41,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Color(0xff23b662)),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Icon(
-                                recorder.isRecording ? Icons.stop : Icons.mic,
-                                color: Color(0xff23b662),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ).marginOnly(left: 20.0, right: 20.0),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: _trimSlider(),
-                    ),
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(9.0),
-                        side: BorderSide(
-                          color: Color(0xff23B662),
-                        ),
-                      ),
-
-                      onPressed: () async {
-                        // await exportVideo();
-                        shareVideoWithContact(context, clippingController);
-                        print("Button press");
-                        // print("Video Trip Path is ${_controller.exportVideo(onCompleted: onCompleted)}")
-                      },
-                      child: Text(
-                        "Share Clip",
-                        textScaleFactor: 1.0,
-                        style: TextStyle(
-                            color: Color(0xff2CE08E),
-                            letterSpacing: 0.4,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w700),
-                        maxLines: 2,
-                      ),
-                      minWidth: Get.width / 3,
-                      height: 40,
-                      // color: Color.fromRGBO(72, 190, 235, 1),
-                      color: Color(0xff23B662).withOpacity(0.1),
-                    ),
                   ],
                 ),
-              ),
-            )
-          : Center(
-              child: Image.asset(
-                "assets/images/gif.gif",
-                height: 300.0,
-                width: 300.0,
-              ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Clip Video",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.0,
+                          color: Colors.white),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showClipInformation(context);
+                      },
+                      child: Icon(
+                        Icons.info_outline,
+                        size: 20,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ).marginOnly(left: 20.0, right: 20.0),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Divider(
+                  height: 2,
+                  color: Colors.white,
+                ).marginOnly(left: 20.0, right: 20.0),
+                SizedBox(
+                  height: 20.0,
+                ),
+                CommonTextField(
+                  fillcolor: Colors.transparent,
+                  controller: clipController.title,
+                  hintText: 'Add Title (required)',
+                  maxLength: 60,
+                  hintTextColor: Colors.white.withOpacity(0.6),
+                  textInputAction: TextInputAction.next,
+                ).marginOnly(left: 20.0, right: 20.0),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: Get.width / 1.5,
+                      child: CommonTextField(
+                        fillcolor: Colors.transparent,
+                        controller: clipController.des,
+                        hintText: 'Add Description',
+                        maxLine: 5,
+                        hintTextColor: Colors.white.withOpacity(0.6),
+                        textInputAction: TextInputAction.next,
+                      ),
+                    ),
+                    Spacer(),
+                    Column(
+                      children: [
+                        audioFile == null
+                            ? SizedBox(
+                                height: 25,
+                                width: 25,
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  stopPlayer();
+                                  setState(() {
+                                    audioFile = null;
+                                  });
+                                },
+                                child: Container(
+                                  height: 25,
+                                  width: 25,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: CommonColor.greenBorderColor,
+                                    size: 15.0,
+                                  ),
+                                ),
+                              ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        audioFile != null
+                            ? Obx(
+                                () => isPlay.value == false
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          audioplay(audioFile.path);
+                                        },
+                                        child: Container(
+                                          height: 41,
+                                          width: 41,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            gradient: LinearGradient(
+                                                    begin: Alignment.topRight,
+                                                    end: Alignment.bottomLeft,
+                                                    colors: [
+                                                      Color(0xff22B161),
+                                                      Color(0xff35B7A5),
+                                                      Color(0xff48BEEB),
+                                                    ],
+                                                  ),
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.play_arrow_sharp,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        height: 41,
+                                        width: 41,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color:
+                                                  CommonColor.greenBorderColor),
+                                        ),
+                                        child: Center(
+                                          child: Lottie.asset(
+                                                  'assets/images/waves.json')
+                                              .marginOnly(
+                                                  left: 3.0, right: 3.0),
+                                        ),
+                                      ),
+                              )
+                            : GestureDetector(
+                                onTap: () async {
+                                  if (recorder.isRecording) {
+                                    await stop();
+                                  } else {
+                                    await record();
+                                  }
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 41,
+                                  width: 41,
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Color(0xff23b662)),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      recorder.isRecording
+                                          ? Icons.stop
+                                          : Icons.mic,
+                                      color: Color(0xff23b662),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ],
+                    )
+                  ],
+                ).marginOnly(left: 20.0, right: 20.0),
+                SizedBox(
+                  height: clipController.isScreenLoading.value == false
+                      ? 10.0
+                      : 20.0,
+                ),
+                clipController.isScreenLoading.value == false
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _trimSlider(),
+                      )
+                    : Container(
+                        width: double.infinity,
+                        height: 40.0,
+                        padding: EdgeInsets.symmetric(horizontal: 24.0),
+                        child: LiquidLinearProgressIndicator(
+                          value: progress,
+                          backgroundColor: Colors.transparent,
+                          valueColor: AlwaysStoppedAnimation(
+                              CommonColor.greenBorderColor),
+                          borderRadius: 5.0,
+                          center: Text(
+                            "${(progress * 100).toStringAsFixed(0)}%",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ).marginOnly(bottom: 20.0),
+                MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(9.0),
+                    side: BorderSide(
+                      color: clipController.isScreenLoading.value
+                          ? Colors.grey
+                          : Color(0xff23B662),
+                    ),
+                  ),
+                  onPressed: clipController.isScreenLoading.value == true
+                      ? null
+                      : () async {
+                          // await exportVideo();
+                          shareVideoWithContact(context, clippingController);
+                          print("Button press");
+                          // print("Video Trip Path is ${_controller.exportVideo(onCompleted: onCompleted)}")
+                        },
+                  child: Text(
+                    "Share Clip",
+                    textScaleFactor: 1.0,
+                    style: TextStyle(
+                        color: clipController.isScreenLoading.value
+                            ? Colors.grey
+                            : Color(0xff2CE08E),
+                        letterSpacing: 0.4,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w700),
+                    maxLines: 2,
+                  ),
+                  minWidth: Get.width / 3,
+                  height: 40,
+                  // color: Color.fromRGBO(72, 190, 235, 1),
+                  color: Color(0xff23B662).withOpacity(0.1),
+                ),
+              ],
             ),
-    );
+          ),
+        )
+        // : Center(
+        //     child: Image.asset(
+        //       "assets/images/gif.gif",
+        //       height: 300.0,
+        //       width: 300.0,
+        //     ),
+        //   ),
+        );
   }
 
   String formatter(Duration duration) => [
@@ -661,7 +904,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                                 _.companyUser[i]['firstName'],
                                             "recieverLastName": _.companyUser[i]
                                                 ['lastName'],
-                                            "time" : DateTime.now().toString(),
+                                            "time": DateTime.now().toString(),
                                           });
                                         }
                                       } else {
@@ -684,7 +927,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                             "recieverLastName":
                                                 _.searchcompanyUser[i]
                                                     ['lastName'],
-                                            "time" : DateTime.now().toString(),
+                                            "time": DateTime.now().toString(),
                                           });
                                         }
                                       }
