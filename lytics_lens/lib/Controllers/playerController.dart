@@ -7,14 +7,11 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/home_controller.dart';
 import 'package:lytics_lens/Services/internetcheck.dart';
 import 'package:http/http.dart' as http;
 import 'package:lytics_lens/utils/api.dart';
-import 'package:lytics_lens/widget/common_snackbar.dart';
 import 'package:wakelock/wakelock.dart';
-
 import 'package:path_provider/path_provider.dart';
 import 'dart:math';
 
@@ -114,13 +111,6 @@ class VideoController extends GetxController {
   Duration startAt = Duration();
 
   TextEditingController selectedTab = TextEditingController(text: 'Details');
-
-  //<-------------- CompanyUser ----------------->
-
-  var companyUser = [].obs;
-  var searchcompanyUser = [].obs;
-  var sharingUser = [].obs;
-
   String senderId = '';
   String senderFirstName = '';
   String senderLastName = '';
@@ -155,14 +145,12 @@ class VideoController extends GetxController {
       update();
 
       await getSingleJob(Get.arguments['id']);
-      await getCompanyUser();
       // await urlToFile(videoPath);
     }
 
     // This is Use for online Video
 
     transcriptionlist.addAll(transcription);
-    // transcriptionlist.sort((a, b) => a["duration"].compareTo(b["duration"]));
     if (translation.toString() != "null") {
       dir.add(translation);
     }
@@ -183,9 +171,6 @@ class VideoController extends GetxController {
         });
       }
     }
-    // translationlist.forEach((element) {
-    //   translationlist1.add(element['line']);
-    // });
     urduText = data.join(" ");
     englishText = translationlist.join("");
     print("VIDEO LINK $videoPath");
@@ -266,253 +251,253 @@ class VideoController extends GetxController {
   Future<void> getSingleJob(String jobId) async {
     try {
       if (storage.hasData("Url") == true) {
-        thumbnail.clear();
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        print("Bearer $token");
-        var res = await http
-            .get(Uri.parse(url + ApiData.singleJob + jobId), headers: {
-          'Authorization': "Bearer $token",
-        });
-        var data = json.decode(res.body);
-        // print("All Data $data");
-        Get.log("All Data $data");
-        // print("English Data ${data['translation']}");
-        // print('Sub Topic ${data['segments'][0]['topics']['topic2']}');
-
-        Get.log("All Data $data");
-        print("English Data ${data['translation']}");
-        // print('Sub Topic ${data['segments'][0]['topics']['topic2']}');
-        print("check data is ${data['transcription']}");
-        source = data["source"];
-        channel = data['channel'];
-        comment = data["comments"];
-
-        sourcevideoPath = source.toString() == 'websites'
-            ? 'http://checkk'
-            : data["videoPath"];
-        // videoPath = sourcevideoPath.split('http://172.168.1.131/Videos/').last;
-        videoPath = sourcevideoPath;
-        // await urlToFile(videoPath);
-        if (data["comments"] == null || data["comments"]=='') {
-          isComment = false;
-          update();
-        } else {
-          isComment = true;
-          update();
-        }
-        if (data['audio'] == null) {
-          audioPath = '';
-
-        } else {
-          audioPath = data["audio"];
-          isAudio = true;
-          update();
-        }
-        // event = data['programName'];
-        programName = data['programName'];
-        segments = data['segments'];
-        if (data['sharing'].toString().length == 2) {
-          sharedList = [];
-        } else {
-          data['sharing'].forEach((e) {
-            print("Shared User $e");
-            if (senderId == e['senderId']) {
-              print("Condition Sender True");
-              sharedList.add(e);
-            }
+        try {
+          thumbnail.clear();
+          String url = storage.read("Url");
+          String token = await storage.read("AccessToken");
+          print("Bearer $token");
+          var res = await http
+              .get(Uri.parse(url + ApiData.singleJob + jobId), headers: {
+            'Authorization': "Bearer $token",
           });
-          update();
-        }
+          var data = json.decode(res.body);
+          // print("All Data $data");
+          print("User id is $senderId");
+          // Get.log("Sharing Job data is ${data['sharing']}");
+          // print("All Data $data");
+          Get.log("All Data $data");
+          // print('Sub Topic ${data['segments'][0]['topics']['topic2']}');
 
-        if (data['segments'].toString().length == 2) {
-          topic = '';
-        } else {
-          topic = data['segments'][0]['topics']['topic1'];
-        }
-        if (data['segments'].toString().length == 2) {
-          subTopic = [];
-          analysis = '';
-        } else {
-          subTopic = data['segments'][0]['topics']['topic2'];
-          analysis =
-          data["segments"][0]['segmentAnalysis']["analysis"]["analyst"];
-        }
-        if (data['segments'].toString().length == 2) {
-          hashTags = [];
-        } else {
-          hashTags = data['segments'][0]['hashtags'];
-        }
-        if (source.toLowerCase() == 'website' ||
-            source.toLowerCase() == 'print' ||
-            source.toLowerCase() == 'blog') {
-          title = data['programDescription'].toString() == 'null' ||
-              data['programDescription'].toString() == ''
-              ? ''
-              : data['programDescription'];
-        }
+          source = data["source"];
+          channel = data['channel'];
+          comment = data["comments"];
 
-        guest = data["guests"];
-        queryWords.addAll(data['queryWords']);
-        anchor = data['anchor'];
-        speaker = data['anchor'].toString() == '[]' ? '' : data['anchor'][0];
-        statment = data['programDescription'];
-        channelLogo = data['channelLogoPath'].toString().contains('http')
-            ? data['channelLogoPath']
-            : ApiData.channelLogoPath + data['channelLogoPath'];
-        thumbnailpath = storage.hasData("Url")
-            ? "${storage.read("Url").toString()}/uploads/${data['thumbnailPath']}"
-            : "${ApiData.thumbnailPath + data['thumbnailPath']}";
-        if (source.toLowerCase() == 'website' ||
-            source.toLowerCase() == 'print') {
-          if (data['gallary'].toString().length == 2) {
-            thumbnail = [];
+          sourcevideoPath = source.toString() == 'websites'
+              ? 'http://checkk'
+              : data["videoPath"];
+          // videoPath = sourcevideoPath.split('http://103.31.81.34/Videos/').last;
+          videoPath = sourcevideoPath;
+          // await urlToFile(videoPath);
+          if (data["comments"] == null || data["comments"] == '') {
+            isComment = false;
+            update();
           } else {
-            print("Data in Gallary is ${data['gallary'].toString().length}");
-            data['gallary'].forEach((e) {
-              e.toString().contains('http')
-                  ? thumbnail.add(e)
-                  : thumbnail.add(ApiData.baseUrl + '/uploads/' + e);
+            isComment = true;
+            update();
+          }
+          if (data['audio'] == null) {
+            audioPath = '';
+          } else {
+            audioPath = data["audio"];
+            isAudio = true;
+            update();
+          }
+          // event = data['programName'];
+          programName = data['programName'];
+          segments = data['segments'];
+          if (data['sharing'].toString().length == 2) {
+            sharedList = [];
+          } else {
+            data['sharing'].forEach((e) {
+              print("Shared User $e");
+              if (senderId == e['senderId']) {
+                print("Condition Sender True");
+                sharedList.add(e);
+              }
             });
             update();
           }
-        }
-        description = data['programDescription'];
 
-        programTime = data['programTime'];
-        programDate = data['programDate'];
-        imagePathLast = "${ApiData.thumbnailPath + data['thumbnailPath']}";
-        programType = data['programType'];
-        transcription = data['transcription'].toString().toLowerCase() == 'null'
-            ? []
-            : data['transcription'];
-        translation = data['translation'];
-        print("videoPath is " + data["videoPath"]);
-        print("Date Program Time " + data["programTime"]);
-        print("Date Program Time " + data["programDate"]);
-      } else {
-        String token = await storage.read("AccessToken");
-        thumbnail.clear();
-        print("Bearer $token");
-        var res = await http.get(
-            Uri.parse(ApiData.baseUrl + ApiData.singleJob + jobId),
-            headers: {
-              'Authorization': "Bearer $token",
-            });
-        var data = json.decode(res.body);
-        print("User id is $senderId");
-        Get.log("Sharing Job data is ${data['sharing']}");
-        // print("All Data $data");
-        Get.log("All Data $data");
-        print("English Data ${data['translation']}");
-        // print('Sub Topic ${data['segments'][0]['topics']['topic2']}');
-        print("check data is ${data['transcription']}");
-        source = data["source"];
-        channel = data['channel'];
-        comment = data["comments"];
-
-        sourcevideoPath = source.toString() == 'websites'
-            ? 'http://checkk'
-            : data["videoPath"];
-        // videoPath = sourcevideoPath.split('http://103.31.81.34/Videos/').last;
-        videoPath = sourcevideoPath;
-        // await urlToFile(videoPath);
-         if (data["comments"] == null || data["comments"]=='') {
-          isComment = false;
-          update();
-        } else {
-          isComment = true;
-          update();
-        }
-        if (data['audio'] == null) {
-          audioPath = '';
-
-        } else {
-          audioPath = data["audio"];
-          isAudio = true;
-          update();
-        }
-        // event = data['programName'];
-        programName = data['programName'];
-        segments = data['segments'];
-        if (data['sharing'].toString().length == 2) {
-          sharedList = [];
-        } else {
-          data['sharing'].forEach((e) {
-            print("Shared User $e");
-            if (senderId == e['senderId']) {
-              print("Condition Sender True");
-              sharedList.add(e);
-            }
-          });
-          update();
-        }
-
-        if (data['segments'].toString().length == 2) {
-          topic = '';
-        } else {
-          topic = data['segments'][0]['topics']['topic1'];
-        }
-        if (data['segments'].toString().length == 2) {
-          subTopic = [];
-          analysis = '';
-        } else {
-          subTopic = data['segments'][0]['topics']['topic2'];
-          analysis =
-              data["segments"][0]['segmentAnalysis']["analysis"]["analyst"];
-        }
-        if (data['segments'].toString().length == 2) {
-          hashTags = [];
-        } else {
-          hashTags = data['segments'][0]['hashtags'];
-        }
-        if (source.toLowerCase() == 'website' ||
-            source.toLowerCase() == 'print' ||
-            source.toLowerCase() == 'blog') {
-          title = data['programDescription'].toString() == 'null' ||
-                  data['programDescription'].toString() == ''
-              ? ''
-              : data['programDescription'];
-        }
-
-        guest = data["guests"];
-        queryWords.addAll(data['queryWords']);
-        anchor = data['anchor'];
-        speaker = data['anchor'].toString() == '[]' ? '' : data['anchor'][0];
-        statment = data['programDescription'];
-        channelLogo = data['channelLogoPath'].toString().contains('http')
-            ? data['channelLogoPath']
-            : ApiData.channelLogoPath + data['channelLogoPath'];
-        thumbnailpath = storage.hasData("Url")
-            ? "${storage.read("Url").toString()}/uploads/${data['thumbnailPath']}"
-            : "${ApiData.thumbnailPath + data['thumbnailPath']}";
-        if (source.toLowerCase() == 'website' ||
-            source.toLowerCase() == 'print') {
-          if (data['gallary'].toString().length == 2) {
-            thumbnail = [];
+          if (data['segments'].toString().length == 2) {
+            topic = '';
           } else {
-            print("Data in Gallary is ${data['gallary'].toString().length}");
-            data['gallary'].forEach((e) {
-              e.toString().contains('http')
-                  ? thumbnail.add(e)
-                  : thumbnail.add(ApiData.baseUrl + '/uploads/' + e);
+            topic = data['segments'][0]['topics']['topic1'];
+          }
+          if (data['segments'].toString().length == 2) {
+            subTopic = [];
+            analysis = '';
+          } else {
+            subTopic = data['segments'][0]['topics']['topic2'];
+            analysis =
+                data["segments"][0]['segmentAnalysis']["analysis"]["analyst"];
+          }
+          if (data['segments'].toString().length == 2) {
+            hashTags = [];
+          } else {
+            hashTags = data['segments'][0]['hashtags'];
+          }
+          if (source.toLowerCase() == 'website' ||
+              source.toLowerCase() == 'print' ||
+              source.toLowerCase() == 'blog') {
+            title = data['programDescription'].toString() == 'null' ||
+                    data['programDescription'].toString() == ''
+                ? ''
+                : data['programDescription'];
+          }
+
+          guest = data["guests"];
+          queryWords.addAll(data['queryWords']);
+          anchor = data['anchor'];
+          speaker = data['anchor'].toString() == '[]' ? '' : data['anchor'][0];
+          statment = data['programDescription'];
+          channelLogo = data['channelLogoPath'].toString().contains('http')
+              ? data['channelLogoPath']
+              : ApiData.channelLogoPath + data['channelLogoPath'];
+          thumbnailpath = storage.hasData("Url")
+              ? "${storage.read("Url").toString()}/uploads/${data['thumbnailPath']}"
+              : "${ApiData.thumbnailPath + data['thumbnailPath']}";
+          if (source.toLowerCase() == 'website' ||
+              source.toLowerCase() == 'print') {
+            if (data['gallary'].toString().length == 2) {
+              thumbnail = [];
+            } else {
+              print("Data in Gallary is ${data['gallary'].toString().length}");
+              data['gallary'].forEach((e) {
+                e.toString().contains('http')
+                    ? thumbnail.add(e)
+                    : thumbnail.add(ApiData.baseUrl + '/uploads/' + e);
+              });
+              update();
+            }
+          }
+          description = data['programDescription'];
+          programTime = data['programTime'];
+          programDate = data['programDate'];
+          imagePathLast = "${ApiData.thumbnailPath + data['thumbnailPath']}";
+          programType = data['programType'];
+          transcription =
+              data['transcription'].toString().toLowerCase() == 'null'
+                  ? []
+                  : data['transcription'];
+          // transcription = [];
+          translation = data['translation'];
+          // translation = [];
+        } catch (e) {
+          print("Error in Player ${e.toString()}");
+        }
+      }
+      else {
+        try {
+          String token = await storage.read("AccessToken");
+          thumbnail.clear();
+          print("Bearer $token");
+          var res = await http.get(
+              Uri.parse(ApiData.baseUrl + ApiData.singleJob + jobId),
+              headers: {
+                'Authorization': "Bearer $token",
+              });
+          var data = json.decode(res.body);
+          print("User id is $senderId");
+          Get.log("Sharing Job data is ${data['sharing']}");
+          // print("All Data $data");
+          Get.log("All Data $data");
+          // print('Sub Topic ${data['segments'][0]['topics']['topic2']}');
+          source = data["source"];
+          channel = data['channel'];
+          comment = data["comments"];
+          sourcevideoPath = source.toString() == 'websites'
+              ? 'http://checkk'
+              : data["videoPath"];
+          // videoPath = sourcevideoPath.split('http://103.31.81.34/Videos/').last;
+          videoPath = sourcevideoPath;
+          // await urlToFile(videoPath);
+          if (data["comments"] == null || data["comments"]=='') {
+            isComment = false;
+            update();
+          } else {
+            isComment = true;
+            update();
+          }
+          if (data['audio'] == null) {
+            audioPath = '';
+
+          } else {
+            audioPath = data["audio"];
+            isAudio = true;
+            update();
+          }
+          // event = data['programName'];
+          programName = data['programName'];
+          segments = data['segments'];
+          if (data['sharing'].toString().length == 2) {
+            sharedList = [];
+          }
+          else {
+            data['sharing'].forEach((e) {
+              print("Shared User $e");
+              if (senderId == e['senderId']) {
+                print("Condition Sender True");
+                sharedList.add(e);
+              }
             });
             update();
           }
-        }
-        description = data['programDescription'];
 
-        programTime = data['programTime'];
-        programDate = data['programDate'];
-        imagePathLast = "${ApiData.thumbnailPath + data['thumbnailPath']}";
-        programType = data['programType'];
-        transcription = data['transcription'].toString().toLowerCase() == 'null'
-            ? []
-            : data['transcription'];
-        translation = data['translation'];
-        print("videoPath is " + data["videoPath"]);
-        print("Date Program Time " + data["programTime"]);
-        print("Date Program Time " + data["programDate"]);
+          if (data['segments'].toString().length == 2) {
+            topic = '';
+          } else {
+            topic = data['segments'][0]['topics']['topic1'];
+          }
+          if (data['segments'].toString().length == 2) {
+            subTopic = [];
+            analysis = '';
+          } else {
+            subTopic = data['segments'][0]['topics']['topic2'];
+            analysis =
+            data["segments"][0]['segmentAnalysis']["analysis"]["analyst"];
+          }
+          if (data['segments'].toString().length == 2) {
+            hashTags = [];
+          } else {
+            hashTags = data['segments'][0]['hashtags'];
+          }
+          if (source.toLowerCase() == 'website' ||
+              source.toLowerCase() == 'print' ||
+              source.toLowerCase() == 'blog') {
+            title = data['programDescription'].toString() == 'null' ||
+                data['programDescription'].toString() == ''
+                ? ''
+                : data['programDescription'];
+          }
+
+          guest = data["guests"];
+          queryWords.addAll(data['queryWords']);
+          anchor = data['anchor'];
+          speaker = data['anchor'].toString() == '[]' ? '' : data['anchor'][0];
+          statment = data['programDescription'];
+          channelLogo = data['channelLogoPath'].toString().contains('http')
+              ? data['channelLogoPath']
+              : ApiData.channelLogoPath + data['channelLogoPath'];
+          thumbnailpath = storage.hasData("Url")
+              ? "${storage.read("Url").toString()}/uploads/${data['thumbnailPath']}"
+              : "${ApiData.thumbnailPath + data['thumbnailPath']}";
+          if (source.toLowerCase() == 'website' ||
+              source.toLowerCase() == 'print') {
+            if (data['gallary'].toString().length == 2) {
+              thumbnail = [];
+            } else {
+              print("Data in Gallary is ${data['gallary'].toString().length}");
+              data['gallary'].forEach((e) {
+                e.toString().contains('http')
+                    ? thumbnail.add(e)
+                    : thumbnail.add(ApiData.baseUrl + '/uploads/' + e);
+              });
+              update();
+            }
+          }
+          description = data['programDescription'];
+
+          programTime = data['programTime'];
+          programDate = data['programDate'];
+          imagePathLast = "${ApiData.thumbnailPath + data['thumbnailPath']}";
+          programType = data['programType'];
+          transcription = data['transcription'].toString().toLowerCase() == 'null'
+              ? []
+              : data['transcription'];
+          translation = data['translation'];
+        } catch (e) {
+          print("Error in Player ${e.toString()}");
+        }
       }
     } on SocketException catch (e) {
       print('Inter Connection Failed');
@@ -700,81 +685,10 @@ class VideoController extends GetxController {
     return guest;
   }
 
-  Future<void> getCompanyUser() async {
-    try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        String id = await storage.read('company_id');
-        companyUser.clear();
-        var res =
-            await http.get(Uri.parse(url + ApiData.companyuser + id), headers: {
-          'Authorization': "Bearer $token",
-        });
-        var data = json.decode(res.body);
-
-        data['users'].forEach((e) {
-          companyUser.add(e);
-        });
-      } else {
-        String token = await storage.read("AccessToken");
-        String id = await storage.read('company_id');
-        update();
-
-        var res = await http.get(
-            Uri.parse(ApiData.baseUrl + ApiData.companyuser + id),
-            headers: {
-              'Authorization': "Bearer $token",
-            });
-        var data = json.decode(res.body);
-        data['users'].forEach((e) {
-          companyUser.add(e);
-        });
-      }
-    } on SocketException catch (e) {
-      print('Inter Connection Failed');
-      isLoading = false;
-      isSocket = true;
-      update();
-      print(e);
-    } catch (e) {
-      isLoading = false;
-      update();
-    }
-  }
-
   String namesSplit(String n) {
     var f = n.split(' ').first;
     var l = n.split(' ').last;
     return '${f[0]} ${l[0]}';
-  }
-
-  searchFunction(String v) {
-    if (v.isEmpty || v == '') {
-      searchcompanyUser.clear();
-    } else {
-      searchcompanyUser.clear();
-      companyUser.forEach((e) {
-        if (e['firstName'].toString().toLowerCase().contains(v.toLowerCase())) {
-          searchcompanyUser.add(e);
-        } else if (e['lastName']
-            .toString()
-            .toLowerCase()
-            .contains(v.toLowerCase())) {
-          searchcompanyUser.add(e);
-        }
-      });
-    }
-  }
-
-  String addDataList(String id) {
-    var r = sharingUser.firstWhere((element) => element['recieverId'] == id,
-        orElse: () => {'recieverId': 'nofound'});
-    return r['recieverId'];
-  }
-
-  void deletedata(String id) {
-    sharingUser.removeWhere((element) => element['recieverId'] == id);
   }
 
   void audioplay(String audioPath) {

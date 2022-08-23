@@ -495,7 +495,7 @@ class HomeScreen extends StatelessWidget {
             : _.isSocketError.value
                 ? InterConnectivity(
                     onPressed: () {
-                      _.getReceiveJob();
+                      _.getSentJobs();
                     },
                   )
                 : _.isDataFailed.value
@@ -513,7 +513,7 @@ class HomeScreen extends StatelessWidget {
                                         child: _.sentjob.length == 0
                                             ? Center(
                                                 child: Text(
-                                                  "No Job Shared",
+                                                  "No Job Sent",
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:

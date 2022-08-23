@@ -358,6 +358,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
               backgroundColor: CommonColor.greenColor);
         }
         else {
+          print("Video Path Clip ${vpath.path}");
+          print("Audio Path Clip ${audioFile.path}");
           Map<String, String> h = {'Authorization': 'Bearer $token'};
           var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
           var res = http.MultipartRequest('POST', uri)

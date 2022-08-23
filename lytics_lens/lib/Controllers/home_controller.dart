@@ -84,9 +84,7 @@ class HomeScreenController extends GetxController {
     await getSentJobs();
     await getJobs(pageno.value);
     await sendDeviceToken();
-
     update();
-
     isLoading.value = false;
     isLoading1.value = false;
     isSendLoading.value = false;

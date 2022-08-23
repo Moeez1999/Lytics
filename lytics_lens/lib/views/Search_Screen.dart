@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-
 // import 'package:lens_app/Views/Components/SearchBarTextField.dart';
-
 
 // import 'package:lens_app/views/Components/SelectVideoScreen.dart';
 
@@ -305,7 +303,8 @@ class SearchScreen extends StatelessWidget {
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
                                                                     : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}");
                                                       } else {
-                                                        Get.delete<VideoController>();
+                                                        Get.delete<
+                                                            VideoController>();
                                                         Get.to(
                                                           () => PlayerScreen(),
                                                           arguments: {
@@ -358,7 +357,8 @@ class SearchScreen extends StatelessWidget {
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
                                                                     : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}");
                                                       } else {
-                                                        Get.delete<VideoController>();
+                                                        Get.delete<
+                                                            VideoController>();
                                                         Get.to(
                                                           () => PlayerScreen(),
                                                           arguments: {
@@ -505,13 +505,11 @@ class SearchScreen extends StatelessWidget {
                                                 ),
                                                 _.isMore.value
                                                     ? Center(
-                                                        child:
-                                                        Image.asset(
+                                                        child: Image.asset(
                                                           "assets/images/gif.gif",
                                                           height: 120.0,
                                                           width: 120.0,
                                                         ),
-
                                                       )
                                                     : SizedBox()
                                               ],
@@ -741,71 +739,171 @@ class SearchScreen extends StatelessWidget {
                                             //     .removeWhere((item) => _.filterlist[index]);
 
                                             // _.update();
+                                            if (_.filterlist[index] !=
+                                                "All Channels") {
+                                              if(_.filterlist.length == 1)
+                                                {
+                                                  setState(() {
+                                                    _.filterGuests.removeWhere(
+                                                            (item) =>
+                                                        item ==
+                                                            _.filterlist[index]);
+                                                    _.filterHost.removeWhere(
+                                                            (item) =>
+                                                        item ==
+                                                            _.filterlist[index]);
+                                                    _.update();
+                                                  });
+                                                  _.hostList.forEach((element) {
+                                                    if (element.name ==
+                                                        _.filterlist[index]) {
+                                                      element.check.value = false;
+                                                    }
+                                                  });
+                                                  _.filterHost.removeWhere(
+                                                          (element) =>
+                                                      element ==
+                                                          _.filterlist[index]);
+                                                  _.guestModelList
+                                                      .forEach((element) {
+                                                    if (element.name ==
+                                                        _.filterlist[index]) {
+                                                      element.check.value = false;
+                                                    }
+                                                  });
+                                                  _.filterGuests.removeWhere(
+                                                          (element) =>
+                                                      element ==
+                                                          _.filterlist[index]);
 
-                                            setState(() {
-                                              _.filterGuests.removeWhere(
-                                                  (item) =>
+                                                  _.selectedChannels.removeWhere(
+                                                          (element) =>
+                                                      element.name ==
+                                                          _.filterlist[index]);
+                                                  _.deleteData(_.filterlist[index]);
+                                                  _.filterProgramType.removeWhere(
+                                                          (item) =>
                                                       item ==
-                                                      _.filterlist[index]);
-                                              _.filterHost.removeWhere((item) =>
+                                                          _.filterlist[index]);
+
+                                                  _.filterChannelList.removeWhere(
+                                                          (item) =>
+                                                      item ==
+                                                          _.filterlist[index]);
+
+                                                  _.filterlist.removeWhere((item) =>
                                                   item == _.filterlist[index]);
 
-                                              // _.selectedchannel.removeWhere(
-                                              //     (item) =>
-                                              //         item ==
-                                              //         _.filterlist[index]);
-                                              _.update();
-                                            });
-                                            _.hostList.forEach((element) {
-                                              if (element.name ==
-                                                  _.filterlist[index]) {
-                                                element.check.value = false;
-                                              }
-                                            });
-                                            _.filterHost.removeWhere(
-                                                (element) =>
-                                                    element ==
-                                                    _.filterlist[index]);
+                                                  if (_.selectedchannel.length ==
+                                                      0) {
+                                                    setState(() {
+                                                      _.selectedchannel
+                                                          .add('All Channels');
+                                                    });
+                                                    _.filterlist
+                                                        .add('All Channels');
+                                                  }
+                                                  _.update();
+                                                  _.filterChannelList.clear();
+                                                  for (int i = 0;
+                                                  i < _.channellist.length;
+                                                  i++) {
+                                                    if (_.channellist[i].name !=
+                                                        'All Channels') {
+                                                      _.filterChannelList.add(
+                                                          _.channellist[i].name);
+                                                    } else {
+                                                      _.channellist[i].check.value =
+                                                      true;
+                                                      _.filterlist.add(
+                                                          _.channellist[i].name);
+                                                    }
+                                                  }
+                                                }
+                                              else
+                                                {
+                                                  setState(() {
+                                                    _.filterGuests.removeWhere(
+                                                            (item) =>
+                                                        item ==
+                                                            _.filterlist[index]);
+                                                    _.filterHost.removeWhere(
+                                                            (item) =>
+                                                        item ==
+                                                            _.filterlist[index]);
+                                                    _.update();
+                                                  });
+                                                  _.hostList.forEach((element) {
+                                                    if (element.name ==
+                                                        _.filterlist[index]) {
+                                                      element.check.value = false;
+                                                    }
+                                                  });
+                                                  _.filterHost.removeWhere(
+                                                          (element) =>
+                                                      element ==
+                                                          _.filterlist[index]);
+                                                  _.guestModelList
+                                                      .forEach((element) {
+                                                    if (element.name ==
+                                                        _.filterlist[index]) {
+                                                      element.check.value = false;
+                                                    }
+                                                  });
+                                                  _.filterGuests.removeWhere(
+                                                          (element) =>
+                                                      element ==
+                                                          _.filterlist[index]);
 
-                                            _.guestModelList.forEach((element) {
-                                              if (element.name ==
-                                                  _.filterlist[index]) {
-                                                element.check.value = false;
-                                              }
-                                            });
+                                                  _.selectedChannels.removeWhere(
+                                                          (element) =>
+                                                      element.name ==
+                                                          _.filterlist[index]);
+                                                  _.deleteData(_.filterlist[index]);
+                                                  _.filterProgramType.removeWhere(
+                                                          (item) =>
+                                                      item ==
+                                                          _.filterlist[index]);
 
-                                            _.filterGuests.removeWhere(
-                                                (element) =>
-                                                    element ==
-                                                    _.filterlist[index]);
+                                                  _.filterChannelList.removeWhere(
+                                                          (item) =>
+                                                      item ==
+                                                          _.filterlist[index]);
 
-                                            _.selectedChannels.removeWhere(
-                                                (element) =>
-                                                    element.name ==
-                                                    _.filterlist[index]);
-                                            _.deleteData(_.filterlist[index]);
-                                            _.filterProgramType.removeWhere(
-                                                (item) =>
-                                                    item ==
-                                                    _.filterlist[index]);
+                                                  _.filterlist.removeWhere((item) =>
+                                                  item == _.filterlist[index]);
 
-                                            _.filterChannelList.removeWhere(
-                                                (item) =>
-                                                    item ==
-                                                    _.filterlist[index]);
+                                                  if (_.selectedchannel.length ==
+                                                      0) {
+                                                    setState(() {
+                                                      _.selectedchannel
+                                                          .add('All Channels');
+                                                    });
+                                                    _.filterlist
+                                                        .add('All Channels');
+                                                  }
 
-                                            _.filterlist.removeWhere((item) =>
-                                                item == _.filterlist[index]);
-
-                                            if (_.selectedchannel.length == 0) {
-                                              setState(() {
-                                                _.selectedchannel
-                                                    .add('All Channels');
-                                              });
-                                              _.filterlist.add('All Channels');
+                                                  _.update();
+                                                }
                                             }
-
-                                            _.update();
+                                            // else if (_.filterlist.length ==
+                                            //     1) {
+                                            //   _.filterChannelList.clear();
+                                            //   for (int i = 0;
+                                            //       i < _.channellist.length;
+                                            //       i++) {
+                                            //     if (_.channellist[i].name ==
+                                            //         'All Channels') {
+                                            //       _.filterChannelList.add(
+                                            //           _.channellist[i].name);
+                                            //     } else {
+                                            //       _.channellist[i].check.value =
+                                            //           true;
+                                            //       _.filterlist.add(
+                                            //           _.channellist[i].name);
+                                            //     }
+                                            //   }
+                                            // }
                                           },
                                           child: Container(
                                             height: 20,
@@ -1469,7 +1567,9 @@ class SearchScreen extends StatelessWidget {
                                           ),
                                           child: Obx(
                                             () => Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Flexible(
                                                   child: Center(
@@ -1477,19 +1577,20 @@ class SearchScreen extends StatelessWidget {
                                                       _.filterHost.length == 0
                                                           ? 'Select Host'
                                                           : "${_.listToString(_.filterHost)}",
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                           fontFamily: 'Roboto',
-                                                          color:
-                                                              CommonColor.filterColor,
+                                                          color: CommonColor
+                                                              .filterColor,
                                                           fontSize: 12.0),
                                                     ).marginOnly(
                                                         left: 5.0, right: 5.0),
                                                   ),
                                                 ),
                                                 Image.asset(
-                                                    "assets/images/Vector.png")
+                                                        "assets/images/Vector.png")
                                                     .marginOnly(right: 8),
                                               ],
                                             ),
@@ -1522,9 +1623,7 @@ class SearchScreen extends StatelessWidget {
                                           //   doCallback: _.addhostdata,
                                           // ),
                                         ),
-
                                       )
-
                               ],
                             ),
                             Column(
@@ -1567,25 +1666,28 @@ class SearchScreen extends StatelessWidget {
                                           ),
                                           child: Obx(
                                             () => Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Center(
                                                   child: Text(
                                                     _.filterGuests.length == 0
                                                         ? 'Select Guest'
                                                         : "${_.listToString(_.filterGuests)}",
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     maxLines: 1,
                                                     style: TextStyle(
                                                         fontFamily: 'Roboto',
-                                                        color:
-                                                            CommonColor.filterColor,
+                                                        color: CommonColor
+                                                            .filterColor,
                                                         fontSize: 12.0),
                                                   ).marginOnly(
                                                       left: 5.0, right: 5.0),
                                                 ),
                                                 Image.asset(
-                                                    "assets/images/Vector.png")
+                                                        "assets/images/Vector.png")
                                                     .marginOnly(right: 8),
                                               ],
                                             ),
@@ -2583,9 +2685,6 @@ class SearchScreen extends StatelessWidget {
     });
   }
 }
-
-
-
 
 //--------------------------------------------------------------
 //channellist2=channellist4
