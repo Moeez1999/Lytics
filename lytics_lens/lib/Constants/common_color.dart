@@ -34,4 +34,5 @@ class CommonColor {
   static final Color registrationBackground = Color(0xff02083b);
 
   static final Color hintTextColor = Color(0xffC4C4C4A3).withOpacity(0.64);
+  static final Color buttonColor = Color(0xff24b662).withOpacity(0.1);
 }

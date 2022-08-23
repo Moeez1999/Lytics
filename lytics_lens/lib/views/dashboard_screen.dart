@@ -114,7 +114,7 @@ class Dashboard extends StatelessWidget {
                         }
                       },
                       child: Text(
-                        "Exit",
+                        "EXIT",
                         textScaleFactor: 1.0,
                         style: TextStyle(
                             color: CommonColor.greenTextColor, fontSize: 16),

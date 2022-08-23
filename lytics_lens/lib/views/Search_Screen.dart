@@ -702,11 +702,8 @@ class SearchScreen extends StatelessWidget {
                                 });
                                 _.update();
                               },
-                              child: Icon(
-                                Icons.delete,
-                                color: Color(0xffb7b7b7),
-                                size: 15,
-                              ),
+                              child: Image.asset("assets/images/trash_full.png").marginOnly(left: 5,bottom: 2),
+
                             )
                           ],
                         ),

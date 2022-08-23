@@ -376,12 +376,9 @@ class ReportsScreen extends StatelessWidget {
                                 });
                                 _.update();
                               },
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                                size: 15,
-                              ),
-                            )
+                              child: Image.asset("assets/images/trash_full.png").marginOnly(left: 5,bottom: 5),
+
+                  )
                           ],
                         ),
                         Row(
@@ -1976,11 +1973,7 @@ class ReportsScreen extends StatelessWidget {
                                 _.filterlist.add('All Channels');
                                 _.update();
                               },
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                                size: 15,
-                              ),
+                              child: Image.asset("assets/images/trash_full.png").marginOnly(left: 5,bottom: 5),
                             )
                           ],
                         ),

@@ -251,7 +251,7 @@ class AccountScreen extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
           title: const Text(
-            'Update',
+            'UPDATE',
             textScaleFactor: 1.0,
             style: TextStyle(
               fontSize: 18,

@@ -184,7 +184,7 @@ class LoginScreen extends StatelessWidget {
                                     minWidth: Get.width / 3,
                                     height: 40,
                                     // color: Color.fromRGBO(72, 190, 235, 1),
-                                    color: Color(0xff23B662).withOpacity(0.1),
+                                    color: CommonColor.buttonColor,
                                   ),
                                 ),
                                 SizedBox(
@@ -197,12 +197,7 @@ class LoginScreen extends StatelessWidget {
                                       Get.to(() => ForgotPassword());
                                     },
                                     child: Text(
-                                      _.remoteConfigService.remoteConfig
-                                              .getString('forgot')
-                                              .isNotEmpty
-                                          ? _.remoteConfigService.remoteConfig
-                                              .getString('forgot')
-                                          : "Forgot Password?",
+                                       "Forgot Password?",
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
                                           color: Color(0xFFD3D3D3),

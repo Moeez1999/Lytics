@@ -137,7 +137,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                       CommonTextField(
                         fillcolor: Colors.transparent,
                         controller: _.retypePasswordController,
-                        hintText: 'Confirm password',
+                        hintText: 'Confirm Password',
                         textInputAction: TextInputAction.next,
                         inputFormatters: [
                           FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s"))
@@ -187,7 +187,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                     ),
                     minWidth: Get.width / 3,
                     height: 40,
-                    color: Colors.transparent,
+                    color: CommonColor.buttonColor,
                     child: Text(
                       "SAVE",
                       textScaleFactor: 1.0,
