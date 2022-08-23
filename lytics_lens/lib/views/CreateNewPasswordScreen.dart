@@ -189,12 +189,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                     height: 40,
                     color: Colors.transparent,
                     child: Text(
-                      _.remoteConfigService.remoteConfig
-                          .getString('save')
-                          .isNotEmpty
-                      ? _.remoteConfigService.remoteConfig
-                          .getString('save')
-                      :  "SAVE",
+                      "SAVE",
                       textScaleFactor: 1.0,
                       style: TextStyle(
                           color: Color(0xff23B662),

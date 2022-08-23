@@ -127,12 +127,7 @@ class ForgotPassword extends StatelessWidget {
                                     _.forgotPassword();
                                   }
                                 },
-                                child: Text(
-                                  _.remoteConfigService.remoteConfig
-                                      .getString('send_code')
-                                      .isNotEmpty
-                                  ? _.remoteConfigService.remoteConfig
-                                      .getString('send_code') : "SEND CODE",
+                                child: Text("SEND CODE",
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
                                       color: Color(0xff23B662),
@@ -158,7 +153,7 @@ class ForgotPassword extends StatelessWidget {
                               height: 20.0,
                             ),
                             Container(
-                              width: Get.width / 2,
+                              width: Get.width / 1.8,
                               child: PinCodeTextField(
                                 appContext: context,
                                 pastedTextStyle: TextStyle(

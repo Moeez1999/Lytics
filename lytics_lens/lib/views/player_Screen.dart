@@ -888,6 +888,7 @@ class PlayerScreen extends StatelessWidget {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Row(
+
                                                       children: [
                                                         Container(
                                                           width: 110,
@@ -921,46 +922,59 @@ class PlayerScreen extends StatelessWidget {
                                                                     'blog'
                                                             ? SizedBox()
                                                             : _.isAudio
-                                                                ? GestureDetector(
-                                                                    onTap: () {
-                                                                      _.betterPlayerController
-                                                                          .pause();
-                                                                      _.audioplay(
-                                                                          _.audioPath);
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          34,
-                                                                      width: 34,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        shape: BoxShape
-                                                                            .circle,
-                                                                        gradient:
-                                                                            LinearGradient(
-                                                                          begin:
-                                                                              Alignment.topRight,
-                                                                          end: Alignment
-                                                                              .bottomLeft,
-                                                                          colors: [
-                                                                            Color(0xff22B161),
-                                                                            Color(0xff35B7A5),
-                                                                            Color(0xff48BEEB),
-                                                                          ],
+                                                                ? Obx(
+                                                                    () => _.isPlay.value ==
+                                                                            false
+                                                                        ? GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              _.betterPlayerController.pause();
+                                                                              _.audioplay(_.audioPath);
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              height: 34,
+                                                                              width: 34,
+                                                                              decoration: BoxDecoration(
+                                                                                shape: BoxShape.circle,
+                                                                                gradient: LinearGradient(
+                                                                                  begin: Alignment.topRight,
+                                                                                  end: Alignment.bottomLeft,
+                                                                                  colors: [
+                                                                                    Color(0xff22B161),
+                                                                                    Color(0xff35B7A5),
+                                                                                    Color(0xff48BEEB),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              child: Center(
+                                                                                child: Icon(
+                                                                                  Icons.play_arrow_sharp,
+                                                                                  color: Colors.white,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        : GestureDetector(
+                                                                      onTap: (){
+                                                                        _.stopPlayer();
+                                                                      },
+                                                                          child: Container(
+                                                                              height:
+                                                                              34,
+                                                                              width:
+                                                                              34,
+                                                                              decoration:
+                                                                                  BoxDecoration(
+                                                                                shape: BoxShape.circle,
+                                                                                border: Border.all(color: CommonColor.greenBorderColor),
+                                                                              ),
+                                                                              child:
+                                                                                  Center(
+                                                                                child: Lottie.asset('assets/images/waves.json').marginOnly(left: 3.0, right: 3.0),
+                                                                              ),
+                                                                            ),
                                                                         ),
-                                                                      ),
-                                                                      child:
-                                                                          Center(
-                                                                        child: Obx(() =>
-                                                                            Icon(
-                                                                              _.isPlay.value == false ? Icons.play_arrow_outlined : Icons.stop,
-                                                                              color: Colors.white,
-                                                                            )),
-                                                                      ),
-                                                                    ).marginOnly(
-                                                                            top:
-                                                                                20),
                                                                   )
                                                                 : SizedBox(),
                                                         _.source.toLowerCase() ==
@@ -1013,11 +1027,7 @@ class PlayerScreen extends StatelessWidget {
                                                                               Colors.white,
                                                                         ),
                                                                       ),
-                                                                    ).marginOnly(
-                                                                            top:
-                                                                                20,
-                                                                            left:
-                                                                                7),
+                                                                    ).marginOnly(left: 7),
                                                                   )
                                                                 : SizedBox(),
                                                       ],
@@ -1531,308 +1541,6 @@ class PlayerScreen extends StatelessWidget {
         });
   }
 
-  //<-----------------------------Share video With Contact Bottom sheet-------------
-
-  void shareVideoWithContact(BuildContext context, VideoController _) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        elevation: 0,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
-            return Container(
-              height: Get.height - 260,
-              width: Get.width,
-              color: Color(0xff131C3A),
-              child: Obx(() => _.isBottomLoading.value
-                  ? Center(
-                      child: Image.asset(
-                        "assets/images/gif.gif",
-                        height: 300.0,
-                        width: 300.0,
-                      ),
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.back();
-                            },
-                            child: Center(
-                              child: Container(
-                                height: 5.0,
-                                width: Get.width / 3,
-                                decoration: BoxDecoration(
-                                  color: CommonColor.textFieldBorderColor,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                height: 34,
-                                width: Get.width / 1.6,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(6.0),
-                                    bottomLeft: Radius.circular(6.0),
-                                    topLeft: Radius.circular(6.0),
-                                    bottomRight: Radius.circular(6.0),
-                                  ),
-                                  color: Color(0xff455177),
-                                ),
-                                child: TextFormField(
-                                  controller: _.searchContact,
-                                  cursorColor: CommonColor.greenColor,
-                                  onChanged: (c) {
-                                    _.searchFunction(c);
-                                  },
-                                  textAlignVertical: TextAlignVertical.center,
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                      color: Colors.green,
-                                    ),
-                                    // prefixIcon: Image.asset(
-                                    // "assets/images/search-green.png",
-                                    //
-                                    // //fit: BoxFit.none,
-                                    // ).marginOnly(),
-
-                                    // ).marginOnly(left: 20,top: 9,bottom: 9,right: 11),
-                                    hintText: "Search",
-                                    fillColor: Color(0xff455177),
-                                    contentPadding: EdgeInsets.zero,
-                                    hintStyle: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xffD3D3D3),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xff455177),
-                                      ),
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(6),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xff455177),
-                                      ),
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(6),
-                                      ),
-                                    ),
-                                    filled: true,
-                                  ),
-                                ),
-                              ),
-                              MaterialButton(
-                                color: CommonColor.greenColorWithOpacity,
-                                shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: Color(0xff23B662),
-                                    ),
-                                    borderRadius: BorderRadius.circular(9.0)),
-                                onPressed: () async {
-                                  shareDialougebox(context, _);
-                                },
-                                child: Text(
-                                  "SHARE",
-                                  textScaleFactor: 1.0,
-                                  style: TextStyle(
-                                      color: CommonColor.greenButtonTextColor,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                minWidth: Get.width / 3.9,
-                                height: 33,
-                              ).marginOnly(left: 13),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Expanded(
-                            child: ListView.separated(
-                              itemCount: _.searchcompanyUser.length == 0
-                                  ? _.companyUser.length
-                                  : _.searchcompanyUser.length,
-                              shrinkWrap: true,
-                              separatorBuilder: (c, i) {
-                                return SizedBox(
-                                  height: 10.0,
-                                );
-                              },
-                              itemBuilder: (c, i) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (_.searchcompanyUser.length == 0) {
-                                        if (_.addDataList(
-                                                _.companyUser[i]['id']) ==
-                                            '${_.companyUser[i]['id']}') {
-                                          _.deletedata(_.companyUser[i]['id']);
-                                        } else {
-                                          _.sharingUser.add({
-                                            "senderId": _.senderId,
-                                            "senderFirstName":
-                                                _.senderFirstName,
-                                            "senderLastName": _.senderLastName,
-                                            "recieverId": _.companyUser[i]
-                                                ['id'],
-                                            "recieverFirstName":
-                                                _.companyUser[i]['firstName'],
-                                            "recieverLastName": _.companyUser[i]
-                                                ['lastName'],
-                                          });
-                                        }
-                                      } else {
-                                        if (_.addDataList(
-                                                _.searchcompanyUser[i]['id']) ==
-                                            '${_.searchcompanyUser[i]['id']}') {
-                                          _.deletedata(
-                                              _.searchcompanyUser[i]['id']);
-                                        } else {
-                                          _.sharingUser.add({
-                                            "senderId": _.senderId,
-                                            "senderFirstName":
-                                                _.senderFirstName,
-                                            "senderLastName": _.senderLastName,
-                                            "recieverId": _.searchcompanyUser[i]
-                                                ['id'],
-                                            "recieverFirstName":
-                                                _.searchcompanyUser[i]
-                                                    ['firstName'],
-                                            "recieverLastName":
-                                                _.searchcompanyUser[i]
-                                                    ['lastName'],
-                                          });
-                                        }
-                                      }
-                                    });
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Color(0xff34f68a),
-                                            ),
-                                            color: _.searchcompanyUser.length ==
-                                                    0
-                                                ? _.addDataList(_.companyUser[i]
-                                                            ['id']) ==
-                                                        '${_.companyUser[i]['id']}'
-                                                    ? Color(0xff34f68a)
-                                                    : Colors.transparent
-                                                : _.addDataList(
-                                                            _.searchcompanyUser[
-                                                                i]['id']) ==
-                                                        '${_.searchcompanyUser[i]['id']}'
-                                                    ? Color(0xff34f68a)
-                                                    : Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        child: Center(
-                                          child: _.searchcompanyUser.length == 0
-                                              ? _.addDataList(_.companyUser[i]
-                                                          ['id']) ==
-                                                      '${_.companyUser[i]['id']}'
-                                                  ? Icon(
-                                                      Icons.check,
-                                                      color: CommonColor
-                                                          .whiteColor,
-                                                      size: 40,
-                                                    )
-                                                  : Text(
-                                                      _
-                                                          .namesSplit(
-                                                              '${_.companyUser[i]['firstName']} ${_.companyUser[i]['lastName']}')
-                                                          .toUpperCase(),
-                                                      style: TextStyle(
-                                                          color:
-                                                              Color(0xff34f68a),
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontFamily: 'Roboto'),
-                                                    ).marginOnly(
-                                                      top: 12.0,
-                                                      bottom: 12.0,
-                                                      //left: 5,
-                                                      //right: 5
-                                                    )
-                                              : _.addDataList(
-                                                          _.searchcompanyUser[i]
-                                                              ['id']) ==
-                                                      '${_.searchcompanyUser[i]['id']}'
-                                                  ? Icon(
-                                                      Icons.check,
-                                                      color: CommonColor
-                                                          .whiteColor,
-                                                      size: 40,
-                                                    )
-                                                  : Text(
-                                                      _
-                                                          .namesSplit(
-                                                              '${_.searchcompanyUser[i]['firstName']} ${_.searchcompanyUser[i]['lastName']}')
-                                                          .toUpperCase(),
-                                                      style: TextStyle(
-                                                          color:
-                                                              Color(0xff34f68a),
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontFamily: 'Roboto'),
-                                                    ).marginOnly(
-                                                      top: 12.0,
-                                                      bottom: 12.0,
-                                                      //left: 5,
-                                                      //right: 5
-                                                    ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 20.0,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width / 2.5,
-                                        child: Text(
-                                          _.searchcompanyUser.length == 0
-                                              ? '${_.companyUser[i]['firstName']} ${_.companyUser[i]['lastName']}'
-                                              : '${_.searchcompanyUser[i]['firstName']} ${_.searchcompanyUser[i]['lastName']}',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.0),
-                                        ),
-                                      ),
-                                      Spacer(),
-                                      Image.asset(
-                                        'assets/images/logo (2).png',
-                                        height: 30,
-                                      )
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ]).marginOnly(left: 20, top: 20)),
-            );
-          });
-        });
-  }
-
 //<--------------------------------Dialouge Box ForClip information-----------------
   Future<void> showClipInformation(context, VideoController _) async {
     return showDialog(
@@ -1893,102 +1601,6 @@ class PlayerScreen extends StatelessWidget {
                     minWidth: Get.width / 3.5,
                     height: 38,
                   ).marginOnly(top: 18),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-//<--------------------------------Dialouge Box Confirmation Share information-----------------
-
-  Future<void> shareDialougebox(context, VideoController _) async {
-    return showDialog(
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Color(0xff131C3A),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          title: const Text(
-            'Are you sure?',
-            textScaleFactor: 1.0,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-              letterSpacing: 0.4,
-              fontFamily: 'Roboto',
-            ),
-          ),
-          content: Container(
-            height: 100.0,
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'You’ll share the clip with the people you selected',
-                  textScaleFactor: 1.0,
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white,
-                      letterSpacing: 0.4,
-                      fontFamily: 'Roboto'),
-                ),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    MaterialButton(
-                      onPressed: () async {
-                        Get.back();
-                      },
-                      child: Text(
-                        "CANCEL",
-                        textScaleFactor: 1.0,
-                        style: TextStyle(
-                            color: CommonColor.cancelButtonColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      minWidth: Get.width / 3.5,
-                      height: 38,
-                    ),
-                    SizedBox(
-                      width: 8.0,
-                    ),
-                    MaterialButton(
-                      color: CommonColor.greenColorWithOpacity,
-                      shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: Color(0xff23B662),
-                          ),
-                          borderRadius: BorderRadius.circular(9.0)),
-                      onPressed: () async {
-                        print("check ${_.sharingUser.toString()}");
-                        Get.back();
-                        _.searchContact.clear();
-                        _.update();
-                        await _.sharing();
-                      },
-                      child: Text(
-                        "SHARE",
-                        textScaleFactor: 1.0,
-                        style: TextStyle(
-                            color: CommonColor.greenButtonTextColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      minWidth: Get.width / 3.5,
-                      height: 38,
-                    ),
-                  ],
                 ),
               ],
             ),

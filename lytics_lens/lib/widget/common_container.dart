@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lottie/lottie.dart';
+import 'dart:math' as math;
 
 class CommonContainer extends StatelessWidget {
   final Function() onPressed;
@@ -23,6 +24,7 @@ class CommonContainer extends StatelessWidget {
   final bool isProgress;
   final bool isRead;
   final bool isShare;
+  final bool isSend;
   final int progressValue;
   final bool isAudio;
   final bool isClipped;
@@ -45,6 +47,7 @@ class CommonContainer extends StatelessWidget {
     this.time,
     this.receiverName,
     this.isShare = false,
+    this.isSend = false,
     this.isProgress = false,
     this.isRead = true,
     this.isClipped = false,
@@ -146,84 +149,11 @@ class CommonContainer extends StatelessWidget {
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.w500,
                             ),
-                            // children: <TextSpan>[
-                            //   anchor.toString() == '[]'
-                            //       ? TextSpan(
-                            //           text: '',
-                            //           style: TextStyle(
-                            //             color: Colors.white,
-                            //             letterSpacing: 0.4,
-                            //             fontSize: 12.0,
-                            //             fontFamily: 'Roboto',
-                            //             fontWeight: FontWeight.w500,
-                            //           ),
-                            //         )
-                            //       : TextSpan(
-                            //           text: ' - ${anchor![0]}',
-                            //           style: TextStyle(
-                            //             color: Colors.white,
-                            //             letterSpacing: 0.4,
-                            //             fontSize: 10.0,
-                            //             fontFamily: 'Roboto',
-                            //             fontWeight: FontWeight.w300,
-                            //           ),
-                            //         ),
-                            // ],
                           ),
                         ),
                       ),
-                      // Flexible(
-                      //     child: Text(
-                      //   "$title",
-                      //   textScaleFactor: 1.0,
-                      //   overflow: TextOverflow.ellipsis,
-                      //   maxLines: 1,
-                      //   // headLines[widget.index],
-                      //   // overflow: TextOverflow.ellipsis,
-                      //   style: TextStyle(
-                      //     color: Colors.white,
-                      //     letterSpacing: 0.4,
-                      //     fontSize: 12.0,
-                      //     fontFamily: 'Roboto',
-                      //     fontWeight: FontWeight.w500,
-                      //   ),
-                      // )),
                     ],
                   ),
-                  // SizedBox(
-                  //   height: 5,
-                  // ),
-                  // Container(
-                  //   width: Get.width / 2.8,
-                  //   child: anchor.toString() == '[]'
-                  //       ? Text(
-                  //           "",
-                  //           style: TextStyle(
-                  //             letterSpacing: 0.4,
-                  //             color: Colors.white,
-                  //             fontWeight: FontWeight.w300,
-                  //             fontSize: 10,
-                  //             fontFamily: 'Roboto',
-                  //           ),
-                  //           overflow: TextOverflow.ellipsis,
-                  //           maxLines: 1,
-                  //         )
-                  //       : Text(
-                  //           "${anchor![0]}",
-                  //           // showAuther[widget.index],
-                  //           style: TextStyle(
-                  //             letterSpacing: 0.4,
-                  //             color: Colors.white,
-                  //             fontWeight: FontWeight.w300,
-                  //             fontSize: 10,
-                  //             fontFamily: 'Roboto',
-                  //           ),
-
-                  //           overflow: TextOverflow.ellipsis,
-                  //           maxLines: 1,
-                  //         ),
-                  // ),
-
                   Spacer(),
                   Row(
                     children: [
@@ -302,6 +232,14 @@ class CommonContainer extends StatelessWidget {
                     ?
                     Row(
                       children: [
+                        isSend
+                        ? Transform.rotate(
+                          angle: 180 * math.pi / 180,
+                          child: Image.asset(
+                            'assets/images/video-share.png',
+                            width: 15.0,
+                          ),
+                        ) :
                         Image.asset(
                           'assets/images/video-share.png',
                           width: 15.0,
@@ -373,7 +311,8 @@ class CommonContainer extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ) : Container(
+                    ) :
+                    Container(
                       height: 17,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(

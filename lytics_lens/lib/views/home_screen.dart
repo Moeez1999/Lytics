@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/home_controller.dart';
 
 // import 'package:lytics_lens/Views/Components/SearchBarTextField.dart';
@@ -71,412 +72,371 @@ class HomeScreen extends StatelessWidget {
         child: Obx(() {
           return _.isLoading.value
               ? Center(
-            child: Image.asset(
-              "assets/images/gif.gif",
-              height: 300.0,
-              width: 300.0,
-            ),
-          ).marginOnly(bottom: 50.0)
+                  child: Image.asset(
+                    "assets/images/gif.gif",
+                    height: 300.0,
+                    width: 300.0,
+                  ),
+                ).marginOnly(bottom: 50.0)
               : _.isSocketError.value
-              ? InterConnectivity(
-            onPressed: () async {
-              await _.getJobs(1);
-              await _.getReceiveJob();
-            },
-          )
-              : _.isDataFailed.value
-              ? TapToLoad(onPressed: () {
-            _.getJobs(1);
-          })
-              : _.isSearchData.value
-              ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // SizedBox(
-              //   height: 20.0,
-              // ),
-              Container(
-                width: Get.width / 4.0,
-                height: Get.height / 4.0,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(
-                        "assets/images/searchjob.png",
-                      ),
-                      fit: BoxFit.contain),
-                ),
-              ),
-              Text(
-                'No Result Found',
-                style: TextStyle(
-                    fontSize: 12.0,
-                    fontFamily: 'Roboto',
-                    letterSpacing: 0.4,
-                    color: Colors.white),
-              )
-            ],
-          )
-              : DefaultTabController(
-            length: 5,
-            child: Column(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusScopeNode currentFocus =
-                      FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus) {
-                        currentFocus.unfocus();
-                      }
-                    },
-                    onVerticalDragCancel: () {
-                      FocusScopeNode currentFocus =
-                      FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus) {
-                        currentFocus.unfocus();
-                      }
-                    },
-                    child: RefreshIndicator(
-                        onRefresh: () => _.getJobs(1),
-                        child: ListView.separated(
-                            shrinkWrap: true,
-                            itemCount: _.searchjob.length == 0
-                                ? _.job.length
-                                : _.searchjob.length,
-                            separatorBuilder: (c, e) {
-                              return SizedBox(
-                                height: 5.0,
-                              );
-                            },
-                            itemBuilder: (ctx, index) {
-                              // print('Job Index ${index + 1}');
-                              // print('Created At Date ${_.job[index]['programDate']}');
-                              // print('UTC Date ${_.convertDateUtc(_.job[index]['programDate'])}');
-                              print(
-                                  'Job Index ${_.tpageno.value}');
-                              if (_.job.length != 0) {
-                                if (_.job.length ==
-                                    index + 1) {
-                                  _.tpageno.value =
-                                      _.tpageno.value + 1;
-                                  _.getJobs(_.tpageno.value);
-                                } else {
-                                  _.isMore.value = false;
-                                }
-                              } else if (_.searchjob.length !=
-                                  0) {
-                                if (_.searchjob.length ==
-                                    index + 1) {
-                                  _.tpageno.value =
-                                      _.tpageno.value + 1;
-                                  _.getJobs(_.tpageno.value);
-                                } else {
-                                  print(
-                                      'Search More is Work now');
-                                  _.isMore.value = false;
-                                }
-                              }
-                              return SwipeActionCell(
-                                key: ObjectKey(_.job[index]),
-                                trailingActions: <
-                                    SwipeAction>[
-                                  SwipeAction(
-                                    title: "Delete",
-                                    onTap: (CompletionHandler
-                                    handler) async {
-                                      if (_.getReceivedPerson(
-                                          _.job[index]['sharing']) == '') {
-                                        _.getSingleJob(
-                                            _.job[index]['id']);
-                                      }
-                                      else {
-                                        _.getDeleteJob(
-                                            _.sharedJobs[index]['sharing'],
-                                            _.sharedJobs[index]['id']);
-                                      }
-                                      //<------------ Shared  JOB ---------->
-
-                                      // _.job.removeAt(index);
-                                      // _.update();
-                                    },
-                                    color: Colors.red,
+                  ? InterConnectivity(
+                      onPressed: () async {
+                        await _.getJobs(1);
+                        await _.getReceiveJob();
+                      },
+                    )
+                  : _.isDataFailed.value
+                      ? TapToLoad(onPressed: () {
+                          _.getJobs(1);
+                        })
+                      : _.isSearchData.value
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // SizedBox(
+                                //   height: 20.0,
+                                // ),
+                                Container(
+                                  width: Get.width / 4.0,
+                                  height: Get.height / 4.0,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                          "assets/images/searchjob.png",
+                                        ),
+                                        fit: BoxFit.contain),
                                   ),
-                                ],
-                                child: Column(
-                                  children: [
-                                    CommonContainer(
-                                      onPressed: () {
-                                        _.isMore.value =
-                                        false;
-                                        if (_.searchjob
-                                            .length ==
-                                            0) {
-                                          if (_
-                                              .escalationsJob(
-                                              _.job[index]
-                                              [
-                                              'escalations'])
-                                              .toString() ==
-                                              'false') {
-                                            _.jobStatus(
-                                              _.job[index]
-                                              ['id'],
-                                            );
-                                          } else {
-                                            Get.delete<VideoController>();
-                                            Get.to(
-                                                  () =>
-                                                  PlayerScreen(),
-                                              arguments: {
-                                                "id": _.searchjob
-                                                    .length ==
-                                                    0
-                                                    ? _.job[index]
-                                                ['id']
-                                                    : _.searchjob[
-                                                index]
-                                                [
-                                                'id'],
-                                              },
-                                            );
-                                          }
-                                        } else {
-                                          if (_
-                                              .escalationsJob(
-                                              _.searchjob[index]
-                                              [
-                                              'escalations'])
-                                              .toString() ==
-                                              'false') {
-                                            _.jobStatus(
-                                              _.searchjob[
-                                              index]
-                                              ['id'],
-                                            );
-                                          } else {
-                                            Get.delete<VideoController>();
-                                            Get.to(
-                                                  () =>
-                                                  PlayerScreen(),
-                                              arguments: {
-                                                "id": _.searchjob
-                                                    .length ==
-                                                    0
-                                                    ? _.job[index]
-                                                ['id']
-                                                    : _.searchjob[
-                                                index]
-                                                [
-                                                'id'],
-                                              },
-                                            );
-                                          }
+                                ),
+                                Text(
+                                  'No Result Found',
+                                  style: TextStyle(
+                                      fontSize: 12.0,
+                                      fontFamily: 'Roboto',
+                                      letterSpacing: 0.4,
+                                      color: Colors.white),
+                                )
+                              ],
+                            )
+                          : DefaultTabController(
+                              length: 5,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        FocusScopeNode currentFocus =
+                                            FocusScope.of(context);
+                                        if (!currentFocus.hasPrimaryFocus) {
+                                          currentFocus.unfocus();
                                         }
                                       },
-                                      isShare: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.getReceivedPerson(
-                                          _.job[index]['sharing']) == ''
-                                          ? false
-                                          : true
-                                          : _.getReceivedPerson(
-                                          _.searchjob[index]
-                                          ['sharing']) == ''
-                                          ? false
-                                          : true,
-                                      receiverName: '',
-                                      //     .searchjob
-                                      //     .length ==
-                                      //     0
-                                      //     ? _.getReceivedPerson(_.job[index]
-                                      // ['sharing'])
-                                      //     : _.getReceivedPerson(
-                                      //     _.searchjob[index]
-                                      //     ['sharing']),
-                                      id: _.id,
-                                      isClipped: _.searchjob.length == 0
-                                          ? _.job[index]['share'] != null
-                                          ? true
-                                          : false
-                                          : _.searchjob[index]['share'] != null
-                                          ? true
-                                          : false,
-                                      isAudio: _.searchjob.length == 0
-                                          ?
-                                      _.job[index]['audio'] == null
-                                          ? false
-                                          : true :
-                                      _.searchjob[index]['audio'] == null
-                                          ? false
-                                          : true,
-                                      isRead: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.escalationsJob(_.job[index]
-                                      [
-                                      'escalations'])
-                                          .toString() ==
-                                          'false'
-                                          ? false
-                                          : true
-                                          : _.escalationsJob(_.searchjob[index]
-                                      [
-                                      'escalations'])
-                                          .toString() ==
-                                          'false'
-                                          ? false
-                                          : true,
-                                      imgUrl: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.storage.hasData(
-                                          "Url")
-                                          ? "${_.storage.read("Url")
-                                          .toString()}/uploads/${_
-                                          .job[index]['thumbnailPath']}"
-                                          : "${ApiData.thumbnailPath +
-                                          _.job[index]['thumbnailPath']}"
-                                          : _.storage.hasData(
-                                          "Url")
-                                          ? "${_.storage.read("Url")
-                                          .toString()}/uploads/${_
-                                          .searchjob[index]['thumbnailPath']}"
-                                          : "${ApiData.thumbnailPath +
-                                          _.searchjob[index]['thumbnailPath']}",
-                                      title: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.job[index]
-                                      ['programName']
-                                          : _.searchjob[index]
-                                      ['programName'],
-                                      anchor: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.job[index]
-                                      ['anchor']
-                                          : _.searchjob[index]
-                                      ['anchor'],
-                                      segments: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.getTopicString(_
-                                          .job[index]
-                                      ['segments'])
-                                          : _.getTopicString(
-                                          _.searchjob[
-                                          index][
-                                          'segments']),
-                                      guests: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.getGuestsString(
-                                          _.job[index]
-                                          ['guests'])
-                                          : _.getGuestsString(
-                                          _.searchjob[
-                                          index]
-                                          ['guests']),
-                                      source: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.job[index]
-                                      ['source']
-                                          : _.searchjob[index]
-                                      ['source'],
-                                      channelName: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.job[index]
-                                      ['channel']
-                                          : _.searchjob[index]
-                                      ['channel'],
-                                      channelLogo: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.storage.hasData(
-                                          "Url")
-                                          ? _.job[index]['channelLogoPath']
-                                          .toString()
-                                          .contains(
-                                          'http')
-                                          ? _.job[index]
-                                      [
-                                      'channelLogoPath']
-                                          : "${_.storage.read("Url")
-                                          .toString()}/uploads//${_
-                                          .job[index]['channelLogoPath']}"
-                                          : _.job[index][
-                                      'channelLogoPath']
-                                          .toString()
-                                          .contains(
-                                          'http')
-                                          ? _.job[index]
-                                      ['channelLogoPath']
-                                          : "${ApiData.channelLogoPath +
-                                          _.job[index]['channelLogoPath']}"
-                                          : _.storage.hasData("Url")
-                                          ? _
-                                          .searchjob[index]['channelLogoPath']
-                                          .toString()
-                                          .contains('http')
-                                          ? _
-                                          .searchjob[index]['channelLogoPath']
-                                          : "${_.storage.read("Url")
-                                          .toString()}/uploads//${_
-                                          .searchjob[index]['channelLogoPath']}"
-                                          : _
-                                          .searchjob[index]['channelLogoPath']
-                                          .toString()
-                                          .contains('http')
-                                          ? _
-                                          .searchjob[index]['channelLogoPath']
-                                          : "${ApiData.channelLogoPath + _
-                                          .searchjob[index]['channelLogoPath']}",
-                                      date: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.convertDateUtc(_
-                                          .job[index][
-                                      'programDate']
-                                          .toString())
-                                          : _.convertDateUtc(_
-                                          .searchjob[
-                                      index][
-                                      'programDate']
-                                          .toString()),
-                                      time: _.searchjob
-                                          .length ==
-                                          0
-                                          ? _.convertTime(_
-                                          .job[index]
-                                      ['programTime'])
-                                          : _.convertTime(_
-                                          .searchjob[
-                                      index][
-                                      'programTime']),
+                                      onVerticalDragCancel: () {
+                                        FocusScopeNode currentFocus =
+                                            FocusScope.of(context);
+                                        if (!currentFocus.hasPrimaryFocus) {
+                                          currentFocus.unfocus();
+                                        }
+                                      },
+                                      child: RefreshIndicator(
+                                          onRefresh: () => _.getJobs(1),
+                                          child: ListView.separated(
+                                              shrinkWrap: true,
+                                              itemCount: _.searchjob.length == 0
+                                                  ? _.job.length
+                                                  : _.searchjob.length,
+                                              separatorBuilder: (c, e) {
+                                                return SizedBox(
+                                                  height: 5.0,
+                                                );
+                                              },
+                                              itemBuilder: (ctx, index) {
+                                                // print('Job Index ${index + 1}');
+                                                // print('Created At Date ${_.job[index]['programDate']}');
+                                                // print('UTC Date ${_.convertDateUtc(_.job[index]['programDate'])}');
+                                                print(
+                                                    'Job Index ${_.tpageno.value}');
+                                                if (_.job.length != 0) {
+                                                  if (_.job.length ==
+                                                      index + 1) {
+                                                    _.tpageno.value =
+                                                        _.tpageno.value + 1;
+                                                    _.getJobs(_.tpageno.value);
+                                                  } else {
+                                                    _.isMore.value = false;
+                                                  }
+                                                } else if (_.searchjob.length !=
+                                                    0) {
+                                                  if (_.searchjob.length ==
+                                                      index + 1) {
+                                                    _.tpageno.value =
+                                                        _.tpageno.value + 1;
+                                                    _.getJobs(_.tpageno.value);
+                                                  } else {
+                                                    print(
+                                                        'Search More is Work now');
+                                                    _.isMore.value = false;
+                                                  }
+                                                }
+                                                return SwipeActionCell(
+                                                  key: ObjectKey(_.job[index]),
+                                                  trailingActions: <
+                                                      SwipeAction>[
+                                                    SwipeAction(
+                                                      title: "Delete",
+                                                      onTap: (CompletionHandler
+                                                          handler) async {
+                                                        _.getSingleJob(
+                                                            _.job[index]['id']);
+                                                      },
+                                                      color: Colors.red,
+                                                    ),
+                                                  ],
+                                                  child: Column(
+                                                    children: [
+                                                      CommonContainer(
+                                                        onPressed: () {
+                                                          _.isMore.value =
+                                                              false;
+                                                          if (_.searchjob
+                                                                  .length ==
+                                                              0) {
+                                                            if (_
+                                                                    .escalationsJob(
+                                                                        _.job[index]
+                                                                            [
+                                                                            'escalations'])
+                                                                    .toString() ==
+                                                                'false') {
+                                                              _.jobStatus(
+                                                                _.job[index]
+                                                                    ['id'],
+                                                              );
+                                                            } else {
+                                                              Get.delete<
+                                                                  VideoController>();
+                                                              Get.to(
+                                                                () =>
+                                                                    PlayerScreen(),
+                                                                arguments: {
+                                                                  "id": _.searchjob
+                                                                              .length ==
+                                                                          0
+                                                                      ? _.job[index]
+                                                                          ['id']
+                                                                      : _.searchjob[
+                                                                              index]
+                                                                          [
+                                                                          'id'],
+                                                                },
+                                                              );
+                                                            }
+                                                          } else {
+                                                            if (_
+                                                                    .escalationsJob(
+                                                                        _.searchjob[index]
+                                                                            [
+                                                                            'escalations'])
+                                                                    .toString() ==
+                                                                'false') {
+                                                              _.jobStatus(
+                                                                _.searchjob[
+                                                                        index]
+                                                                    ['id'],
+                                                              );
+                                                            } else {
+                                                              Get.delete<
+                                                                  VideoController>();
+                                                              Get.to(
+                                                                () =>
+                                                                    PlayerScreen(),
+                                                                arguments: {
+                                                                  "id": _.searchjob
+                                                                              .length ==
+                                                                          0
+                                                                      ? _.job[index]
+                                                                          ['id']
+                                                                      : _.searchjob[
+                                                                              index]
+                                                                          [
+                                                                          'id'],
+                                                                },
+                                                              );
+                                                            }
+                                                          }
+                                                        },
+                                                        id: _.id,
+                                                        isClipped: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.job[index][
+                                                                        'share'] !=
+                                                                    null
+                                                                ? true
+                                                                : false
+                                                            : _.searchjob[index]
+                                                                        [
+                                                                        'share'] !=
+                                                                    null
+                                                                ? true
+                                                                : false,
+                                                        isAudio: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.job[index][
+                                                                        'audio'] ==
+                                                                    null
+                                                                ? false
+                                                                : true
+                                                            : _.searchjob[index]
+                                                                        [
+                                                                        'audio'] ==
+                                                                    null
+                                                                ? false
+                                                                : true,
+                                                        isRead: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _
+                                                                        .escalationsJob(_.job[index]
+                                                                            [
+                                                                            'escalations'])
+                                                                        .toString() ==
+                                                                    'false'
+                                                                ? false
+                                                                : true
+                                                            : _
+                                                                        .escalationsJob(_.searchjob[index]
+                                                                            [
+                                                                            'escalations'])
+                                                                        .toString() ==
+                                                                    'false'
+                                                                ? false
+                                                                : true,
+                                                        imgUrl: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.storage.hasData(
+                                                                    "Url")
+                                                                ? "${_.storage.read("Url").toString()}/uploads/${_.job[index]['thumbnailPath']}"
+                                                                : "${ApiData.thumbnailPath + _.job[index]['thumbnailPath']}"
+                                                            : _.storage.hasData(
+                                                                    "Url")
+                                                                ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
+                                                                : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}",
+                                                        title: _.job[index]
+                                                                ['programName'],
+                                                        anchor: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.job[index]
+                                                                ['anchor']
+                                                            : _.searchjob[index]
+                                                                ['anchor'],
+                                                        segments: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.getTopicString(_
+                                                                    .job[index]
+                                                                ['segments'])
+                                                            : _.getTopicString(
+                                                                _.searchjob[
+                                                                        index][
+                                                                    'segments']),
+                                                        guests: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.getGuestsString(
+                                                                _.job[index]
+                                                                    ['guests'])
+                                                            : _.getGuestsString(
+                                                                _.searchjob[
+                                                                        index]
+                                                                    ['guests']),
+                                                        source: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.job[index]
+                                                                ['source']
+                                                            : _.searchjob[index]
+                                                                ['source'],
+                                                        channelName: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.job[index]
+                                                                ['channel']
+                                                            : _.searchjob[index]
+                                                                ['channel'],
+                                                        channelLogo: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.storage.hasData(
+                                                                    "Url")
+                                                                ? _.job[index]['channelLogoPath']
+                                                                        .toString()
+                                                                        .contains(
+                                                                            'http')
+                                                                    ? _.job[index]
+                                                                        [
+                                                                        'channelLogoPath']
+                                                                    : "${_.storage.read("Url").toString()}/uploads//${_.job[index]['channelLogoPath']}"
+                                                                : _.job[index][
+                                                                            'channelLogoPath']
+                                                                        .toString()
+                                                                        .contains(
+                                                                            'http')
+                                                                    ? _.job[index]
+                                                                        ['channelLogoPath']
+                                                                    : "${ApiData.channelLogoPath + _.job[index]['channelLogoPath']}"
+                                                            : _.storage.hasData("Url")
+                                                                ? _.searchjob[index]['channelLogoPath'].toString().contains('http')
+                                                                    ? _.searchjob[index]['channelLogoPath']
+                                                                    : "${_.storage.read("Url").toString()}/uploads//${_.searchjob[index]['channelLogoPath']}"
+                                                                : _.searchjob[index]['channelLogoPath'].toString().contains('http')
+                                                                    ? _.searchjob[index]['channelLogoPath']
+                                                                    : "${ApiData.channelLogoPath + _.searchjob[index]['channelLogoPath']}",
+                                                        date: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.convertDateUtc(_
+                                                                .job[index][
+                                                                    'programDate']
+                                                                .toString())
+                                                            : _.convertDateUtc(_
+                                                                .searchjob[
+                                                                    index][
+                                                                    'programDate']
+                                                                .toString()),
+                                                        time: _.searchjob
+                                                                    .length ==
+                                                                0
+                                                            ? _.convertTime(_
+                                                                    .job[index]
+                                                                ['programTime'])
+                                                            : _.convertTime(_
+                                                                        .searchjob[
+                                                                    index][
+                                                                'programTime']),
+                                                      ),
+                                                      _.isMore.value
+                                                          ? Center(
+                                                              child:
+                                                                  CircularProgressIndicator()
+                                                                      .marginOnly(
+                                                                top: 10.0,
+                                                                bottom: 10.0,
+                                                              ),
+                                                            )
+                                                          : SizedBox()
+                                                    ],
+                                                  ),
+                                                );
+                                              })),
                                     ),
-                                    _.isMore.value
-                                        ? Center(
-                                      child:
-                                      CircularProgressIndicator()
-                                          .marginOnly(
-                                        top: 10.0,
-                                        bottom: 10.0,
-                                      ),
-                                    )
-                                        : SizedBox()
-                                  ],
-                                ),
-                              );
-                            })),
-                  ),
-                )
-              ],
-            ),
-          );
+                                  )
+                                ],
+                              ),
+                            );
         }));
   }
 
@@ -484,311 +444,436 @@ class HomeScreen extends StatelessWidget {
     return Container(
       height: Get.height,
       width: Get.width,
-      color: Color(0xff000425),
-      child: Obx(
-            () {
-          return _.isLoading1.value
-              ? Center(
-            child: Image.asset(
-              "assets/images/gif.gif",
-              height: 300.0,
-              width: 300.0,
-            ),
-          ).marginOnly(bottom: 50.0)
-              : _.isSocketError.value
-              ? InterConnectivity(
-            onPressed: () {
-              _.getReceiveJob();
-            },
-          )
-              : _.isDataFailed.value
-              ? TapToLoad(onPressed: () {
-            _.getReceiveJob();
-          })
-              : _.isSearchData.value
-              ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // SizedBox(
-              //   height: 20.0,
-              // ),
-              Container(
-                width: Get.width / 4.0,
-                height: Get.height / 4.0,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(
-                        "assets/images/searchjob.png",
-                      ),
-                      fit: BoxFit.contain),
-                ),
-              ),
-
-              Text(
-                'No Result Found',
-                style: TextStyle(
-                    fontSize: 12.0,
-                    fontFamily: 'Roboto',
-                    letterSpacing: 0.4,
-                    color: Colors.white),
-              )
-            ],
-          )
-              : DefaultTabController(
-            length: 5,
-            child: Column(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusScopeNode currentFocus =
-                      FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus) {
-                        currentFocus.unfocus();
-                      }
-                    },
-                    onVerticalDragCancel: () {
-                      FocusScopeNode currentFocus =
-                      FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus) {
-                        currentFocus.unfocus();
-                      }
-                    },
-                    child: RefreshIndicator(
-                        onRefresh: () => _.getReceiveJob(),
-                        child: _.sharedJobs.length == 0 ? Center(
-                          child: Text("No Job Shared", style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                              letterSpacing: 1.0
-
-                          ),),
-                        ) :
-                        ListView.separated(
-                            shrinkWrap: true,
-                            itemCount: _.searchjob.length == 0
-                                ? _.sharedJobs.length
-                                : _.searchjob.length,
-                            separatorBuilder: (c, e) {
-                              return SizedBox(
-                                height: 5.0,
-                              );
-                            },
-                            itemBuilder: (ctx, index) {
-                              return Column(
-                                children: [
-                                  CommonContainer(
-                                    onPressed: () {
-                                      Get.to(
-                                            () =>
-                                            PlayerScreen(),
-                                        arguments: {
-                                          "id": _.searchjob.length == 0
-                                              ? _.sharedJobs[index]['id']
-                                              : _.searchjob[index]['id'],
-                                        },
-                                      );
-                                    },
-                                    isRead: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _
-                                        .escalationsJob(
-                                        _.sharedJobs[index]
-                                        [
-                                        'escalations'])
-                                        .toString() ==
-                                        'false'
-                                        ? false
-                                        : true
-                                        : _
-                                        .escalationsJob(
-                                        _.searchjob[index]
-                                        [
-                                        'escalations'])
-                                        .toString() ==
-                                        'false'
-                                        ? false
-                                        : true,
-                                    imgUrl: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.storage.hasData(
-                                        "Url")
-                                        ? "${_.storage.read("Url")
-                                        .toString()}/uploads/${_
-                                        .sharedJobs[index]['thumbnailPath']}"
-                                        : "${ApiData.thumbnailPath +
-                                        _.sharedJobs[index]['thumbnailPath']}"
-                                        : _.storage.hasData(
-                                        "Url")
-                                        ? "${_.storage.read("Url")
-                                        .toString()}/uploads/${_
-                                        .searchjob[index]['thumbnailPath']}"
-                                        : "${ApiData.thumbnailPath +
-                                        _.searchjob[index]['thumbnailPath']}",
-                                    isShare: _.searchjob.length == 0
-                                        ? _.getSharePerson(_.sharedJobs[index]
-                                    ['sharing']) == ''
-                                        ? false
-                                        : true
-                                        : _.getSharePerson(_.searchjob[index]
-                                    ['sharing']) == ''
-                                        ? false
-                                        : true,
-                                    receiverName: _
-                                        .searchjob
-                                        .length ==
-                                        0
-                                        ? _.getSharePerson(_.sharedJobs[index]
-                                    ['sharing'])
-                                        : _.getSharePerson(_.searchjob[index]
-                                    ['sharing']),
-                                    title: _.sharedJobs[index]['share'] != null || _.sharedJobs[index]['audio'] != null
-                                    ? _.sharedJobs[index]['title']
-                                    :
-                                    _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.sharedJobs[index]
-                                    ['programName']
-                                        : _.searchjob[index]
-                                    ['programName'],
-                                    anchor: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.sharedJobs[index]
-                                    ['anchor']
-                                        : _.searchjob[index]
-                                    ['anchor'],
-                                    segments: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.getTopicString(
-                                        _.sharedJobs[
-                                        index]
-                                        ['segments'])
-                                        : _.getTopicString(
-                                        _.searchjob[index]
-                                        ['segments']),
-                                    isClipped: _.sharedJobs[index]['share'] !=
-                                        null ? true : false,
-                                    isAudio: _.sharedJobs[index]['audio'] ==
-                                        null
-                                        ? false
-                                        : true,
-                                    guests: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.getGuestsString(_
-                                        .sharedJobs[
-                                    index]['guests'])
-                                        : _.getGuestsString(
-                                        _.searchjob[index]
-                                        ['guests']),
-                                    source: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.sharedJobs[index]
-                                    ['source']
-                                        : _.searchjob[index]
-                                    ['source'],
-                                    channelName: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.sharedJobs[index]
-                                    ['channel']
-                                        : _.searchjob[index]
-                                    ['channel'],
-                                    channelLogo: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.storage.hasData(
-                                        "Url")
-                                        ? _
-                                        .sharedJobs[index]['channelLogoPath']
-                                        .toString()
-                                        .contains(
-                                        'http')
-                                        ? _.sharedJobs[index][
-                                    'channelLogoPath']
-                                        : "${_.storage.read("Url")
-                                        .toString()}/uploads//${_
-                                        .sharedJobs[index]['channelLogoPath']}"
-                                        : _.sharedJobs[index]
-                                    [
-                                    'channelLogoPath']
-                                        .toString()
-                                        .contains(
-                                        'http')
-                                        ? _.sharedJobs[index]
-                                    ['channelLogoPath']
-                                        : "${ApiData.channelLogoPath + _
-                                        .sharedJobs[index]['channelLogoPath']}"
-                                        : _.storage.hasData("Url")
-                                        ? _
-                                        .searchjob[index]['channelLogoPath']
-                                        .toString()
-                                        .contains('http')
-                                        ? _
-                                        .searchjob[index]['channelLogoPath']
-                                        : "${_.storage.read("Url")
-                                        .toString()}/uploads//${_
-                                        .searchjob[index]['channelLogoPath']}"
-                                        : _
-                                        .searchjob[index]['channelLogoPath']
-                                        .toString()
-                                        .contains('http')
-                                        ? _
-                                        .searchjob[index]['channelLogoPath']
-                                        : "${ApiData.channelLogoPath + _
-                                        .searchjob[index]['channelLogoPath']}",
-                                    date: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.convertDateUtc(_
-                                        .sharedJobs[index]
-                                    [
-                                    'programDate']
-                                        .toString())
-                                        : _.convertDateUtc(_
-                                        .searchjob[index][
-                                    'programDate']
-                                        .toString()),
-                                    time: _.searchjob
-                                        .length ==
-                                        0
-                                        ? _.convertTime(
-                                        _.sharedJobs[
-                                        index][
-                                        'programTime'])
-                                        : _.convertTime(_
-                                        .searchjob[
-                                    index]
-                                    ['programTime']),
-                                  ),
-                                  _.isMore.value
-                                      ? Center(
-                                    child:
-                                    CircularProgressIndicator()
-                                        .marginOnly(
-                                      top: 10.0,
-                                      bottom: 10.0,
-                                    ),
-                                  )
-                                      : SizedBox()
-                                ],
-                              );
-                            })),
+      // color: Color(0xff000425),
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          backgroundColor: Color(0xff000425),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(50.0),
+            child: AppBar(
+              bottom: TabBar(
+                isScrollable: false,
+                physics: NeverScrollableScrollPhysics(),
+                indicatorColor: Colors.transparent,
+                labelColor: CommonColor.greenBorderColor,
+                unselectedLabelColor: Colors.grey,
+                tabs: [
+                  Tab(
+                    text: "Received",
                   ),
-                )
-              ],
+                  Tab(
+                    text: "Sent",
+                  ),
+                ],
+              ),
+              elevation: 0.0,
+              backgroundColor: Color(0xff000425),
+              titleSpacing: 0.0,
             ),
-          );
-        },
+          ),
+          body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
+            children: [receivedList(_), sentList(_)],
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget sentList(HomeScreenController _) {
+    return Obx(
+      () {
+        return _.isSendLoading.value
+            ? Center(
+                child: Image.asset(
+                  "assets/images/gif.gif",
+                  height: 300.0,
+                  width: 300.0,
+                ),
+              ).marginOnly(bottom: 50.0)
+            : _.isSocketError.value
+                ? InterConnectivity(
+                    onPressed: () {
+                      _.getReceiveJob();
+                    },
+                  )
+                : _.isDataFailed.value
+                    ? TapToLoad(onPressed: () {
+                        _.getSentJobs();
+                      })
+                    : DefaultTabController(
+                            length: 5,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    child: RefreshIndicator(
+                                        onRefresh: () => _.getReceiveJob(),
+                                        child: _.sentjob.length == 0
+                                            ? Center(
+                                                child: Text(
+                                                  "No Job Shared",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 20,
+                                                      letterSpacing: 1.0),
+                                                ),
+                                              )
+                                            : ListView.separated(
+                                                shrinkWrap: true,
+                                                itemCount: _.sentjob.length,
+                                                separatorBuilder: (c, e) {
+                                                  return SizedBox(
+                                                    height: 5.0,
+                                                  );
+                                                },
+                                                itemBuilder: (ctx, index) {
+                                                  return Column(
+                                                    children: [
+                                                      CommonContainer(
+                                                        onPressed: () {
+                                                          Get.to(
+                                                            () =>
+                                                                PlayerScreen(),
+                                                            arguments: {
+                                                              "id": _.sentjob[
+                                                                  index]['id'],
+                                                            },
+                                                          );
+                                                        },
+                                                        isRead: _
+                                                                    .escalationsJob(
+                                                                        _.sentjob[index]
+                                                                            [
+                                                                            'escalations'])
+                                                                    .toString() ==
+                                                                'false'
+                                                            ? false
+                                                            : true,
+                                                        imgUrl: _.storage
+                                                                .hasData("Url")
+                                                            ? "${_.storage.read("Url").toString()}/uploads/${_.sentjob[index]['thumbnailPath']}"
+                                                            : "${ApiData.thumbnailPath + _.sentjob[index]['thumbnailPath']}",
+                                                        isShare: _.getSharePerson(_
+                                                                            .sentjob[
+                                                                        index][
+                                                                    'sharing']) ==
+                                                                ''
+                                                            ? false
+                                                            : true,
+                                                        receiverName: "",
+                                                        title: _.sentjob[index][
+                                                                        'share'] !=
+                                                                    null ||
+                                                                _.sentjob[index]
+                                                                        [
+                                                                        'audio'] !=
+                                                                    null
+                                                            ? _.sentjob[index]
+                                                                ['title']
+                                                            : _.sentjob[index]
+                                                                ['programName'],
+                                                        anchor: _.sentjob[index]
+                                                            ['anchor'],
+                                                        segments:
+                                                            _.getTopicString(
+                                                                _.sentjob[index]
+                                                                    [
+                                                                    'segments']),
+                                                        isClipped: _.sentjob[
+                                                                        index]
+                                                                    ['share'] !=
+                                                                null
+                                                            ? true
+                                                            : false,
+                                                        isAudio: _.sentjob[
+                                                                        index]
+                                                                    ['audio'] ==
+                                                                null
+                                                            ? false
+                                                            : true,
+                                                        guests:
+                                                            _.getGuestsString(
+                                                                _.sentjob[index]
+                                                                    ['guests']),
+                                                        source: _.sentjob[index]
+                                                            ['source'],
+                                                        channelName:
+                                                            _.sentjob[index]
+                                                                ['channel'],
+                                                        channelLogo: _.storage
+                                                                .hasData("Url")
+                                                            ? _.sentjob[index][
+                                                                        'channelLogoPath']
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'http')
+                                                                ? _.sentjob[
+                                                                        index][
+                                                                    'channelLogoPath']
+                                                                : "${_.storage.read("Url").toString()}/uploads//${_.sentjob[index]['channelLogoPath']}"
+                                                            : _.sentjob[index][
+                                                                        'channelLogoPath']
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'http')
+                                                                ? _.sentjob[index]
+                                                                    ['channelLogoPath']
+                                                                : "${ApiData.channelLogoPath + _.sentjob[index]['channelLogoPath']}",
+                                                        date: _.convertDateUtc(_
+                                                            .sentjob[index]
+                                                                ['programDate']
+                                                            .toString()),
+                                                        time: _.convertTime(_
+                                                                .sentjob[index]
+                                                            ['programTime']),
+                                                      ),
+                                                      _.isMore.value
+                                                          ? Center(
+                                                              child:
+                                                                  CircularProgressIndicator()
+                                                                      .marginOnly(
+                                                                top: 10.0,
+                                                                bottom: 10.0,
+                                                              ),
+                                                            )
+                                                          : SizedBox()
+                                                    ],
+                                                  );
+                                                })),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+      },
+    );
+  }
+
+  Widget receivedList(HomeScreenController _) {
+    return Obx(
+      () {
+        return _.isLoading1.value
+            ? Center(
+                child: Image.asset(
+                  "assets/images/gif.gif",
+                  height: 300.0,
+                  width: 300.0,
+                ),
+              ).marginOnly(bottom: 50.0)
+            : _.isSocketError.value
+                ? InterConnectivity(
+                    onPressed: () {
+                      _.getReceiveJob();
+                    },
+                  )
+                : _.isDataFailed.value
+                    ? TapToLoad(onPressed: () {
+                        _.getReceiveJob();
+                      })
+                    : _.isSearchData.value
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // SizedBox(
+                              //   height: 20.0,
+                              // ),
+                              Container(
+                                width: Get.width / 4.0,
+                                height: Get.height / 4.0,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                        "assets/images/searchjob.png",
+                                      ),
+                                      fit: BoxFit.contain),
+                                ),
+                              ),
+
+                              Text(
+                                'No Result Found',
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontFamily: 'Roboto',
+                                    letterSpacing: 0.4,
+                                    color: Colors.white),
+                              )
+                            ],
+                          )
+                        : DefaultTabController(
+                            length: 5,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    child: RefreshIndicator(
+                                        onRefresh: () => _.getReceiveJob(),
+                                        child: _.receivedJobsList.length == 0
+                                            ? Center(
+                                                child: Text(
+                                                  "No Job Received",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 20,
+                                                      letterSpacing: 1.0),
+                                                ),
+                                              )
+                                            : ListView.separated(
+                                                shrinkWrap: true,
+                                                itemCount:
+                                                    _.receivedJobsList.length,
+                                                separatorBuilder: (c, e) {
+                                                  return SizedBox(
+                                                    height: 5.0,
+                                                  );
+                                                },
+                                                itemBuilder: (ctx, index) {
+                                                  return Column(
+                                                    children: [
+                                                      CommonContainer(
+                                                        onPressed: () {
+                                                          Get.to(
+                                                            () =>
+                                                                PlayerScreen(),
+                                                            arguments: {
+                                                              "id":
+                                                                  _.receivedJobsList[
+                                                                          index]
+                                                                      ['id'],
+                                                            },
+                                                          );
+                                                        },
+                                                        isRead: _
+                                                                    .escalationsJob(
+                                                                        _.receivedJobsList[index]
+                                                                            [
+                                                                            'escalations'])
+                                                                    .toString() ==
+                                                                'false'
+                                                            ? false
+                                                            : true,
+                                                        imgUrl: _.storage
+                                                                .hasData("Url")
+                                                            ? "${_.storage.read("Url").toString()}/uploads/${_.receivedJobsList[index]['thumbnailPath']}"
+                                                            : "${ApiData.thumbnailPath + _.receivedJobsList[index]['thumbnailPath']}",
+                                                        isShare: _.getSharePerson(
+                                                                    _.receivedJobsList[
+                                                                            index]
+                                                                        [
+                                                                        'sharing']) ==
+                                                                ''
+                                                            ? false
+                                                            : true,
+                                                        receiverName: _
+                                                            .getSharePerson(
+                                                                _.receivedJobsList[
+                                                                        index][
+                                                                    'sharing']),
+                                                        title: _.receivedJobsList[
+                                                                            index]
+                                                                        [
+                                                                        'share'] !=
+                                                                    null ||
+                                                                _.receivedJobsList[
+                                                                            index]
+                                                                        [
+                                                                        'audio'] !=
+                                                                    null
+                                                            ? _.receivedJobsList[
+                                                                index]['title']
+                                                            : _.receivedJobsList[
+                                                                    index]
+                                                                ['programName'],
+                                                        anchor:
+                                                            _.receivedJobsList[
+                                                                    index]
+                                                                ['anchor'],
+                                                        segments: _.getTopicString(
+                                                            _.receivedJobsList[
+                                                                    index]
+                                                                ['segments']),
+                                                        isClipped:
+                                                            _.receivedJobsList[
+                                                                            index]
+                                                                        [
+                                                                        'share'] !=
+                                                                    null
+                                                                ? true
+                                                                : false,
+                                                        isAudio: _.receivedJobsList[
+                                                                        index]
+                                                                    ['audio'] ==
+                                                                null
+                                                            ? false
+                                                            : true,
+                                                        guests: _.getGuestsString(
+                                                            _.receivedJobsList[
+                                                                    index]
+                                                                ['guests']),
+                                                        source:
+                                                            _.receivedJobsList[
+                                                                    index]
+                                                                ['source'],
+                                                        channelName:
+                                                            _.receivedJobsList[
+                                                                    index]
+                                                                ['channel'],
+                                                        channelLogo: _.storage
+                                                                .hasData("Url")
+                                                            ? _.receivedJobsList[index]
+                                                                        [
+                                                                        'channelLogoPath']
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'http')
+                                                                ? _.receivedJobsList[index]
+                                                                    [
+                                                                    'channelLogoPath']
+                                                                : "${_.storage.read("Url").toString()}/uploads//${_.receivedJobsList[index]['channelLogoPath']}"
+                                                            : _.receivedJobsList[
+                                                                        index][
+                                                                        'channelLogoPath']
+                                                                    .toString()
+                                                                    .contains(
+                                                                        'http')
+                                                                ? _.receivedJobsList[index]
+                                                                    ['channelLogoPath']
+                                                                : "${ApiData.channelLogoPath + _.receivedJobsList[index]['channelLogoPath']}",
+                                                        date: _.convertDateUtc(_
+                                                            .receivedJobsList[
+                                                                index]
+                                                                ['programDate']
+                                                            .toString()),
+                                                        time: _.convertTime(
+                                                            _.receivedJobsList[
+                                                                    index][
+                                                                'programTime']),
+                                                      ),
+                                                      _.isMore.value
+                                                          ? Center(
+                                                              child:
+                                                                  CircularProgressIndicator()
+                                                                      .marginOnly(
+                                                                top: 10.0,
+                                                                bottom: 10.0,
+                                                              ),
+                                                            )
+                                                          : SizedBox()
+                                                    ],
+                                                  );
+                                                })),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+      },
     );
   }
 
@@ -837,76 +922,5 @@ class HomeScreen extends StatelessWidget {
         children: g,
       ),
     );
-  }
-
-  Widget showTabs() {
-    return DefaultTabController(
-      initialIndex: 1,
-      length: 5,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('TabBar Widget'),
-          bottom: const TabBar(
-            tabs: <Widget>[
-              Tab(
-                icon: Icon(Icons.cloud_outlined),
-              ),
-              Tab(
-                icon: Icon(Icons.beach_access_sharp),
-              ),
-              Tab(
-                icon: Icon(Icons.brightness_5_sharp),
-              ),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-
-          children: <Widget>[
-            Center(
-              child: Text("It's cloudy here"),
-            ),
-            Center(
-              child: Text("It's rainy here"),
-            ),
-            Center(
-              child: Text("It's sunny here"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void showAlert(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) =>
-            AlertDialog(
-              backgroundColor: Color(0xff0F162E),
-              contentPadding:
-              EdgeInsets.only(left: 10, right: 10, bottom: 15, top: 12),
-              title: Column(
-                children: [
-                  Text(
-                    "The Following Tabs Represent The Source Of Information",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 9),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Image.asset("assets/images/onboarding1.png"),
-                ],
-              ),
-              content: InkWell(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Text("hi")),
-            ));
   }
 }

@@ -107,50 +107,56 @@ class _ClippingScreenState extends State<ClippingScreen> {
     recorder.closeRecorder();
     mPlayer!.closePlayer();
     mPlayer = null;
+    Get.delete<ClippingController>();
     super.dispose();
   }
 
   Future<void> urlToFile() async {
     clipController.isScreenLoading.value = true;
-    setState(() {
-      progress = 0.0;
-    });
-    final request = Request('GET', Uri.parse(widget.fileurl));
-    final StreamedResponse response = await Client().send(request);
-    final contentLength = response.contentLength;
-    setState(() {
-      progress = 0.000001;
-    });
-    List<int> bytes = [];
-    var rng = new Random();
-    final file = await getFile((rng.nextInt(100)).toString() + '.mp4');
-    response.stream.listen(
-      (List<int> newBytes) {
-        bytes.addAll(newBytes);
-        final downloadedLength = bytes.length;
-        setState(() {
-          progress = downloadedLength.toDouble() / (contentLength ?? 1);
-        });
-        print("progress: $progress");
-      },
-      onDone: () async {
-        setState(() {
-          progress = 1;
-        });
-        await file.writeAsBytes(bytes);
-        _controller = VideoEditorController.file(file,
-            maxDuration: const Duration(seconds: 30))
-          ..initialize().then((_) => setState(() {}));
-        initRecorder();
-        betterPlayerController.pause();
-        clipController.isScreenLoading.value = false;
-      },
-      onError: (e) {
-        debugPrint(e);
-        clipController.isScreenLoading.value = false;
-      },
-      cancelOnError: true,
-    );
+    try {
+      setState(() {
+        progress = 0.0;
+      });
+      final request = Request('GET', Uri.parse(widget.fileurl));
+      final StreamedResponse response = await Client().send(request);
+      final contentLength = response.contentLength;
+      setState(() {
+        progress = 0.000001;
+      });
+      List<int> bytes = [];
+      var rng = new Random();
+      final file = await getFile((rng.nextInt(100)).toString() + '.mp4');
+      response.stream.listen(
+        (List<int> newBytes) {
+          bytes.addAll(newBytes);
+          final downloadedLength = bytes.length;
+          setState(() {
+            progress = downloadedLength.toDouble() / (contentLength ?? 1);
+          });
+          print("progress: $progress");
+        },
+        onDone: () async {
+          setState(() {
+            progress = 1;
+          });
+          await file.writeAsBytes(bytes);
+          _controller = VideoEditorController.file(file,
+              maxDuration: const Duration(seconds: 30))
+            ..initialize().then((_) => setState(() {}));
+          initRecorder();
+          betterPlayerController.pause();
+          clipController.isScreenLoading.value = false;
+        },
+        onError: (e) {
+          debugPrint(e);
+          clipController.isScreenLoading.value = false;
+        },
+        cancelOnError: true,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+      clipController.isScreenLoading.value = false;
+    }
   }
 
   Future<File> getFile(String filename) async {
@@ -268,7 +274,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
             Get.log('Check Response ${result}');
             clipController.sharingUser.clear();
             clipController.homeScreenController.isLoading.value = true;
-            await clipController.homeScreenController.getJobs(1);
+            await clipController.homeScreenController.getSentJobs();
             clipController.homeScreenController.isLoading.value = false;
             Get.back();
             clipController.isBottomLoading.value = false;
@@ -281,7 +287,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
             Get.back();
             clipController.isBottomLoading.value = false;
           }
-        } else {
+        }
+        else {
           Map<String, String> h = {'Authorization': 'Bearer $token'};
           var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
           var res = http.MultipartRequest('POST', uri)
@@ -302,7 +309,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
           if (response.statusCode == 200) {
             clipController.sharingUser.clear();
             clipController.homeScreenController.isLoading.value = true;
-            await clipController.homeScreenController.getJobs(1);
+            await clipController.homeScreenController.getSentJobs();
             clipController.homeScreenController.isLoading.value = false;
             Get.back();
             clipController.isBottomLoading.value = false;
@@ -340,7 +347,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
           Get.log('Check Response ${result}');
           clipController.sharingUser.clear();
           clipController.homeScreenController.isLoading.value = true;
-          await clipController.homeScreenController.getJobs(1);
+          await clipController.homeScreenController.getSentJobs();
           clipController.homeScreenController.isLoading.value = false;
           Get.back();
           clipController.isBottomLoading.value = false;
@@ -349,7 +356,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
               message: "",
               isWarning: false,
               backgroundColor: CommonColor.greenColor);
-        } else {
+        }
+        else {
           Map<String, String> h = {'Authorization': 'Bearer $token'};
           var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
           var res = http.MultipartRequest('POST', uri)
@@ -366,12 +374,12 @@ class _ClippingScreenState extends State<ClippingScreen> {
             ..files.add(
                 await http.MultipartFile.fromPath('videoPath', vpath.path));
           var response = await res.send();
-          print('Check Response ${response.statusCode}');
+          print('Check Response audio/video status code ${response.statusCode}');
           var result = await response.stream.bytesToString();
-          Get.log('Check Response ${result}');
+          Get.log('Check Response audio/video ${result}');
           clipController.sharingUser.clear();
           clipController.homeScreenController.isLoading.value = true;
-          await clipController.homeScreenController.getJobs(1);
+          await clipController.homeScreenController.getSentJobs();
           clipController.homeScreenController.isLoading.value = false;
           Get.back();
           clipController.isBottomLoading.value = false;
@@ -543,14 +551,14 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             gradient: LinearGradient(
-                                                    begin: Alignment.topRight,
-                                                    end: Alignment.bottomLeft,
-                                                    colors: [
-                                                      Color(0xff22B161),
-                                                      Color(0xff35B7A5),
-                                                      Color(0xff48BEEB),
-                                                    ],
-                                                  ),
+                                              begin: Alignment.topRight,
+                                              end: Alignment.bottomLeft,
+                                              colors: [
+                                                Color(0xff22B161),
+                                                Color(0xff35B7A5),
+                                                Color(0xff48BEEB),
+                                              ],
+                                            ),
                                           ),
                                           child: Center(
                                             child: Icon(
@@ -657,7 +665,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                           // print("Video Trip Path is ${_controller.exportVideo(onCompleted: onCompleted)}")
                         },
                   child: Text(
-                    "Share Clip",
+                    "SHARE CLIP",
                     textScaleFactor: 1.0,
                     style: TextStyle(
                         color: clipController.isScreenLoading.value
@@ -677,13 +685,6 @@ class _ClippingScreenState extends State<ClippingScreen> {
             ),
           ),
         )
-        // : Center(
-        //     child: Image.asset(
-        //       "assets/images/gif.gif",
-        //       height: 300.0,
-        //       width: 300.0,
-        //     ),
-        //   ),
         );
   }
 
@@ -996,8 +997,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                                       size: 40,
                                                     )
                                                   : Text(
-                                                      _
-                                                          .namesSplit(
+                                                      _.namesSplit(
                                                               '${_.searchcompanyUser[i]['firstName']} ${_.searchcompanyUser[i]['lastName']}')
                                                           .toUpperCase(),
                                                       style: TextStyle(

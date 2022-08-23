@@ -183,7 +183,7 @@ class ClippingController extends GetxController
             },
             body: json.encode(c));
         var data = json.decode(res.body);
-        Get.log('Result is $data');
+        Get.log('Shared Job Result is $data');
         if (res.statusCode == 200) {
           // await sharing();
           sharingUser.clear();

@@ -78,6 +78,7 @@ class PushNotificationService {
           {
             // _.getSingleJob(message.data["jobID"]);
           }
+
       },
     );
 

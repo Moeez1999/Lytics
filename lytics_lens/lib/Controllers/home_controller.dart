@@ -20,6 +20,7 @@ class HomeScreenController extends GetxController {
 
   var isLoading = true.obs;
   var isLoading1 = true.obs;
+  var isSendLoading = true.obs;
 
   String id = '';
 
@@ -51,8 +52,9 @@ class HomeScreenController extends GetxController {
 
   var job = [].obs;
   var searchjob = [].obs;
+  var sentjob = [].obs;
 
-  var sharedJobs = [].obs;
+  var receivedJobsList = [].obs;
 
   var escalation = <dynamic>[].obs;
   var hashtags = [];
@@ -79,7 +81,7 @@ class HomeScreenController extends GetxController {
     id = await storage.read('id');
     FlutterAppBadger.removeBadge();
     await getReceiveJob();
-    // await getSharedJobs();
+    await getSentJobs();
     await getJobs(pageno.value);
     await sendDeviceToken();
 
@@ -87,6 +89,7 @@ class HomeScreenController extends GetxController {
 
     isLoading.value = false;
     isLoading1.value = false;
+    isSendLoading.value = false;
     super.onReady();
   }
 
@@ -273,7 +276,7 @@ class HomeScreenController extends GetxController {
           print("Bearer $token");
           var res = await http.get(
             Uri.parse(
-                '$url${ApiData.alertJobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+                '$url${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
             headers: {
               'Authorization': 'Bearer $token',
               "Content-type": 'application/json',
@@ -301,7 +304,7 @@ class HomeScreenController extends GetxController {
             print("Bearer $token");
             var res = await http.get(
               Uri.parse(
-                  '$url${ApiData.alertJobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+                  '$url${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
               headers: {
                 'Authorization': 'Bearer $token',
                 "Content-type": 'application/json',
@@ -314,8 +317,6 @@ class HomeScreenController extends GetxController {
             print('Total Pages ${data['totalPages']}');
             print('Total Pages ${tpageno.value}');
             job.addAll(data['results']);
-
-            update();
             isMore.value = false;
           } else {
             isMore.value = false;
@@ -337,7 +338,7 @@ class HomeScreenController extends GetxController {
           print("Bearer $token");
           var res = await http.get(
             Uri.parse(
-                '${ApiData.baseUrl}${ApiData.alertJobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+                '${ApiData.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
             headers: {
               'Authorization': 'Bearer $token',
               "Content-type": 'application/json',
@@ -365,7 +366,7 @@ class HomeScreenController extends GetxController {
             print("Bearer $token");
             var res = await http.get(
               Uri.parse(
-                  '${ApiData.baseUrl}${ApiData.alertJobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+                  '${ApiData.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
               headers: {
                 'Authorization': 'Bearer $token',
                 "Content-type": 'application/json',
@@ -381,7 +382,6 @@ class HomeScreenController extends GetxController {
             // job.assignAll(List.from(job.reversed));
             job.addAll(data['results']);
             // job.assignAll(List.from(job.reversed));
-            update();
             isMore.value = false;
           } else {
             isMore.value = false;
@@ -399,12 +399,13 @@ class HomeScreenController extends GetxController {
     }
   }
 
-  Future<void> getSharedJobs() async {
-    job.clear();
+  Future<void> getSentJobs() async {
+    sentjob.clear();
     try {
       isSocketError.value = false;
       isDataFailed.value = false;
-      // sharedJobs.clear();
+      isSendLoading.value = true;
+      // receivedJobsList.clear();
       // update();
       if (storage.hasData("Url") == true) {
         String url = storage.read("Url");
@@ -418,8 +419,9 @@ class HomeScreenController extends GetxController {
           },
         );
         var data = json.decode(res.body);
-        job.addAll(data);
-        await getJobs(pageno.value);
+        sentjob.addAll(data);
+        isSendLoading.value = false;
+        // await getJobs(pageno.value);
       } else {
         String id = await storage.read('id');
         String token = await storage.read("AccessToken");
@@ -432,12 +434,13 @@ class HomeScreenController extends GetxController {
         );
         var data = json.decode(res.body);
         // Get.log("Check ALL Shared Data ${res.body}");
-        job.addAll(data);
+        sentjob.addAll(data);
+        isSendLoading.value =  false;
         // await getJobs(pageno.value);
       }
     } on SocketException catch (e) {
       print(e);
-      isLoading.value = false;
+      isSendLoading.value = false;
       isSocketError.value = true;
       // CustomSnackBar.showSnackBar(
       //     title: AppStrings.unable,
@@ -446,7 +449,7 @@ class HomeScreenController extends GetxController {
       //     isWarning: true);
 
     } catch (e) {
-      isLoading.value = false;
+      isSendLoading.value = false;
       isDataFailed.value = true;
 
       print(e.toString());
@@ -456,7 +459,7 @@ class HomeScreenController extends GetxController {
 
   Future<void> getReceiveJob() async {
     isLoading1.value = true;
-    sharedJobs.clear();
+    receivedJobsList.clear();
     try {
       if (storage.hasData("Url") == true) {
         String url = storage.read("Url");
@@ -471,9 +474,10 @@ class HomeScreenController extends GetxController {
         );
         var data = json.decode(res.body);
         // Get.log("Receiver Jobs $data");
-        sharedJobs.addAll(data);
+        receivedJobsList.addAll(data);
         isLoading1.value = false;
-      } else {
+      }
+      else {
         String token = await storage.read("AccessToken");
         String id = await storage.read('id');
         print("User Id is $id");
@@ -486,7 +490,7 @@ class HomeScreenController extends GetxController {
         );
         var data = json.decode(res.body);
         // Get.log("Receiver Jobs $data");
-        sharedJobs.addAll(data);
+        receivedJobsList.addAll(data);
         isLoading1.value = false;
       }
     } on SocketException catch (e) {
@@ -724,7 +728,7 @@ class HomeScreenController extends GetxController {
 
       print('Job Request is ${res.body}');
       tpageno.value = 1;
-      // await sharedJobs();
+      // await receivedJobsList();
       await getJobs(1);
     } else {
       var res = await http.patch(
@@ -736,7 +740,7 @@ class HomeScreenController extends GetxController {
       );
       print('Job Request is ${res.body}');
       tpageno.value = 1;
-      // await sharedJobs();
+      // await receivedJobsList();
       await getJobs(1);
     }
   }
@@ -818,7 +822,7 @@ class HomeScreenController extends GetxController {
 
       print('Job Request is ${res.body}');
       await getJobs(1);
-      // await sharedJobs();
+      // await receivedJobsList();
       Get.delete<VideoController>();
       Get.to(
         () => PlayerScreen(),
@@ -835,7 +839,7 @@ class HomeScreenController extends GetxController {
 
       print('Job Read Request is ${res.body}');
       await getJobs(1);
-      // await sharedJobs();
+      // await receivedJobsList();
       Get.delete<VideoController>();
       Get.to(
         () => PlayerScreen(),
