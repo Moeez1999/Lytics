@@ -7,14 +7,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Constants/constants.dart';
 import 'package:lytics_lens/Controllers/global_controller.dart';
-import 'package:lytics_lens/utils/api.dart';
+// import 'package:lytics_lens/utils/api.dart';
 import 'package:lytics_lens/views/player_Screen.dart';
 
 class PushNotificationService {
   final FirebaseMessaging _fcm;
 
   final storage = new GetStorage();
-
 
   GlobalController _ = Get.find<GlobalController>();
 
@@ -54,18 +53,7 @@ class PushNotificationService {
         print("Notification message Body ${message.notification!.body}");
         print("Notification message Body length${message.data.length}");
         // var messagejobid = message.data["jobID"];
-        AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: 1234,
-              channelKey: 'basic_channel',
-              title: "${message.notification!.title}",
-              body: "${message.notification!.body}",
-              notificationLayout: NotificationLayout.BigPicture,
-              //bigPicture: 'https://www.fluttercampus.com/img/logo_small.webp'),
-              bigPicture: storage.hasData("Url")
-                  ? '${storage.read("Url").toString()}/uploads/${message.data["thumbnailPath"]}'
-                  : '${ApiData.thumbnailPath + message.data["thumbnailPath"]}'),
-        );
+
         Get.snackbar(
             "${message.notification!.title}", "${message.notification!.body}",
             backgroundColor: CommonColor.snackbarColour, onTap: (value) {
@@ -74,28 +62,39 @@ class PushNotificationService {
           // var messagejobid = message.data["jobID"];
           // var messagejobid = message.data["jobID"];
         });
-        if(message.data["jobID"] != '')
-          {
-            // _.getSingleJob(message.data["jobID"]);
-          }
-
+        if (message.data["jobID"] != '') {
+          _.getSingleJob(message.data["jobID"]);
+        }
       },
     );
+
 
     // replacement for onResume: When the app is in the background and opened directly from the push notification.
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       // FlutterAppBadger.updateBadgeCount(message.data.length);
       print("Notification message Body ${message.data}");
       print("Notification message Body length${message.data.length}");
-
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 1234,
+          channelKey: 'basic_channel',
+          title: "${message.notification!.title}",
+          body: "${message.notification!.body}",
+          notificationLayout: NotificationLayout.BigPicture,
+          //bigPicture: 'https://www.fluttercampus.com/img/logo_small.webp'),
+          bigPicture: '${message.data["thumbnailPath"]}',
+        ),
+      );
       if (message.data["jobID"].toString().isNotEmpty ||
           message.data["jobID"].toString() != '') {
         print('JOB ID FOUND');
+        _.getSingleJob(message.data["jobID"]);
         // var messagejobid = message.data["jobID"];
       } else {
         print('Not Job Id Found');
       }
       // Get.toNamed("/${message.data["screen"]}");
     });
+
   }
 }

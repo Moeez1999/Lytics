@@ -18,6 +18,8 @@ class AccountController extends GetxController {
 
   List updateList = [];
 
+  String useremail = '';
+
   final storage = GetStorage();
 
   late NetworkController networkController;
@@ -37,6 +39,7 @@ class AccountController extends GetxController {
 
   @override
   void onReady() async {
+    useremail = await storage.read('email');
     getShow();
     getShowUpdate();
     isLoading = false;
@@ -137,6 +140,9 @@ class AccountController extends GetxController {
       await storage.remove("lastName");
       await storage.remove("UsersChannels");
        await storage.remove("isOnboard");
+       controller.job.clear();
+       controller.receivedJobsList.clear();
+       controller.sentjob.clear();
       Constants.index = 0;
 
       Get.offAll(() => LoginScreen());

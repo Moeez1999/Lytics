@@ -158,7 +158,7 @@ class Dashboard extends StatelessWidget {
           backgroundColor: Color.fromRGBO(27, 29, 40, 1),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(Icons.settings),
           label: 'Settings',
           backgroundColor: Color.fromRGBO(27, 29, 40, 1),
         ),

@@ -762,7 +762,7 @@ class HomeScreenController extends GetxController {
   {
     print("List of Sharing $sharingId");
     print("JobId of Sharing $Jobid");
-    isLoading.value = true;
+    isSendLoading.value = true;
     String token = await storage.read("AccessToken");
     try
     {
@@ -778,8 +778,8 @@ class HomeScreenController extends GetxController {
             },
           );
         }
-        await getJobs(1);
-        isLoading.value = false;
+        await getSentJobs();
+        isSendLoading.value = false;
       }
       else
       {
@@ -794,12 +794,12 @@ class HomeScreenController extends GetxController {
           );
           print("Check Data is delete${d.body}");
         }
-        await getJobs(1);
-        isLoading.value = false;
+        await getSentJobs();
+        isSendLoading.value = false;
       }
     }catch(e)
     {
-      isLoading.value = false;
+      isSendLoading.value = false;
     }
 
   }

@@ -243,7 +243,7 @@ class LoginScreen extends StatelessWidget {
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: Text(
-                              'v2.0.1',
+                              'Ver 2.1.0',
                               textScaleFactor: 1.0,
                               style: TextStyle(
                                   fontSize: 11.0,

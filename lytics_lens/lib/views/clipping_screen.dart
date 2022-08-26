@@ -224,6 +224,10 @@ class _ClippingScreenState extends State<ClippingScreen> {
   }
 
   Future<void> exportVideo() async {
+    if (isPlay.value = true) {
+      isPlay.value = false;
+      stop();
+    }
     // clippingController.isLoading = true;
     // clippingController.update();
     clipController.isBottomLoading.value = true;
@@ -239,6 +243,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
   }
 
   Future<void> sendData(File vpath) async {
+    print("Check This $audioFile");
     try {
       print("Start Time ${start.toString()}");
       print("Start Time ${end.toString()}");
@@ -251,7 +256,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
       print("Start Time $e");
       // var c = json.encode(clipController.sharingUser);
       String token = await storage.read("AccessToken");
-      if (audioFile == null) {
+      if (audioFile.path == null || audioFile.path == '') {
         if (storage.hasData("Url") == true) {
           String url = storage.read("Url");
           Map<String, String> h = {'Authorization': 'Bearer $token'};
@@ -276,19 +281,21 @@ class _ClippingScreenState extends State<ClippingScreen> {
             clipController.homeScreenController.isLoading.value = true;
             await clipController.homeScreenController.getSentJobs();
             clipController.homeScreenController.isLoading.value = false;
-            Get.back();
             clipController.isBottomLoading.value = false;
+            Get.back();
+            Get.back();
             CustomSnackBar.showSnackBar(
                 title: "Job shared successfully",
                 message: "",
                 isWarning: false,
                 backgroundColor: CommonColor.greenColor);
-          } else {
+          }
+          else {
             Get.back();
             clipController.isBottomLoading.value = false;
           }
-        }
-        else {
+        } else {
+          print("Audio Function Call");
           Map<String, String> h = {'Authorization': 'Bearer $token'};
           var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
           var res = http.MultipartRequest('POST', uri)
@@ -311,8 +318,9 @@ class _ClippingScreenState extends State<ClippingScreen> {
             clipController.homeScreenController.isLoading.value = true;
             await clipController.homeScreenController.getSentJobs();
             clipController.homeScreenController.isLoading.value = false;
-            Get.back();
             clipController.isBottomLoading.value = false;
+            Get.back();
+            Get.back();
             CustomSnackBar.showSnackBar(
                 title: "Job shared successfully",
                 message: "",
@@ -323,7 +331,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
             clipController.isBottomLoading.value = false;
           }
         }
-      } else {
+      }
+      else {
         if (storage.hasData("Url") == true) {
           String url = storage.read("Url");
           Map<String, String> h = {'Authorization': 'Bearer $token'};
@@ -349,8 +358,9 @@ class _ClippingScreenState extends State<ClippingScreen> {
           clipController.homeScreenController.isLoading.value = true;
           await clipController.homeScreenController.getSentJobs();
           clipController.homeScreenController.isLoading.value = false;
-          Get.back();
           clipController.isBottomLoading.value = false;
+          Get.back();
+          Get.back();
           CustomSnackBar.showSnackBar(
               title: "Job shared successfully",
               message: "",
@@ -374,15 +384,17 @@ class _ClippingScreenState extends State<ClippingScreen> {
             ..files.add(
                 await http.MultipartFile.fromPath('videoPath', vpath.path));
           var response = await res.send();
-          print('Check Response audio/video status code ${response.statusCode}');
+          print(
+              'Check Response audio/video status code ${response.statusCode}');
           var result = await response.stream.bytesToString();
           Get.log('Check Response audio/video ${result}');
           clipController.sharingUser.clear();
           clipController.homeScreenController.isLoading.value = true;
           await clipController.homeScreenController.getSentJobs();
           clipController.homeScreenController.isLoading.value = false;
-          Get.back();
           clipController.isBottomLoading.value = false;
+          Get.back();
+          Get.back();
           CustomSnackBar.showSnackBar(
             title: "Job shared successfully",
             message: "",
@@ -451,7 +463,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                   height: 20.0,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       "Clip Video",
@@ -461,16 +473,16 @@ class _ClippingScreenState extends State<ClippingScreen> {
                           fontSize: 16.0,
                           color: Colors.white),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        showClipInformation(context);
-                      },
-                      child: Icon(
-                        Icons.info_outline,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                    )
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     showClipInformation(context);
+                    //   },
+                    //   child: Icon(
+                    //     Icons.info_outline,
+                    //     size: 20,
+                    //     color: Colors.white,
+                    //   ),
+                    // )
                   ],
                 ).marginOnly(left: 20.0, right: 20.0),
                 SizedBox(
@@ -684,8 +696,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
               ],
             ),
           ),
-        )
-        );
+        ));
   }
 
   String formatter(Duration duration) => [
@@ -874,171 +885,205 @@ class _ClippingScreenState extends State<ClippingScreen> {
                             height: 10.0,
                           ),
                           Expanded(
-                            child: ListView.separated(
-                              itemCount: _.searchcompanyUser.length == 0
-                                  ? _.companyUser.length
-                                  : _.searchcompanyUser.length,
-                              shrinkWrap: true,
-                              separatorBuilder: (c, i) {
-                                return SizedBox(
-                                  height: 10.0,
-                                );
-                              },
-                              itemBuilder: (c, i) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (_.searchcompanyUser.length == 0) {
-                                        if (_.addDataList(
-                                                _.companyUser[i]['id']) ==
-                                            '${_.companyUser[i]['id']}') {
-                                          _.deletedata(_.companyUser[i]['id']);
-                                        } else {
-                                          _.sharingUser.add({
-                                            "senderId": _.senderId,
-                                            "senderFirstName":
-                                                _.senderFirstName,
-                                            "senderLastName": _.senderLastName,
-                                            "recieverId": _.companyUser[i]
-                                                ['id'],
-                                            "recieverFirstName":
-                                                _.companyUser[i]['firstName'],
-                                            "recieverLastName": _.companyUser[i]
-                                                ['lastName'],
-                                            "time": DateTime.now().toString(),
-                                          });
-                                        }
-                                      } else {
-                                        if (_.addDataList(
-                                                _.searchcompanyUser[i]['id']) ==
-                                            '${_.searchcompanyUser[i]['id']}') {
-                                          _.deletedata(
-                                              _.searchcompanyUser[i]['id']);
-                                        } else {
-                                          _.sharingUser.add({
-                                            "senderId": _.senderId,
-                                            "senderFirstName":
-                                                _.senderFirstName,
-                                            "senderLastName": _.senderLastName,
-                                            "recieverId": _.searchcompanyUser[i]
-                                                ['id'],
-                                            "recieverFirstName":
-                                                _.searchcompanyUser[i]
-                                                    ['firstName'],
-                                            "recieverLastName":
-                                                _.searchcompanyUser[i]
-                                                    ['lastName'],
-                                            "time": DateTime.now().toString(),
-                                          });
-                                        }
-                                      }
-                                    });
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Color(0xff34f68a),
-                                            ),
-                                            color: _.searchcompanyUser.length ==
-                                                    0
-                                                ? _.addDataList(_.companyUser[i]
-                                                            ['id']) ==
-                                                        '${_.companyUser[i]['id']}'
-                                                    ? Color(0xff34f68a)
-                                                    : Colors.transparent
-                                                : _.addDataList(
-                                                            _.searchcompanyUser[
-                                                                i]['id']) ==
-                                                        '${_.searchcompanyUser[i]['id']}'
-                                                    ? Color(0xff34f68a)
-                                                    : Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        child: Center(
-                                          child: _.searchcompanyUser.length == 0
-                                              ? _.addDataList(_.companyUser[i]
+                            child: _.nodata.value
+                                ? Center(
+                                    child: Text(
+                                      "No data found",
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                                : ListView.separated(
+                                    itemCount: _.searchcompanyUser.length == 0
+                                        ? _.companyUser.length
+                                        : _.searchcompanyUser.length,
+                                    shrinkWrap: true,
+                                    separatorBuilder: (c, i) {
+                                      return SizedBox(
+                                        height: 10.0,
+                                      );
+                                    },
+                                    itemBuilder: (c, i) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            if (_.searchcompanyUser.length ==
+                                                0) {
+                                              if (_.addDataList(
+                                                      _.companyUser[i]['id']) ==
+                                                  '${_.companyUser[i]['id']}') {
+                                                _.deletedata(
+                                                    _.companyUser[i]['id']);
+                                              } else {
+                                                _.sharingUser.add({
+                                                  "senderId": _.senderId,
+                                                  "senderFirstName":
+                                                      _.senderFirstName,
+                                                  "senderLastName":
+                                                      _.senderLastName,
+                                                  "recieverId": _.companyUser[i]
+                                                      ['id'],
+                                                  "recieverFirstName":
+                                                      _.companyUser[i]
+                                                          ['firstName'],
+                                                  "recieverLastName":
+                                                      _.companyUser[i]
+                                                          ['lastName'],
+                                                  "time":
+                                                      DateTime.now().toString(),
+                                                });
+                                              }
+                                            } else {
+                                              if (_.addDataList(
+                                                      _.searchcompanyUser[i]
                                                           ['id']) ==
-                                                      '${_.companyUser[i]['id']}'
-                                                  ? Icon(
-                                                      Icons.check,
-                                                      color: CommonColor
-                                                          .whiteColor,
-                                                      size: 40,
-                                                    )
-                                                  : Text(
-                                                      _
-                                                          .namesSplit(
-                                                              '${_.companyUser[i]['firstName']} ${_.companyUser[i]['lastName']}')
-                                                          .toUpperCase(),
-                                                      style: TextStyle(
-                                                          color:
-                                                              Color(0xff34f68a),
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontFamily: 'Roboto'),
-                                                    ).marginOnly(
-                                                      top: 12.0,
-                                                      bottom: 12.0,
-                                                      //left: 5,
-                                                      //right: 5
-                                                    )
-                                              : _.addDataList(
-                                                          _.searchcompanyUser[i]
-                                                              ['id']) ==
-                                                      '${_.searchcompanyUser[i]['id']}'
-                                                  ? Icon(
-                                                      Icons.check,
-                                                      color: CommonColor
-                                                          .whiteColor,
-                                                      size: 40,
-                                                    )
-                                                  : Text(
-                                                      _.namesSplit(
-                                                              '${_.searchcompanyUser[i]['firstName']} ${_.searchcompanyUser[i]['lastName']}')
-                                                          .toUpperCase(),
-                                                      style: TextStyle(
-                                                          color:
-                                                              Color(0xff34f68a),
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontFamily: 'Roboto'),
-                                                    ).marginOnly(
-                                                      top: 12.0,
-                                                      bottom: 12.0,
-                                                      //left: 5,
-                                                      //right: 5
-                                                    ),
+                                                  '${_.searchcompanyUser[i]['id']}') {
+                                                _.deletedata(
+                                                    _.searchcompanyUser[i]
+                                                        ['id']);
+                                              } else {
+                                                _.sharingUser.add({
+                                                  "senderId": _.senderId,
+                                                  "senderFirstName":
+                                                      _.senderFirstName,
+                                                  "senderLastName":
+                                                      _.senderLastName,
+                                                  "recieverId":
+                                                      _.searchcompanyUser[i]
+                                                          ['id'],
+                                                  "recieverFirstName":
+                                                      _.searchcompanyUser[i]
+                                                          ['firstName'],
+                                                  "recieverLastName":
+                                                      _.searchcompanyUser[i]
+                                                          ['lastName'],
+                                                  "time":
+                                                      DateTime.now().toString(),
+                                                });
+                                              }
+                                            }
+                                          });
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 50,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Color(0xff34f68a),
+                                                  ),
+                                                  color: _.searchcompanyUser
+                                                              .length ==
+                                                          0
+                                                      ? _.addDataList(
+                                                                  _.companyUser[
+                                                                          i]
+                                                                      ['id']) ==
+                                                              '${_.companyUser[i]['id']}'
+                                                          ? Color(0xff34f68a)
+                                                          : Colors.transparent
+                                                      : _.addDataList(
+                                                                  _.searchcompanyUser[
+                                                                          i]
+                                                                      ['id']) ==
+                                                              '${_.searchcompanyUser[i]['id']}'
+                                                          ? Color(0xff34f68a)
+                                                          : Colors.transparent,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0)),
+                                              child: Center(
+                                                child: _.searchcompanyUser
+                                                            .length ==
+                                                        0
+                                                    ? _.addDataList(
+                                                                _.companyUser[i]
+                                                                    ['id']) ==
+                                                            '${_.companyUser[i]['id']}'
+                                                        ? Icon(
+                                                            Icons.check,
+                                                            color: CommonColor
+                                                                .whiteColor,
+                                                            size: 40,
+                                                          )
+                                                        : Text(
+                                                            _
+                                                                .namesSplit(
+                                                                    '${_.companyUser[i]['firstName']} ${_.companyUser[i]['lastName']}')
+                                                                .toUpperCase(),
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    0xff34f68a),
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontFamily:
+                                                                    'Roboto'),
+                                                          ).marginOnly(
+                                                            top: 12.0,
+                                                            bottom: 12.0,
+                                                            //left: 5,
+                                                            //right: 5
+                                                          )
+                                                    : _.addDataList(
+                                                                _.searchcompanyUser[
+                                                                    i]['id']) ==
+                                                            '${_.searchcompanyUser[i]['id']}'
+                                                        ? Icon(
+                                                            Icons.check,
+                                                            color: CommonColor
+                                                                .whiteColor,
+                                                            size: 40,
+                                                          )
+                                                        : Text(
+                                                            _
+                                                                .namesSplit(
+                                                                    '${_.searchcompanyUser[i]['firstName']} ${_.searchcompanyUser[i]['lastName']}')
+                                                                .toUpperCase(),
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    0xff34f68a),
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontFamily:
+                                                                    'Roboto'),
+                                                          ).marginOnly(
+                                                            top: 12.0,
+                                                            bottom: 12.0,
+                                                            //left: 5,
+                                                            //right: 5
+                                                          ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 20.0,
+                                            ),
+                                            SizedBox(
+                                              width: Get.width / 2.5,
+                                              child: Text(
+                                                _.searchcompanyUser.length == 0
+                                                    ? '${_.companyUser[i]['firstName']} ${_.companyUser[i]['lastName']}'
+                                                    : '${_.searchcompanyUser[i]['firstName']} ${_.searchcompanyUser[i]['lastName']}',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15.0),
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            Image.asset(
+                                              'assets/images/logo (2).png',
+                                              height: 30,
+                                            )
+                                          ],
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 20.0,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width / 2.5,
-                                        child: Text(
-                                          _.searchcompanyUser.length == 0
-                                              ? '${_.companyUser[i]['firstName']} ${_.companyUser[i]['lastName']}'
-                                              : '${_.searchcompanyUser[i]['firstName']} ${_.searchcompanyUser[i]['lastName']}',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.0),
-                                        ),
-                                      ),
-                                      Spacer(),
-                                      Image.asset(
-                                        'assets/images/logo (2).png',
-                                        height: 30,
-                                      )
-                                    ],
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                            ),
                           ),
                         ]).marginOnly(left: 20, top: 20)),
             );
@@ -1185,12 +1230,14 @@ class _ClippingScreenState extends State<ClippingScreen> {
                           borderRadius: BorderRadius.circular(9.0)),
                       onPressed: () async {
                         print("Start Time $start");
+                        print("Start Time $end");
+                        print("Start Time ${_controller.video.value.duration.inSeconds}");
                         print("End Time $audioFile");
                         if (_.title.text.isEmpty &&
                             _.des.text.isEmpty &&
                             audioFile == null &&
                             start == 0.0 &&
-                            end == _controller.video.value.duration.inSeconds) {
+                            end == end) {
                           Get.back();
                           await _.sharing(widget.jobId);
                         } else {

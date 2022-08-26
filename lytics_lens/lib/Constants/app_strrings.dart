@@ -55,7 +55,7 @@ static const String otpNotMatch="OTP code does not match";
 
 static const String selectdate = "Please select date";
 static const String channellist = "Please select channel";
-static const String programlist = "Please select program Type";
+static const String programlist = "Please select Program type";
 
 
 }

@@ -1167,7 +1167,7 @@ class PlayerScreen extends StatelessWidget {
                                                           width:
                                                               Get.width / 3.5,
                                                           child: Text(
-                                                            "Related Hasgtags",
+                                                            "Related Hashtags",
                                                             style: TextStyle(
                                                                 fontSize: 12,
                                                                 fontWeight:
@@ -1177,7 +1177,7 @@ class PlayerScreen extends StatelessWidget {
                                                                     .white),
                                                           ).marginOnly(
                                                               top: 12.0),
-                                                        ),
+                                                         ),
                                                         SizedBox(
                                                           width:
                                                               Get.width / 2.2,

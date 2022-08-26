@@ -21,7 +21,6 @@ import '../Models/channel.dart';
 import '../utils/api.dart';
 import '../widget/common_container.dart';
 import '../widget/common_snackbar.dart';
-import '../widget/headline_container.dart';
 import '../widget/internetconnectivity_screen.dart';
 import '../widget/multiselectDropdown/multi_select_bottom_sheet.dart';
 import '../widget/trendingkeyword_container.dart';

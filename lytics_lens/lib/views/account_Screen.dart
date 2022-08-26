@@ -63,7 +63,8 @@ class AccountScreen extends StatelessWidget {
                               return ListView(shrinkWrap: true, children: [
                                 options(
                                   text: 'Change Password',
-                                  subTitle: 'You can change your password',
+                                  subTitle: '',
+                                  // subTitle: 'You can change your password',
                                   imagename: 'assets/images/password.png',
                                   onTap: () {
                                     Get.to(() => ChangePasswordScreen());
@@ -121,10 +122,10 @@ class AccountScreen extends StatelessWidget {
                                 //     Get.to(() => SelectSubscriptionScreen());
                                 //   },
                                 // ),
-
                                 options(
                                   text: 'Logout',
                                   subTitle: '',
+                                  // subTitle: '${_.useremail}',
                                   imagename: 'assets/images/logout.png',
                                   onTap: () {
                                     _showMyDialog(context, _);
@@ -145,7 +146,7 @@ class AccountScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'v2.0.1',
+                          'Ver 2.1.0',
                           textScaleFactor: 1.0,
                           style: TextStyle(
                               fontSize: 11.0,
@@ -153,16 +154,11 @@ class AccountScreen extends StatelessWidget {
                               fontWeight: FontWeight.w300,
                               color: Colors.white),
                         ).marginOnly(bottom: 5.0),
-                        // Image.asset(
-                        //   "assets/images/i.png",
-                        //   height: 15,
-                        //   width: 15,
-                        // ).marginOnly(bottom: 7),
-                        Icon(
-                          Icons.info_outline_rounded,
-                          color: Colors.white,
-                          size: 15,
-                        ).marginOnly(bottom: 8, left: 3),
+                        // Icon(
+                        //   Icons.info_outline_rounded,
+                        //   color: Colors.white,
+                        //   size: 15,
+                        // ).marginOnly(bottom: 8, left: 3),
                       ],
                     ),
                   )
@@ -378,7 +374,6 @@ class AccountScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(9.0)),
                       onPressed: () async {
                         print("check");
-
                         await _.logout();
                       },
                       child: Text(

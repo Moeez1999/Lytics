@@ -2385,7 +2385,7 @@ class ReportsScreen extends StatelessWidget {
                           }
                         },
                         child: Text(
-                          "APPLY Filter",
+                          "APPLY FILTER",
                           style: TextStyle(
                               letterSpacing: 0.4,
                               color: CommonColor.greenButtonTextColor,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lytics_lens/Controllers/home_controller.dart';
@@ -26,6 +27,7 @@ class GlobalController extends GetxController
 
   Future<void> getSingleJob(String jobId) async {
     print("Check This Function calling");
+    print("Check Job Id is $jobId");
     try {
       if (storage.hasData("Url") == true) {
         String url = storage.read("Url");
@@ -37,7 +39,17 @@ class GlobalController extends GetxController
         });
         var data = json.decode(res.body);
         Get.log("All Data $data");
-        homeScreenController.job.insert(0, data);
+        Get.log("All Data ${data['share']}");
+        if(data['share'] == 'true')
+          {
+            print("Job insert in received");
+            homeScreenController.receivedJobsList.insert(0, data);
+          }
+        else
+          {
+            print("Job insert in Alert");
+            homeScreenController.job.insert(0, data);
+          }
       }
       else {
         String token = await storage.read("AccessToken");
@@ -49,8 +61,14 @@ class GlobalController extends GetxController
             });
         var data = json.decode(res.body);
         print("Check Data $data");
-        homeScreenController.job.insert(0, data);
-        print("Check Data 1");
+        if(data['share'].toString().isLowerCase == 'true')
+        {
+          homeScreenController.receivedJobsList.insert(0, data);
+        }
+        else
+        {
+          homeScreenController.job.insert(0, data);
+        }
       }
     } on SocketException catch (e) {
       print('Inter Connection Failed');

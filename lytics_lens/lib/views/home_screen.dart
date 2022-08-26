@@ -266,34 +266,8 @@ class HomeScreen extends StatelessWidget {
                                                           }
                                                         },
                                                         id: _.id,
-                                                        isClipped: _.searchjob
-                                                                    .length ==
-                                                                0
-                                                            ? _.job[index][
-                                                                        'share'] !=
-                                                                    null
-                                                                ? true
-                                                                : false
-                                                            : _.searchjob[index]
-                                                                        [
-                                                                        'share'] !=
-                                                                    null
-                                                                ? true
-                                                                : false,
-                                                        isAudio: _.searchjob
-                                                                    .length ==
-                                                                0
-                                                            ? _.job[index][
-                                                                        'audio'] ==
-                                                                    null
-                                                                ? false
-                                                                : true
-                                                            : _.searchjob[index]
-                                                                        [
-                                                                        'audio'] ==
-                                                                    null
-                                                                ? false
-                                                                : true,
+                                                        isClipped: false,
+                                                        isAudio: false,
                                                         isRead: _.searchjob
                                                                     .length ==
                                                                 0
@@ -495,7 +469,7 @@ class HomeScreen extends StatelessWidget {
             : _.isSocketError.value
                 ? InterConnectivity(
                     onPressed: () {
-                      _.getReceiveJob();
+                      _.getSentJobs();
                     },
                   )
                 : _.isDataFailed.value
@@ -509,7 +483,7 @@ class HomeScreen extends StatelessWidget {
                                 Expanded(
                                   child: GestureDetector(
                                     child: RefreshIndicator(
-                                        onRefresh: () => _.getReceiveJob(),
+                                        onRefresh: () => _.getSentJobs(),
                                         child: _.sentjob.length == 0
                                             ? Center(
                                                 child: Text(
@@ -536,113 +510,113 @@ class HomeScreen extends StatelessWidget {
                                                       CommonContainer(
                                                         onPressed: () {
                                                           Get.to(
-                                                            () =>
+                                                                () =>
                                                                 PlayerScreen(),
                                                             arguments: {
                                                               "id": _.sentjob[
-                                                                  index]['id'],
+                                                              index]['id'],
                                                             },
                                                           );
                                                         },
-                                                        isRead: _
-                                                                    .escalationsJob(
-                                                                        _.sentjob[index]
-                                                                            [
-                                                                            'escalations'])
-                                                                    .toString() ==
-                                                                'false'
+                                                        isRead: _.escalationsJob(
+                                                            _.sentjob[index]
+                                                            [
+                                                            'escalations'])
+                                                            .toString() ==
+                                                            'false'
                                                             ? false
                                                             : true,
                                                         imgUrl: _.storage
-                                                                .hasData("Url")
+                                                            .hasData("Url")
                                                             ? "${_.storage.read("Url").toString()}/uploads/${_.sentjob[index]['thumbnailPath']}"
                                                             : "${ApiData.thumbnailPath + _.sentjob[index]['thumbnailPath']}",
                                                         isShare: _.getSharePerson(_
-                                                                            .sentjob[
-                                                                        index][
-                                                                    'sharing']) ==
-                                                                ''
+                                                            .sentjob[
+                                                        index][
+                                                        'sharing']) ==
+                                                            ''
                                                             ? false
                                                             : true,
                                                         receiverName: "",
                                                         title: _.sentjob[index][
-                                                                        'share'] !=
-                                                                    null ||
-                                                                _.sentjob[index]
-                                                                        [
-                                                                        'audio'] !=
-                                                                    null
-                                                            ? _.sentjob[index]
-                                                                ['title']
-                                                            : _.sentjob[index]
-                                                                ['programName'],
-                                                        anchor: _.sentjob[index]
-                                                            ['anchor'],
-                                                        segments:
-                                                            _.getTopicString(
-                                                                _.sentjob[index]
-                                                                    [
-                                                                    'segments']),
-                                                        isClipped: _.sentjob[
-                                                                        index]
-                                                                    ['share'] !=
+                                                        'share'] !=
+                                                            null ||
+                                                            _.sentjob[index]
+                                                            [
+                                                            'audio'] !=
                                                                 null
+                                                            ? _.sentjob[index]
+                                                        ['title']
+                                                            : _.sentjob[index]
+                                                        ['programName'],
+                                                        anchor: _.sentjob[index]
+                                                        ['anchor'],
+                                                        segments:
+                                                        _.getTopicString(
+                                                            _.sentjob[index]
+                                                            [
+                                                            'segments']),
+                                                        isClipped: _.sentjob[
+                                                        index]
+                                                        ['share'] !=
+                                                            null
                                                             ? true
                                                             : false,
                                                         isAudio: _.sentjob[
-                                                                        index]
-                                                                    ['audio'] ==
-                                                                null
+                                                        index]
+                                                        ['audio'] ==
+                                                            null
                                                             ? false
                                                             : true,
                                                         guests:
-                                                            _.getGuestsString(
-                                                                _.sentjob[index]
-                                                                    ['guests']),
-                                                        source: _.sentjob[index]
-                                                            ['source'],
-                                                        channelName:
+                                                        _.getGuestsString(
                                                             _.sentjob[index]
-                                                                ['channel'],
+                                                            ['guests']),
+                                                        source: _.sentjob[index]
+                                                        ['source'],
+                                                        channelName:
+                                                        _.sentjob[index]
+                                                        ['channel'],
                                                         channelLogo: _.storage
-                                                                .hasData("Url")
+                                                            .hasData("Url")
                                                             ? _.sentjob[index][
-                                                                        'channelLogoPath']
-                                                                    .toString()
-                                                                    .contains(
-                                                                        'http')
-                                                                ? _.sentjob[
-                                                                        index][
-                                                                    'channelLogoPath']
-                                                                : "${_.storage.read("Url").toString()}/uploads//${_.sentjob[index]['channelLogoPath']}"
+                                                        'channelLogoPath']
+                                                            .toString()
+                                                            .contains(
+                                                            'http')
+                                                            ? _.sentjob[
+                                                        index][
+                                                        'channelLogoPath']
+                                                            : "${_.storage.read("Url").toString()}/uploads//${_.sentjob[index]['channelLogoPath']}"
                                                             : _.sentjob[index][
-                                                                        'channelLogoPath']
-                                                                    .toString()
-                                                                    .contains(
-                                                                        'http')
-                                                                ? _.sentjob[index]
-                                                                    ['channelLogoPath']
-                                                                : "${ApiData.channelLogoPath + _.sentjob[index]['channelLogoPath']}",
+                                                        'channelLogoPath']
+                                                            .toString()
+                                                            .contains(
+                                                            'http')
+                                                            ? _.sentjob[index]
+                                                        ['channelLogoPath']
+                                                            : "${ApiData.channelLogoPath + _.sentjob[index]['channelLogoPath']}",
                                                         date: _.convertDateUtc(_
                                                             .sentjob[index]
-                                                                ['programDate']
+                                                        ['programDate']
                                                             .toString()),
                                                         time: _.convertTime(_
-                                                                .sentjob[index]
-                                                            ['programTime']),
+                                                            .sentjob[index]
+                                                        ['programTime']),
                                                       ),
                                                       _.isMore.value
                                                           ? Center(
-                                                              child:
-                                                                  CircularProgressIndicator()
-                                                                      .marginOnly(
-                                                                top: 10.0,
-                                                                bottom: 10.0,
-                                                              ),
-                                                            )
+                                                        child:
+                                                        CircularProgressIndicator()
+                                                            .marginOnly(
+                                                          top: 10.0,
+                                                          bottom: 10.0,
+                                                        ),
+                                                      )
                                                           : SizedBox()
                                                     ],
                                                   );
+
                                                 })),
                                   ),
                                 )

@@ -16,6 +16,8 @@ class ClippingController extends GetxController
   bool isLoading = true;
   var isBottomLoading = false.obs;
   var isScreenLoading = true.obs;
+  var nodata = false.obs;
+
   final storage = new GetStorage();
   TextEditingController title = TextEditingController();
   TextEditingController des = TextEditingController();
@@ -102,6 +104,7 @@ class ClippingController extends GetxController
   }
 
   searchFunction(String v) {
+    nodata.value = false;
     if (v.isEmpty || v == '') {
       searchcompanyUser.clear();
     } else {
@@ -109,12 +112,14 @@ class ClippingController extends GetxController
       companyUser.forEach((e) {
         if (e['firstName'].toString().toLowerCase().contains(v.toLowerCase())) {
           searchcompanyUser.add(e);
-        } else if (e['lastName']
+        }
+        else if (e['lastName']
             .toString()
             .toLowerCase()
             .contains(v.toLowerCase())) {
           searchcompanyUser.add(e);
-        } else if (e['firstName']
+        }
+        else if (e['firstName']
             .toString()
             .toLowerCase()
             .contains(v.split(' ').first.toLowerCase()) &&
@@ -122,6 +127,10 @@ class ClippingController extends GetxController
           searchcompanyUser.add(e);
         }
       });
+      if(searchcompanyUser.length == 0)
+        {
+          nodata.value = true;
+        }
     }
   }
 
@@ -160,10 +169,11 @@ class ClippingController extends GetxController
         if (res.statusCode == 200) {
           sharingUser.clear();
           homeScreenController.isLoading.value = true;
-          await homeScreenController.getReceiveJob();
+          await homeScreenController.getSentJobs();
           homeScreenController.isLoading.value = false;
-          Get.back();
           isBottomLoading.value = false;
+          Get.back();
+          Get.back();
           CustomSnackBar.showSnackBar(
               title: "Job shared successfully",
               message: "",
@@ -189,10 +199,11 @@ class ClippingController extends GetxController
           sharingUser.clear();
           searchContact.clear();
           homeScreenController.isLoading.value = true;
-          await homeScreenController.getReceiveJob();
+          await homeScreenController.getSentJobs();
           homeScreenController.isLoading.value = false;
-          Get.back();
           isBottomLoading.value = false;
+          Get.back();
+          Get.back();
           CustomSnackBar.showSnackBar(
               title: "Job shared successfully",
               message: "",

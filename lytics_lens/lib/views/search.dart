@@ -461,8 +461,7 @@ class SearchBarView extends StatelessWidget {
                                                         child: ListView.builder(
                                                           padding:
                                                               EdgeInsets.zero,
-                                                          itemCount: _.searchtopiclist
-                                                                      .length ==
+                                                          itemCount: _.searchtopiclist.length ==
                                                                   0
                                                               ? _.topiclist
                                                                   .length
@@ -495,6 +494,8 @@ class SearchBarView extends StatelessWidget {
                                                                     arguments: _
                                                                         .searchText
                                                                         .text);
+                                                                _.searchtopiclist.clear();
+                                                                _.update();
                                                               },
                                                               child: Container(
                                                                 height: 40.0,
