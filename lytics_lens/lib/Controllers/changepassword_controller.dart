@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,13 +58,14 @@ class ChangePasswordController extends GetxController {
           CustomSnackBar.showSnackBar(
               title: AppStrings.passwordChanged,
               message: "",
-              backgroundColor: CommonColor.snackbarColour,isWarning: true);
-
+              backgroundColor: CommonColor.snackbarColour,
+              isWarning: true);
         } else {
           CustomSnackBar.showSnackBar(
               title: AppStrings.passwordDoesNotMatch,
               message: "",
-              backgroundColor: CommonColor.snackbarColour,isWarning: true);
+              backgroundColor: CommonColor.snackbarColour,
+              isWarning: true);
         }
       } else {
         print(ApiData.baseUrl);
@@ -89,17 +88,18 @@ class ChangePasswordController extends GetxController {
           CustomSnackBar.showSnackBar(
             title: AppStrings.passwordChanged,
             message: "",
-            backgroundColor: CommonColor.snackbarColour,);
+            backgroundColor: CommonColor.snackbarColour,
+          );
         } else {
           CustomSnackBar.showSnackBar(
               title: AppStrings.passwordDoesNotMatch,
               message: "",
-              backgroundColor: CommonColor.snackbarColour,isWarning: true);
+              backgroundColor: CommonColor.snackbarColour,
+              isWarning: true);
         }
       }
     } catch (e) {
       // Get.snackbar('Error', e.toString().contains("SocketException"), backgroundColor: Colors.red, colorText: Colors.white);
-
 
     }
   }

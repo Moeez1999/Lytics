@@ -68,7 +68,6 @@ class PushNotificationService {
       },
     );
 
-
     // replacement for onResume: When the app is in the background and opened directly from the push notification.
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       // FlutterAppBadger.updateBadgeCount(message.data.length);
@@ -95,6 +94,5 @@ class PushNotificationService {
       }
       // Get.toNamed("/${message.data["screen"]}");
     });
-
   }
 }

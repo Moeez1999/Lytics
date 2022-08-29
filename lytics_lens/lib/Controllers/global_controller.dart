@@ -8,12 +8,9 @@ import 'package:lytics_lens/Controllers/home_controller.dart';
 import 'package:http/http.dart' as http;
 import 'package:lytics_lens/utils/api.dart';
 
-class GlobalController extends GetxController
-{
-
+class GlobalController extends GetxController {
   late HomeScreenController homeScreenController;
   final storage = new GetStorage();
-
 
   @override
   void onInit() {
@@ -40,18 +37,14 @@ class GlobalController extends GetxController
         var data = json.decode(res.body);
         Get.log("All Data $data");
         Get.log("All Data ${data['share']}");
-        if(data['share'] == 'true')
-          {
-            print("Job insert in received");
-            homeScreenController.receivedJobsList.insert(0, data);
-          }
-        else
-          {
-            print("Job insert in Alert");
-            homeScreenController.job.insert(0, data);
-          }
-      }
-      else {
+        if (data['share'] == 'true') {
+          print("Job insert in received");
+          homeScreenController.receivedJobsList.insert(0, data);
+        } else {
+          print("Job insert in Alert");
+          homeScreenController.job.insert(0, data);
+        }
+      } else {
         String token = await storage.read("AccessToken");
         print("Bearer $token");
         var res = await http.get(
@@ -61,12 +54,9 @@ class GlobalController extends GetxController
             });
         var data = json.decode(res.body);
         print("Check Data $data");
-        if(data['share'].toString().isLowerCase == 'true')
-        {
+        if (data['share'].toString().isLowerCase == 'true') {
           homeScreenController.receivedJobsList.insert(0, data);
-        }
-        else
-        {
+        } else {
           homeScreenController.job.insert(0, data);
         }
       }
@@ -78,5 +68,4 @@ class GlobalController extends GetxController
       print('Global Controller Error occurred ${e.toString()}');
     }
   }
-
 }

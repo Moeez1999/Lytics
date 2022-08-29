@@ -1,7 +1,6 @@
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class ChangeSubscription1Controller extends GetxController {
-  
   bool isLoading = false;
   List intelligence = [];
   List allchannels = [];
@@ -46,7 +45,6 @@ class ChangeSubscription1Controller extends GetxController {
         'name': '1',
         'check': false,
       },
-      
     ];
 
     update();

@@ -165,20 +165,16 @@ class SearchController extends GetxController {
     selectedchannel.add('All Channels');
     update();
     storage.read('UsersChannels').forEach((e) {
-      if(e.toString().isLowerCase == 'all')
-        {
-
-        }
-      else
-        {
-          allChannels.add(e);
-          channellistonly.add(e);
-          filterChannelList.add(e);
-          cchannellist.add({
-            'id': e,
-            'name': e,
-          });
-        }
+      if (e.toString().isLowerCase == 'all') {
+      } else {
+        allChannels.add(e);
+        channellistonly.add(e);
+        filterChannelList.add(e);
+        cchannellist.add({
+          'id': e,
+          'name': e,
+        });
+      }
     });
 
     cchannellist.forEach((element) {
@@ -249,10 +245,9 @@ class SearchController extends GetxController {
         print('Programtype Response $response');
         responseprogramtyperesult.addAll(response['results']);
         responseprogramtyperesult.forEach((element) {
-          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training')
-          {}
-          else
-          {
+          if (element['name'] == 'EE - Training' ||
+              element['name'] == 'UU - Training') {
+          } else {
             responseprogramlist
                 .add({'id': element['name'], 'name': element['name']});
           }
@@ -274,13 +269,12 @@ class SearchController extends GetxController {
         responseprogramtyperesult.addAll(response['results']);
         responseprogramtyperesult.forEach((element) {
           print("Program Type is $element");
-          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training')
-            {}
-          else
-            {
-              responseprogramlist
-                  .add({'id': element['name'], 'name': element['name']});
-            }
+          if (element['name'] == 'EE - Training' ||
+              element['name'] == 'UU - Training') {
+          } else {
+            responseprogramlist
+                .add({'id': element['name'], 'name': element['name']});
+          }
           // programTypesList.add({"id": element['name'], "name": element['name']});
         });
         update();

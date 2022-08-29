@@ -4,26 +4,21 @@ import 'package:get/get.dart';
 import 'package:lytics_lens/views/player_Screen.dart';
 
 class DashboardController extends GetxController {
-
-  int currentindex=0;
-  ListQueue<int> navigationQueue =ListQueue();
-
+  int currentindex = 0;
+  ListQueue<int> navigationQueue = ListQueue();
 
   @override
   void onInit() {
     print('Dashboard Arrgument is ${Get.arguments}');
-    if(Get.arguments != null)
-    {
+    if (Get.arguments != null) {
       print('Dashboard Arrgument is ${Get.arguments}');
-      Get.to(() =>PlayerScreen(), arguments: {
-        "id": Get.arguments.toString()});
+      Get.to(() => PlayerScreen(), arguments: {"id": Get.arguments.toString()});
     }
     super.onInit();
   }
 
   @override
   void onReady() {
-
     super.onReady();
   }
 // this is a very useless application made by hamza, hammad and moeez
@@ -31,7 +26,7 @@ class DashboardController extends GetxController {
   void changeTabIndex(int index) {
     currentindex = index;
 
-    if(index == currentindex){
+    if (index == currentindex) {
       navigationQueue.clear();
       // navigationQueue.removeWhere((element) => element == index);
       navigationQueue.addLast(index);
@@ -43,10 +38,9 @@ class DashboardController extends GetxController {
     checkdata();
   }
 
-  void checkdata(){
+  void checkdata() {
     navigationQueue.forEach((element) {
       print('Add Data in Queue $element');
     });
   }
-
 }

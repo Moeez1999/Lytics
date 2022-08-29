@@ -65,7 +65,8 @@ class SearchBarTextField extends StatelessWidget {
                       width: 20.0,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage("assets/images/search-green.png"),
+                              image:
+                                  AssetImage("assets/images/search-green.png"),
                               fit: BoxFit.contain)),
                     ),
                   ),
@@ -95,7 +96,6 @@ class SearchBarTextField extends StatelessWidget {
           ),
         ),
       ),
-    
     );
   }
 

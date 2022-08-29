@@ -888,7 +888,6 @@ class PlayerScreen extends StatelessWidget {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Row(
-
                                                       children: [
                                                         Container(
                                                           width: 110,
@@ -956,25 +955,23 @@ class PlayerScreen extends StatelessWidget {
                                                                             ),
                                                                           )
                                                                         : GestureDetector(
-                                                                      onTap: (){
-                                                                        _.stopPlayer();
-                                                                      },
-                                                                          child: Container(
-                                                                              height:
-                                                                              34,
-                                                                              width:
-                                                                              34,
-                                                                              decoration:
-                                                                                  BoxDecoration(
+                                                                            onTap:
+                                                                                () {
+                                                                              _.stopPlayer();
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              height: 34,
+                                                                              width: 34,
+                                                                              decoration: BoxDecoration(
                                                                                 shape: BoxShape.circle,
                                                                                 border: Border.all(color: CommonColor.greenBorderColor),
                                                                               ),
-                                                                              child:
-                                                                                  Center(
+                                                                              child: Center(
                                                                                 child: Lottie.asset('assets/images/waves.json').marginOnly(left: 3.0, right: 3.0),
                                                                               ),
                                                                             ),
-                                                                        ),
+                                                                          ),
                                                                   )
                                                                 : SizedBox(),
                                                         _.source.toLowerCase() ==
@@ -1027,7 +1024,9 @@ class PlayerScreen extends StatelessWidget {
                                                                               Colors.white,
                                                                         ),
                                                                       ),
-                                                                    ).marginOnly(left: 7),
+                                                                    ).marginOnly(
+                                                                            left:
+                                                                                7),
                                                                   )
                                                                 : SizedBox(),
                                                       ],
@@ -1177,7 +1176,7 @@ class PlayerScreen extends StatelessWidget {
                                                                     .white),
                                                           ).marginOnly(
                                                               top: 12.0),
-                                                         ),
+                                                        ),
                                                         SizedBox(
                                                           width:
                                                               Get.width / 2.2,

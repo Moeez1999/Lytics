@@ -9,7 +9,6 @@ class GlobalTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final bool secure;
 
-
   GlobalTextField(
     this.control,
     this.validation,

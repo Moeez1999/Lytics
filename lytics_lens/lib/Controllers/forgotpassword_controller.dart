@@ -15,8 +15,7 @@ import '../Services/remoteconfig_service.dart';
 class ForgotPasswordController extends GetxController {
   bool isLoading = true;
 
-
-  RemoteConfigService remoteConfigService =  Get.find<RemoteConfigService>();
+  RemoteConfigService remoteConfigService = Get.find<RemoteConfigService>();
 
   // ignore: close_sinks
   StreamController<ErrorAnimationType>? errorController;

@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
-
-// import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
-
-// import 'package:lens_app/Views/Components/SearchBarTextField.dart';
-
-
-// import 'package:lens_app/views/Components/SelectVideoScreen.dart';
 
 import 'package:lytics_lens/Views/player_Screen.dart';
 import 'package:lytics_lens/views/Components/searchfield.dart';
@@ -24,10 +16,7 @@ import '../widget/common_snackbar.dart';
 import '../widget/internetconnectivity_screen.dart';
 import '../widget/multiselectDropdown/multi_select_bottom_sheet.dart';
 import '../widget/trendingkeyword_container.dart';
-// import 'Components/Global_BottmNav.dart';
 
-// import 'package:resize/resize.dart';
-// import 'package:shimmer_animation/shimmer_animation.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -304,7 +293,8 @@ class SearchScreen extends StatelessWidget {
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
                                                                     : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}");
                                                       } else {
-                                                        Get.delete<VideoController>();
+                                                        Get.delete<
+                                                            VideoController>();
                                                         Get.to(
                                                           () => PlayerScreen(),
                                                           arguments: {
@@ -357,7 +347,8 @@ class SearchScreen extends StatelessWidget {
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
                                                                     : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}");
                                                       } else {
-                                                        Get.delete<VideoController>();
+                                                        Get.delete<
+                                                            VideoController>();
                                                         Get.to(
                                                           () => PlayerScreen(),
                                                           arguments: {
@@ -504,13 +495,11 @@ class SearchScreen extends StatelessWidget {
                                                 ),
                                                 _.isMore.value
                                                     ? Center(
-                                                        child:
-                                                        Image.asset(
+                                                        child: Image.asset(
                                                           "assets/images/gif.gif",
                                                           height: 120.0,
                                                           width: 120.0,
                                                         ),
-
                                                       )
                                                     : SizedBox()
                                               ],
@@ -701,8 +690,8 @@ class SearchScreen extends StatelessWidget {
                                 });
                                 _.update();
                               },
-                              child: Image.asset("assets/images/trash_full.png").marginOnly(left: 5,bottom: 2),
-
+                              child: Image.asset("assets/images/trash_full.png")
+                                  .marginOnly(left: 5, bottom: 2),
                             )
                           ],
                         ),
@@ -1465,7 +1454,9 @@ class SearchScreen extends StatelessWidget {
                                           ),
                                           child: Obx(
                                             () => Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Flexible(
                                                   child: Center(
@@ -1473,19 +1464,20 @@ class SearchScreen extends StatelessWidget {
                                                       _.filterHost.length == 0
                                                           ? 'Select Host'
                                                           : "${_.listToString(_.filterHost)}",
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                           fontFamily: 'Roboto',
-                                                          color:
-                                                              CommonColor.filterColor,
+                                                          color: CommonColor
+                                                              .filterColor,
                                                           fontSize: 12.0),
                                                     ).marginOnly(
                                                         left: 5.0, right: 5.0),
                                                   ),
                                                 ),
                                                 Image.asset(
-                                                    "assets/images/Vector.png")
+                                                        "assets/images/Vector.png")
                                                     .marginOnly(right: 8),
                                               ],
                                             ),
@@ -1518,9 +1510,7 @@ class SearchScreen extends StatelessWidget {
                                           //   doCallback: _.addhostdata,
                                           // ),
                                         ),
-
                                       )
-
                               ],
                             ),
                             Column(
@@ -1563,25 +1553,28 @@ class SearchScreen extends StatelessWidget {
                                           ),
                                           child: Obx(
                                             () => Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Center(
                                                   child: Text(
                                                     _.filterGuests.length == 0
                                                         ? 'Select Guest'
                                                         : "${_.listToString(_.filterGuests)}",
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     maxLines: 1,
                                                     style: TextStyle(
                                                         fontFamily: 'Roboto',
-                                                        color:
-                                                            CommonColor.filterColor,
+                                                        color: CommonColor
+                                                            .filterColor,
                                                         fontSize: 12.0),
                                                   ).marginOnly(
                                                       left: 5.0, right: 5.0),
                                                 ),
                                                 Image.asset(
-                                                    "assets/images/Vector.png")
+                                                        "assets/images/Vector.png")
                                                     .marginOnly(right: 8),
                                               ],
                                             ),

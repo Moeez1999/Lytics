@@ -17,7 +17,7 @@ class CreatenewpasswordController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController retypePasswordController = TextEditingController();
 
-  RemoteConfigService remoteConfigService =  Get.find<RemoteConfigService>();
+  RemoteConfigService remoteConfigService = Get.find<RemoteConfigService>();
 
   final formkey = GlobalKey<FormState>();
 
@@ -28,8 +28,7 @@ class CreatenewpasswordController extends GetxController {
 
   @override
   void onInit() {
-    if(Get.arguments != null)
-    {
+    if (Get.arguments != null) {
       email = Get.arguments.toString();
       update();
     }
@@ -72,7 +71,7 @@ class CreatenewpasswordController extends GetxController {
             print(data.body);
           }
         } else {
-          print("email is "+ email);
+          print("email is " + email);
           print('All Email is ${storage.read('forgetemail').toString()}');
           var data = await http
               .post(Uri.parse(ApiData.baseUrl + ApiData.resetpassword), body: {

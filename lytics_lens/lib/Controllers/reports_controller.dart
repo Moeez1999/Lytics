@@ -118,7 +118,6 @@ class ReportsController extends GetxController {
   var filterHost = [].obs;
   List<String> anchorList = [];
 
-
   List anchorList1 = [];
 
   List allanchorList = [];
@@ -440,9 +439,7 @@ class ReportsController extends GetxController {
       }
     } on SocketException catch (e) {
       print(e);
-    } catch (e) {
-
-    }
+    } catch (e) {}
   }
 
   // <------------- Get Program type ------------>
@@ -466,16 +463,15 @@ class ReportsController extends GetxController {
         print('Programtype Response $response');
         responseprogramtyperesult.addAll(response['results']);
         responseprogramtyperesult.forEach((element) {
-          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training')
-            {}
-          else
-            {
-              responseprogramlist
-                  .add({'id': element['name'], 'name': element['name']});
-              programTypefilter.add(element['name']);
-              programTypefilterdata
-                  .add({'id': element['name'], 'name': element['name']});
-            }
+          if (element['name'] == 'EE - Training' ||
+              element['name'] == 'UU - Training') {
+          } else {
+            responseprogramlist
+                .add({'id': element['name'], 'name': element['name']});
+            programTypefilter.add(element['name']);
+            programTypefilterdata
+                .add({'id': element['name'], 'name': element['name']});
+          }
           // programTypesList.add({"id": element['name'], "name": element['name']});
         });
         update();
@@ -494,15 +490,15 @@ class ReportsController extends GetxController {
         print('Programtype Response $response');
         responseprogramtyperesult.addAll(response['results']);
         responseprogramtyperesult.forEach((element) {
-          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training'){}
-          else
-            {
-              responseprogramlist
-                  .add({'id': element['name'], 'name': element['name']});
-              programTypefilter.add(element['name']);
-              programTypefilterdata
-                  .add({'id': element['name'], 'name': element['name']});
-            }
+          if (element['name'] == 'EE - Training' ||
+              element['name'] == 'UU - Training') {
+          } else {
+            responseprogramlist
+                .add({'id': element['name'], 'name': element['name']});
+            programTypefilter.add(element['name']);
+            programTypefilterdata
+                .add({'id': element['name'], 'name': element['name']});
+          }
 
           // programTypesList.add({"id": element['name'], "name": element['name']});
         });
@@ -627,13 +623,11 @@ class ReportsController extends GetxController {
         print('Chanel Response $response');
         responseresult.addAll(response['results']);
         responseresult.forEach((element) {
-          if(element['name'].toString().isLowerCase == 'all')
-            {}
-          else
-            {
-              responsechannellist.add(element['name']);
-              filterchannellist.add(element['name']);
-            }
+          if (element['name'].toString().isLowerCase == 'all') {
+          } else {
+            responsechannellist.add(element['name']);
+            filterchannellist.add(element['name']);
+          }
         });
         update();
         channelsAll.add({'id': 'All Channels', 'name': 'All Channels'});
@@ -660,13 +654,11 @@ class ReportsController extends GetxController {
         // log('Chanel Response $response');
         responseresult.addAll(response['results']);
         responseresult.forEach((element) {
-          if(element['name'].toString().isLowerCase == 'all')
-            {}
-          else
-            {
-              responsechannellist.add(element['name']);
-              filterchannellist.add(element['name']);
-            }
+          if (element['name'].toString().isLowerCase == 'all') {
+          } else {
+            responsechannellist.add(element['name']);
+            filterchannellist.add(element['name']);
+          }
         });
         reverse = responsechannellist.reversed.toList();
         channelsAll.add({'id': 'All Channels', 'name': 'All Channels'});
@@ -1258,8 +1250,7 @@ class ReportsController extends GetxController {
         isLoading = false;
         update();
         print(data1);
-      }
-      else {
+      } else {
         isLoading = true;
         update();
         Get.log('CHeck ProgramTypes Data ${json.encode(programTypefilter)}');
@@ -1361,8 +1352,7 @@ class ReportsController extends GetxController {
           ));
         }
       }
-    }
-    else {
+    } else {
       print("Total  Graph Length is ${result.length}");
       if (result.length >= 10) {
         for (int i = 0; i < 10; i++) {

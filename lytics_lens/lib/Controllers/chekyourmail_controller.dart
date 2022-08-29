@@ -1,12 +1,10 @@
-
 import 'package:get/get.dart';
 
 class CheckYourMailController extends GetxController {
   bool isLoading = true;
 
-
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
   }
 
@@ -21,7 +19,4 @@ class CheckYourMailController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-
-
 }

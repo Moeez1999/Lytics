@@ -82,9 +82,8 @@ class CreateNewPasswordScreen extends StatelessWidget {
                   height: 26.0,
                 ),
                 Center(
-
                   child: Container(
-                    width: Get.width/1.7,
+                    width: Get.width / 1.7,
                     height: 34,
                     //color: Colors.amber,
                     child: Text(

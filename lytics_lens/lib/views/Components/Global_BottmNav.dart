@@ -16,24 +16,15 @@ class GlobalBottomNav extends StatefulWidget {
 class _GlobalBottomNavState extends State<GlobalBottomNav> {
   int selectedIndex = 0;
 
-
   void navigation(int index) {
-    if (index == 0)
-      {
-        print("List clear");
-        Get.off(() => HomeScreen());
-      }
-
-    else if (index == 1)
-      {
-        Get.off(() => SearchBarView());
-      }
-    else if(index == 2)
-      {
-        Get.off(() => ReportsScreen());
-      }
-    else if(index==3)
-    {
+    if (index == 0) {
+      print("List clear");
+      Get.off(() => HomeScreen());
+    } else if (index == 1) {
+      Get.off(() => SearchBarView());
+    } else if (index == 2) {
+      Get.off(() => ReportsScreen());
+    } else if (index == 3) {
       Get.off(() => AccountScreen());
     }
   }
@@ -48,10 +39,13 @@ class _GlobalBottomNavState extends State<GlobalBottomNav> {
             size: 25.0,
           ),
           label: 'Alerts',
-            backgroundColor: Color(0xff031347),
+          backgroundColor: Color(0xff031347),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search , size: 25.0,),
+          icon: Icon(
+            Icons.search,
+            size: 25.0,
+          ),
           label: 'Search',
           backgroundColor: Color.fromRGBO(27, 29, 40, 1),
         ),
@@ -67,8 +61,8 @@ class _GlobalBottomNavState extends State<GlobalBottomNav> {
         ),
       ],
       currentIndex: Constants.index,
-      selectedItemColor: Color( 0xff22B161),
-      selectedFontSize : 12.0,
+      selectedItemColor: Color(0xff22B161),
+      selectedFontSize: 12.0,
       backgroundColor: Color(0xff031347),
       unselectedItemColor: Color(0xffD3D3D3),
       type: BottomNavigationBarType.fixed,

@@ -88,9 +88,9 @@ class HeadlineContainer extends StatelessWidget {
                   collapseText: 'Show Less',
                   maxLines: 3,
                   animation: true,
-                  onLinkTap: (){
+                  onLinkTap: () {
                     print("Check");
-                    showMyDialog(context , title! , channelName!,colorCode);
+                    showMyDialog(context, title!, channelName!, colorCode);
                   },
                   animationDuration: Duration(seconds: 3),
                   linkStyle: TextStyle(
@@ -114,19 +114,23 @@ class HeadlineContainer extends StatelessWidget {
     ).marginOnly(left: 3);
   }
 
-  Future<void> showMyDialog(context,String news , String channel ,int? colorCode) async {
+  Future<void> showMyDialog(
+      context, String news, String channel, int? colorCode) async {
     return showDialog(
       context: context,
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Color(0xff131C3A),
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0),side: BorderSide(color:  colorCode.toString() == ''
-              ? Color(0xff48beeb)
-              : Color(colorCode!),),),
-
- actions: [
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            side: BorderSide(
+              color: colorCode.toString() == ''
+                  ? Color(0xff48beeb)
+                  : Color(colorCode!),
+            ),
+          ),
+          actions: [
             MaterialButton(
               onPressed: () async {
                 Get.back();
@@ -142,10 +146,7 @@ class HeadlineContainer extends StatelessWidget {
               minWidth: Get.width / 3.5,
               height: 38,
             ),
-
           ],
-
-
           title: Text(
             '$channel News',
             textScaleFactor: 1.0,
@@ -161,16 +162,15 @@ class HeadlineContainer extends StatelessWidget {
             '$news',
             textScaleFactor: 1.0,
             style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w300,
-                color: Colors.white,
-                letterSpacing: 0.4,
-                fontFamily: 'Roboto',
+              fontSize: 13,
+              fontWeight: FontWeight.w300,
+              color: Colors.white,
+              letterSpacing: 0.4,
+              fontFamily: 'Roboto',
             ),
           ),
         );
       },
     );
   }
-
 }

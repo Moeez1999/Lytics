@@ -79,8 +79,6 @@ class AccountController extends GetxController {
           print("CHeck The Version Txt ${value.data()}");
         }
         update();
-
-        
       }).catchError((e) {
         // CustomSnackBar.showSnackBar(title: AppStrings.unable, message: "", backgroundColor: Color(0xff48beeb));
       });
@@ -139,10 +137,10 @@ class AccountController extends GetxController {
       await storage.remove("firstName");
       await storage.remove("lastName");
       await storage.remove("UsersChannels");
-       await storage.remove("isOnboard");
-       controller.job.clear();
-       controller.receivedJobsList.clear();
-       controller.sentjob.clear();
+      await storage.remove("isOnboard");
+      controller.job.clear();
+      controller.receivedJobsList.clear();
+      controller.sentjob.clear();
       Constants.index = 0;
 
       Get.offAll(() => LoginScreen());

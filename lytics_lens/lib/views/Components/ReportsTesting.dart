@@ -24,9 +24,10 @@ class _GraphnsState extends State<Graphns> {
         body: Column(children: [
           //Initialize the chart widget
           SfCartesianChart(
-              primaryXAxis:CategoryAxis(
-                labelStyle: TextStyle(color:CommonColor.orangeColor),maximumLabelWidth: 80.0,
-        ),
+              primaryXAxis: CategoryAxis(
+                labelStyle: TextStyle(color: CommonColor.orangeColor),
+                maximumLabelWidth: 80.0,
+              ),
               // Chart title
               // Enable legend
               legend: Legend(isVisible: false),

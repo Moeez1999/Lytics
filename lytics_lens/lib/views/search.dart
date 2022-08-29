@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
-
-// import 'package:lens_app/views/Components/searchtextfield.dart';
 
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/views/Search_Screen.dart';
-import 'package:lytics_lens/widget/headline_container.dart';
-
 
 import '../Controllers/searchbar_controller.dart';
 import '../widget/internetconnectivity_screen.dart';
-
-// import 'Components/Global_BottmNav.dart';
 
 class SearchBarView extends StatelessWidget {
   const SearchBarView({Key? key}) : super(key: key);
@@ -72,7 +64,7 @@ class SearchBarView extends StatelessWidget {
                   ? InterConnectivity(
                       onPressed: () async {
                         await _.gettopic();
-                       // _.getHeadlines();
+                        // _.getHeadlines();
                       },
                     )
                   : SingleChildScrollView(
@@ -193,7 +185,7 @@ class SearchBarView extends StatelessWidget {
                                                             child: Image.asset(
                                                               "assets/images/search-green.png",
                                                               height: 20,
-                                                              width:20,
+                                                              width: 20,
                                                               fit: BoxFit.fill,
                                                             ))
                                                         .marginOnly(
@@ -203,7 +195,6 @@ class SearchBarView extends StatelessWidget {
                                                             right: 3.0),
                                                     Expanded(
                                                       child: TextFormField(
-
                                                         cursorColor: CommonColor
                                                             .greenColor,
                                                         textAlignVertical:
@@ -461,7 +452,8 @@ class SearchBarView extends StatelessWidget {
                                                         child: ListView.builder(
                                                           padding:
                                                               EdgeInsets.zero,
-                                                          itemCount: _.searchtopiclist.length ==
+                                                          itemCount: _.searchtopiclist
+                                                                      .length ==
                                                                   0
                                                               ? _.topiclist
                                                                   .length
@@ -494,7 +486,8 @@ class SearchBarView extends StatelessWidget {
                                                                     arguments: _
                                                                         .searchText
                                                                         .text);
-                                                                _.searchtopiclist.clear();
+                                                                _.searchtopiclist
+                                                                    .clear();
                                                                 _.update();
                                                               },
                                                               child: Container(

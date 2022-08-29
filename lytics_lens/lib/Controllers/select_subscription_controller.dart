@@ -202,7 +202,7 @@ class SelectSubscriptionController extends GetxController {
       print("Current User Token is $token");
       var res = await http.patch(
         Uri.parse(ApiData.baseUrl + ApiData.getUserInformation + id),
-        body: json.encode({'escalations': allData,'device': 'mobile'}),
+        body: json.encode({'escalations': allData, 'device': 'mobile'}),
         headers: {
           'Authorization': "Bearer $token",
         },

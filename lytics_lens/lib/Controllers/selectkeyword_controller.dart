@@ -35,13 +35,14 @@ class SelectKeyWordController extends GetxController {
   RxList topicsList = [].obs;
   final storage = new GetStorage();
 
-  var keyWordsList = [];//List for add All data at once from api
+  var keyWordsList = []; //List for add All data at once from api
 
-  List<String> listOfQueryWords = [];//List for add query data
-    List<String> urduQueryWords = [];// List for add urdu querrywords from api function
+  List<String> listOfQueryWords = []; //List for add query data
+  List<String> urduQueryWords =
+      []; // List for add urdu querrywords from api function
 
-  var showListOfWords = [].obs;//List for show keywords in ui
-  var showListOfUrduWords = [].obs;//List for show Urdu Keywords in ui
+  var showListOfWords = [].obs; //List for show keywords in ui
+  var showListOfUrduWords = [].obs; //List for show Urdu Keywords in ui
 
   List allKeyword = [];
 

@@ -435,7 +435,7 @@ class HomeScreenController extends GetxController {
         var data = json.decode(res.body);
         // Get.log("Check ALL Shared Data ${res.body}");
         sentjob.addAll(data);
-        isSendLoading.value =  false;
+        isSendLoading.value = false;
         // await getJobs(pageno.value);
       }
     } on SocketException catch (e) {
@@ -476,8 +476,7 @@ class HomeScreenController extends GetxController {
         // Get.log("Receiver Jobs $data");
         receivedJobsList.addAll(data);
         isLoading1.value = false;
-      }
-      else {
+      } else {
         String token = await storage.read("AccessToken");
         String id = await storage.read('id');
         print("User Id is $id");
@@ -639,8 +638,7 @@ class HomeScreenController extends GetxController {
     List rec = [];
     for (int i = 0; i < r.length; i++) {
       if (id == r[i]['recieverId']) {
-        rec.add(
-            '${r[i]['senderFirstName']} ${r[i]['senderLastName']}');
+        rec.add('${r[i]['senderFirstName']} ${r[i]['senderLastName']}');
       }
     }
     print("The data of reviever api is ${rec.toString()}");
@@ -652,8 +650,7 @@ class HomeScreenController extends GetxController {
     List sen = [];
     for (int i = 0; i < r.length; i++) {
       if (id == r[i]['senderId']) {
-        sen.add(
-            '${r[i]['recieverFirstName']} ${r[i]['recieverLastName']}');
+        sen.add('${r[i]['recieverFirstName']} ${r[i]['recieverLastName']}');
       }
     }
     print("The data of Sender api is ${sen.toString()}");
@@ -758,19 +755,15 @@ class HomeScreenController extends GetxController {
     return c;
   }
 
-  Future<void> getDeleteJob(List sharingId , String Jobid) async
-  {
+  Future<void> getDeleteJob(List sharingId, String Jobid) async {
     print("List of Sharing $sharingId");
     print("JobId of Sharing $Jobid");
     isSendLoading.value = true;
     String token = await storage.read("AccessToken");
-    try
-    {
-      if (storage.hasData('Url') == true)
-      {
+    try {
+      if (storage.hasData('Url') == true) {
         String url = storage.read("Url");
-        for(int i =0 ; i < sharingId.length ; i++)
-        {
+        for (int i = 0; i < sharingId.length; i++) {
           await http.patch(
             Uri.parse(url + ApiData.deleteSharedJob + sharingId[i]['_id']),
             headers: {
@@ -780,14 +773,13 @@ class HomeScreenController extends GetxController {
         }
         await getSentJobs();
         isSendLoading.value = false;
-      }
-      else
-      {
-        for(int i =0 ; i < sharingId.length ; i++)
-        {
+      } else {
+        for (int i = 0; i < sharingId.length; i++) {
           print("Job Type Id is ${sharingId[i]['_id']}");
           var d = await http.patch(
-            Uri.parse(ApiData.baseUrl + ApiData.deleteSharedJob + sharingId[i]['_id']),
+            Uri.parse(ApiData.baseUrl +
+                ApiData.deleteSharedJob +
+                sharingId[i]['_id']),
             headers: {
               'Authorization': "Bearer $token",
             },
@@ -797,11 +789,9 @@ class HomeScreenController extends GetxController {
         await getSentJobs();
         isSendLoading.value = false;
       }
-    }catch(e)
-    {
+    } catch (e) {
       isSendLoading.value = false;
     }
-
   }
 
   Future<void> jobStatus(String id) async {

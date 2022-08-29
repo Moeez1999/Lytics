@@ -16,10 +16,9 @@ class CheckYourMail extends StatelessWidget {
             elevation: 0.0,
           ),
           body: GestureDetector(
-            onTap: (){
+            onTap: () {
               FocusScopeNode currentFocus = FocusScope.of(context);
-              if(!currentFocus.hasPrimaryFocus)
-              {
+              if (!currentFocus.hasPrimaryFocus) {
                 currentFocus.unfocus();
               }
             },
@@ -50,14 +49,15 @@ class CheckYourMail extends StatelessWidget {
                   Text(
                     "We have sent password recovery\n options to your email",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12.0.sp, color: Color(0xFFD3D3D3)),
+                    style:
+                        TextStyle(fontSize: 12.0.sp, color: Color(0xFFD3D3D3)),
                   ),
                   SizedBox(
                     height: 50.0.h,
                   ),
                   MaterialButton(
                     onPressed: () {
-                      Get.to(() =>Enter4DigitCode());
+                      Get.to(() => Enter4DigitCode());
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0))),

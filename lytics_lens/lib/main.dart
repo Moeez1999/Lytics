@@ -26,12 +26,13 @@ void main() async {
     null,
     [
       NotificationChannel(
-          channelGroupKey: 'basic_channel_group',
-          channelKey: 'basic_channel',
-          channelName: 'Basic notifications',
-          importance: NotificationImportance.High,
-          defaultColor: Color(0xff22B161),
-          channelDescription: 'Notification channel for basic tests',)
+        channelGroupKey: 'basic_channel_group',
+        channelKey: 'basic_channel',
+        channelName: 'Basic notifications',
+        importance: NotificationImportance.High,
+        defaultColor: Color(0xff22B161),
+        channelDescription: 'Notification channel for basic tests',
+      )
     ],
     // Channel groups are only visual and are not required
     channelGroups: [
@@ -40,7 +41,7 @@ void main() async {
           channelGroupName: 'Basic group')
     ],
   );
-  SystemChrome.setSystemUIOverlayStyle( 
+  SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: CommonColor.appBarColor,
       systemNavigationBarIconBrightness: Brightness.dark,

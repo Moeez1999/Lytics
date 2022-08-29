@@ -11,8 +11,7 @@ import 'package:http/http.dart' as http;
 import '../Constants/common_color.dart';
 import '../widget/common_snackbar.dart';
 
-class ClippingController extends GetxController
-{
+class ClippingController extends GetxController {
   bool isLoading = true;
   var isBottomLoading = false.obs;
   var isScreenLoading = true.obs;
@@ -33,9 +32,8 @@ class ClippingController extends GetxController
   String senderFirstName = '';
   String senderLastName = '';
 
-
   @override
-  void onInit() async{
+  void onInit() async {
     senderId = await storage.read('id');
     senderFirstName = await storage.read('firstName');
     senderLastName = await storage.read('lastName');
@@ -43,7 +41,7 @@ class ClippingController extends GetxController
   }
 
   @override
-  void onReady() async{
+  void onReady() async {
     await getCompanyUser();
     isLoading = false;
     update();
@@ -55,7 +53,6 @@ class ClippingController extends GetxController
     super.onClose();
   }
 
-
   Future<void> getCompanyUser() async {
     try {
       if (storage.hasData("Url") == true) {
@@ -64,7 +61,7 @@ class ClippingController extends GetxController
         String id = await storage.read('company_id');
         companyUser.clear();
         var res =
-        await http.get(Uri.parse(url + ApiData.companyuser + id), headers: {
+            await http.get(Uri.parse(url + ApiData.companyuser + id), headers: {
           'Authorization': "Bearer $token",
         });
         var data = json.decode(res.body);
@@ -100,7 +97,6 @@ class ClippingController extends GetxController
       isLoading = false;
       update();
     }
-
   }
 
   searchFunction(String v) {
@@ -112,25 +108,25 @@ class ClippingController extends GetxController
       companyUser.forEach((e) {
         if (e['firstName'].toString().toLowerCase().contains(v.toLowerCase())) {
           searchcompanyUser.add(e);
-        }
-        else if (e['lastName']
+        } else if (e['lastName']
             .toString()
             .toLowerCase()
             .contains(v.toLowerCase())) {
           searchcompanyUser.add(e);
-        }
-        else if (e['firstName']
-            .toString()
-            .toLowerCase()
-            .contains(v.split(' ').first.toLowerCase()) &&
-            e['lastName'].toString().toLowerCase().contains(v.split(' ').last.toLowerCase())) {
+        } else if (e['firstName']
+                .toString()
+                .toLowerCase()
+                .contains(v.split(' ').first.toLowerCase()) &&
+            e['lastName']
+                .toString()
+                .toLowerCase()
+                .contains(v.split(' ').last.toLowerCase())) {
           searchcompanyUser.add(e);
         }
       });
-      if(searchcompanyUser.length == 0)
-        {
-          nodata.value = true;
-        }
+      if (searchcompanyUser.length == 0) {
+        nodata.value = true;
+      }
     }
   }
 
@@ -221,5 +217,4 @@ class ClippingController extends GetxController
       update();
     }
   }
-
 }

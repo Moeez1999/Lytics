@@ -219,6 +219,5 @@ class ChangeSubscription extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: g,
     );
-
   }
 }

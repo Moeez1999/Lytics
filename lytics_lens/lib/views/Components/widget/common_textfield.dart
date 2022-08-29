@@ -192,7 +192,7 @@ class CommonTextField extends StatelessWidget {
       this.keyboardType = TextInputType.text,
       this.textInputAction = TextInputAction.done,
       this.maxLength,
-      this.maxLine  = 1,
+      this.maxLine = 1,
       this.readOnly,
       this.onTap,
       this.inputFormatters,

@@ -30,8 +30,8 @@ class SearchField extends StatelessWidget {
         color: Color(0xff455177),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(
-            top: 0.0, bottom: 0.0, right: 0.0, left: 0.0),
+        padding:
+            const EdgeInsets.only(top: 0.0, bottom: 0.0, right: 0.0, left: 0.0),
         child: Stack(
           alignment: Alignment.centerRight,
           children: [
@@ -101,7 +101,6 @@ class SearchField extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-
                 ],
               ),
             )

@@ -9,7 +9,6 @@ class ChangeSubscription1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(27, 29, 40, 1),
         title: Align(

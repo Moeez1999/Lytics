@@ -66,19 +66,18 @@ class ForgotPassword extends StatelessWidget {
                                     : "Forgot Your Password?",
                                 textScaleFactor: 1.0,
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25.0,
-                                  letterSpacing: 0.7,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Roboto'
-                                ),
+                                    color: Colors.white,
+                                    fontSize: 25.0,
+                                    letterSpacing: 0.7,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Roboto'),
                                 textAlign: TextAlign.center),
                             SizedBox(
                               height: 25.0,
                             ),
                             Center(
                               child: Container(
-                                width: Get.width/1.5,
+                                width: Get.width / 1.5,
                                 height: 32,
                                 child: Text(
                                   _.remoteConfigService.remoteConfig
@@ -128,7 +127,8 @@ class ForgotPassword extends StatelessWidget {
                                     _.forgotPassword();
                                   }
                                 },
-                                child: Text("SEND CODE",
+                                child: Text(
+                                  "SEND CODE",
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
                                       color: Color(0xff23B662),
@@ -145,7 +145,7 @@ class ForgotPassword extends StatelessWidget {
                                   ),
                                 ),
                                 // color: Color.fromRGBO(72, 190, 235, 1),
-                                color:CommonColor.buttonColor,
+                                color: CommonColor.buttonColor,
                                 minWidth: Get.width / 3,
                                 height: 36,
                               ),
@@ -244,10 +244,11 @@ class ForgotPassword extends StatelessWidget {
                             Center(
                               child: Text(
                                 _.remoteConfigService.remoteConfig
-                                      .getString('code')
-                                      .isNotEmpty
-                                  ? _.remoteConfigService.remoteConfig
-                                      .getString('code') : 'ENTER CODE',
+                                        .getString('code')
+                                        .isNotEmpty
+                                    ? _.remoteConfigService.remoteConfig
+                                        .getString('code')
+                                    : 'ENTER CODE',
                                 textScaleFactor: 1.0,
                                 style: TextStyle(
                                   fontSize: 12.0,

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lytics_lens/Services/internetcheck.dart';
@@ -15,20 +14,16 @@ class Enter4DigitController extends GetxController {
 
   var resentcode;
 
-
   late NetworkController networkController;
 
   @override
-  void onInit(){
-    if(Get.isRegistered<NetworkController>())
-    {
+  void onInit() {
+    if (Get.isRegistered<NetworkController>()) {
       networkController = Get.find<NetworkController>();
-    }
-    else
-    {
+    } else {
       networkController = Get.put(NetworkController());
     }
-    if(Get.arguments != null){
+    if (Get.arguments != null) {
       resentcode = Get.arguments;
     }
     super.onInit();
@@ -46,12 +41,10 @@ class Enter4DigitController extends GetxController {
     super.onClose();
   }
 
-
-  void enterButton(){
-    otp = firstDigit.text + secondDigit.text + thirdDigit.text + fourthDigit.text;
+  void enterButton() {
+    otp =
+        firstDigit.text + secondDigit.text + thirdDigit.text + fourthDigit.text;
     print(otp);
-    Get.to(() =>CreateNewPasswordScreen());
+    Get.to(() => CreateNewPasswordScreen());
   }
-
-
 }

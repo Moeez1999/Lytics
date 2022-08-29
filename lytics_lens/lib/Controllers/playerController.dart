@@ -7,12 +7,10 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/home_controller.dart';
 import 'package:lytics_lens/Services/internetcheck.dart';
 import 'package:http/http.dart' as http;
 import 'package:lytics_lens/utils/api.dart';
-import 'package:lytics_lens/widget/common_snackbar.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'package:path_provider/path_provider.dart';

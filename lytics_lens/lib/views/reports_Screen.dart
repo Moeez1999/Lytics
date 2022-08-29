@@ -376,9 +376,9 @@ class ReportsScreen extends StatelessWidget {
                                 });
                                 _.update();
                               },
-                              child: Image.asset("assets/images/trash_full.png").marginOnly(left: 5,bottom: 5),
-
-                  )
+                              child: Image.asset("assets/images/trash_full.png")
+                                  .marginOnly(left: 5, bottom: 5),
+                            )
                           ],
                         ),
                         Row(
@@ -1973,7 +1973,8 @@ class ReportsScreen extends StatelessWidget {
                                 _.filterlist.add('All Channels');
                                 _.update();
                               },
-                              child: Image.asset("assets/images/trash_full.png").marginOnly(left: 5,bottom: 5),
+                              child: Image.asset("assets/images/trash_full.png")
+                                  .marginOnly(left: 5, bottom: 5),
                             )
                           ],
                         ),
