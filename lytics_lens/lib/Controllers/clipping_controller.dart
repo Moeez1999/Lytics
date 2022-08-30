@@ -64,7 +64,14 @@ class ClippingController extends GetxController
         await http.get(Uri.parse(url + ApiData.companyuser + id), headers: {
           'Authorization': "Bearer $token",
         });
+
         var data = json.decode(res.body);
+        companyUser.add({
+          "id" : "everyone",
+          "firstName" : "Everyone",
+          "lastName" : "Everyone",
+        });
+
         data['users'].forEach((e) {
           companyUser.add(e);
         });
@@ -80,6 +87,7 @@ class ClippingController extends GetxController
             headers: {
               'Authorization': "Bearer $token",
             });
+
         var data = json.decode(res.body);
         companyUser.add({
           "id" : "everyone",

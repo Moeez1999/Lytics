@@ -367,7 +367,7 @@ class VideoController extends GetxController {
 
         programTime = data['programTime'];
         programDate = data['programDate'];
-        imagePathLast = "${ApiData.thumbnailPath + data['thumbnailPath']}";
+        imagePathLast = data['thumbnailPath'];
         programType = data['programType'];
         transcription = data['transcription'].toString().toLowerCase() == 'null'
             ? []
@@ -495,7 +495,7 @@ class VideoController extends GetxController {
 
         programTime = data['programTime'];
         programDate = data['programDate'];
-        imagePathLast = "${ApiData.thumbnailPath + data['thumbnailPath']}";
+        imagePathLast = data['thumbnailPath'];
         programType = data['programType'];
         transcription = data['transcription'].toString().toLowerCase() == 'null'
             ? []

@@ -603,7 +603,27 @@ class _ClippingScreenState extends State<ClippingScreen> {
                               itemBuilder: (c, i) {
                                 return GestureDetector(
                                   onTap: () {
+                                    print("Everyone pressed ${_.companyUser[i]['firstName']}");
                                     setState(() {
+                                      if(_.companyUser[i]['firstName']=="Everyone"){
+                                        print('object');
+                                        _.companyUser.forEach((e) {
+                                          if(e["firstName"]!="Everyone"){
+                                            _.sharingUser.add({
+                                              "senderId": _.senderId,
+                                              "senderFirstName":
+                                              _.senderFirstName,
+                                              "senderLastName": _.senderLastName,
+                                              "recieverId": e['id'],
+                                              "recieverFirstName": e['firstName'],
+                                              "recieverLastName": e['lastName'],
+                                              "time": DateTime.now(),
+                                            });
+                                          }
+                                        });
+                                      }
+                                      print("Check List Data ${_.sharingUser}");
+
                                       if (_.searchcompanyUser.length == 0) {
                                         if (_.addDataList(
                                                 _.companyUser[i]['id']) ==

@@ -336,11 +336,9 @@ class HomeScreen extends StatelessWidget {
                                           0
                                           ? _.storage.hasData(
                                           "Url")
-                                          ? "${_.storage.read("Url")
-                                          .toString()}/uploads/${_
-                                          .job[index]['thumbnailPath']}"
-                                          : "${ApiData.thumbnailPath +
-                                          _.job[index]['thumbnailPath']}"
+                                          ? _
+                                          .job[index]['thumbnailPath']
+                                          : _.job[index]['thumbnailPath']
                                           : _.storage.hasData(
                                           "Url")
                                           ? "${_.storage.read("Url")
