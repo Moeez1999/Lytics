@@ -236,14 +236,6 @@ class SearchBarView extends StatelessWidget {
                                                         },
                                                         decoration:
                                                             InputDecoration(
-                                                          // prefixIcon: Icon(Icons.search),
-                                                          // prefixIcon: Image.asset(
-                                                          // "assets/images/search-green.png",
-                                                          //
-                                                          // //fit: BoxFit.none,
-                                                          // ).marginOnly(),
-
-                                                          // ).marginOnly(left: 20,top: 9,bottom: 9,right: 11),
                                                           hintText: "Search",
                                                           fillColor:
                                                               Color(0xff455177),
@@ -254,7 +246,9 @@ class SearchBarView extends StatelessWidget {
                                                             fontWeight:
                                                                 FontWeight.w400,
                                                             color: Color(
-                                                                0xffD3D3D3),
+                                                                    0xffD3D3D3)
+                                                                .withOpacity(
+                                                                    0.3),
                                                           ),
                                                           enabledBorder:
                                                               OutlineInputBorder(
@@ -314,23 +308,34 @@ class SearchBarView extends StatelessWidget {
                                                     //       width: 25,
                                                     //       fit: BoxFit.fill,
                                                     //     )).marginOnly(right: 10.0)
+
                                                     GestureDetector(
                                                             onTap: () {
                                                               _.searchText
                                                                   .clear();
                                                               _.update();
                                                             },
-                                                            child: Image.asset(
-                                                              "assets/images/cross-green.png",
-                                                              height: 12,
-                                                              width: 12,
-                                                              fit: BoxFit.fill,
-                                                            ))
+                                                            child: _
+                                                                    .searchText
+                                                                    .text
+                                                                    .isNotEmpty
+                                                                ? Image.asset(
+                                                                    "assets/images/cross-green.png",
+                                                                    height: 12,
+                                                                    width: 12,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )
+                                                                : Icon(
+                                                                    Icons.close,
+                                                                    size: 1,
+                                                                    color: Colors
+                                                                        .transparent))
                                                         .marginOnly(
                                                             left: 20.0,
                                                             top: 9,
                                                             bottom: 10,
-                                                            right: 15.0),
+                                                            right: 15.0)
                                                   ],
                                                 ),
                                               ),

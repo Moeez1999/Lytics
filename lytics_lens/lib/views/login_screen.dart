@@ -4,6 +4,7 @@ import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/login_screen_controller.dart';
 import 'package:lytics_lens/Views/Forgot%20Password.dart';
 import 'package:lytics_lens/views/Components/widget/common_textfield.dart';
+import 'package:lytics_lens/widget/common_button.dart';
 import 'package:lytics_lens/widget/common_snackbar.dart';
 import '../widget/validator.dart';
 import 'Components/Global_TextField.dart';
@@ -151,42 +152,53 @@ class LoginScreen extends StatelessWidget {
                                 SizedBox(
                                   height: 15.0,
                                 ),
-                                Container(
-                                  //color: CommonColor.loginAndSendCodeButtonColor,
-                                  width: 162,
-                                  height: 48,
-                                  child: MaterialButton(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(9.0),
-                                      side: BorderSide(
-                                        color: Color(0xff23B662),
-                                      ),
-                                    ),
-
-                                    onPressed: () async {
-                                      await _.verifyEmailPassword();
-                                    },
-                                    child: Text(
-                                      _.remoteConfigService.remoteConfig
-                                              .getString('logintext')
-                                              .isNotEmpty
-                                          ? _.remoteConfigService.remoteConfig
-                                              .getString('logintext')
-                                          : "LOGIN",
-                                      textScaleFactor: 1.0,
-                                      style: TextStyle(
-                                          color: Color(0xff2CE08E),
-                                          letterSpacing: 0.4,
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w700),
-                                      maxLines: 2,
-                                    ),
-                                    minWidth: Get.width / 3,
-                                    height: 40,
-                                    // color: Color.fromRGBO(72, 190, 235, 1),
-                                    color: CommonColor.buttonColor,
-                                  ),
+                                CommonButton(
+                                  buttonText: _.remoteConfigService.remoteConfig
+                                          .getString('logintext')
+                                          .isNotEmpty
+                                      ? _.remoteConfigService.remoteConfig
+                                          .getString('logintext')
+                                      : "LOGIN",
+                                  onPressed: () async {
+                                    await _.verifyEmailPassword();
+                                  },
                                 ),
+                                // Container(
+                                //   //color: CommonColor.loginAndSendCodeButtonColor,
+                                //   width: 162,
+                                //   height: 48,
+                                //   child: MaterialButton(
+                                //     shape: RoundedRectangleBorder(
+                                //       borderRadius: BorderRadius.circular(9.0),
+                                //       side: BorderSide(
+                                //         color: Color(0xff23B662),
+                                //       ),
+                                //     ),
+
+                                //     onPressed: () async {
+                                //       await _.verifyEmailPassword();
+                                //     },
+                                //     child: Text(
+                                //       _.remoteConfigService.remoteConfig
+                                //               .getString('logintext')
+                                //               .isNotEmpty
+                                //           ? _.remoteConfigService.remoteConfig
+                                //               .getString('logintext')
+                                //           : "LOGIN",
+                                //       textScaleFactor: 1.0,
+                                //       style: TextStyle(
+                                //           color: Color(0xff2CE08E),
+                                //           letterSpacing: 0.4,
+                                //           fontSize: 14.0,
+                                //           fontWeight: FontWeight.w700),
+                                //       maxLines: 2,
+                                //     ),
+                                //     minWidth: Get.width / 3,
+                                //     height: 40,
+                                //     // color: Color.fromRGBO(72, 190, 235, 1),
+                                //     color: CommonColor.buttonColor,
+                                //   ),
+                                // ),
                                 SizedBox(
                                   height: 15.0,
                                 ),
@@ -197,7 +209,7 @@ class LoginScreen extends StatelessWidget {
                                       Get.to(() => ForgotPassword());
                                     },
                                     child: Text(
-                                       "Forgot Password?",
+                                      "Forgot Password?",
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
                                           color: Color(0xFFD3D3D3),

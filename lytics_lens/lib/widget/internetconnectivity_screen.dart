@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class InterConnectivity extends StatelessWidget {
   final Function() onPressed;
@@ -14,17 +13,18 @@ class InterConnectivity extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
             child: Container(
-              width: 100,
-              height: 100,
+              width: 200,
+              height: 200,
               decoration: BoxDecoration(
                 image: DecorationImage(
+                  fit: BoxFit.fitHeight,
                   image: AssetImage(
-                    'assets/images/no_wifi.png',
+                    'assets/images/internet.png',
                   ),
                 ),
               ),
@@ -37,10 +37,10 @@ class InterConnectivity extends StatelessWidget {
             'No internet connection.',
             style: TextStyle(
               fontFamily: 'Roboto',
-              fontSize: 11.0,
+              fontSize: 14.0,
               color: Colors.white,
               letterSpacing: 0.4,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(
@@ -50,37 +50,36 @@ class InterConnectivity extends StatelessWidget {
             'Please connect to the internet and try again.',
             style: TextStyle(
               fontFamily: 'Roboto',
-              fontSize: 11.0,
+              fontSize: 14.0,
               color: Colors.white,
               letterSpacing: 0.4,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(
             height: 39,
           ),
           Container(
-            width: 163,
+            width: 133,
             height: 48,
             decoration: BoxDecoration(
-                border: Border.all(color: Color(0xff23B662)),
-                color: Color(0xff23B662).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(5.0)),
+                color: Color(0xff109F4F),
+                borderRadius: BorderRadius.circular(7.0)),
             child: Center(
               child: Text(
                 'TRY AGAIN',
                 style: TextStyle(
                   fontFamily: 'Roboto',
-                  fontSize: 16.0,
-                  color: Color(0xff2CE08E),
+                  fontSize: 14.0,
+                  color: Colors.white,
                   letterSpacing: 0.4,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
           )
         ],
-      ).marginOnly(bottom: 200),
+      ),
     );
   }
 }

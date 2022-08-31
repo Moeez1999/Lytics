@@ -663,6 +663,7 @@ class HomeScreenController extends GetxController {
     print("Bearer $token");
     print("Bearer $jobId");
     if (storage.hasData('Url') == true) {
+     
       String url = storage.read("Url");
       var res =
           await http.get(Uri.parse(url + ApiData.singleJob + jobId), headers: {

@@ -97,39 +97,39 @@ class CommonContainer extends StatelessWidget {
                       ),
                     ).marginOnly(left: 7.0, top: 7, bottom: 7, right: 9),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      isAudio
-                          ? Container(
-                              height: 20,
-                              width: 25,
-                              color: Colors.white,
-                              child: Center(
-                                child: Icon(
-                                  Icons.mic,
-                                  size: 15,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            )
-                          : SizedBox(),
-                      isClipped
-                          ? Container(
-                              height: 20,
-                              width: 25,
-                              color: Colors.green,
-                              child: Center(
-                                child: Icon(
-                                  Icons.cut,
-                                  size: 15,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            )
-                          : SizedBox(),
-                    ],
-                  ).marginOnly(top: 7, right: 9),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     isAudio
+                  //         ? Container(
+                  //             height: 20,
+                  //             width: 25,
+                  //             color: Colors.white,
+                  //             child: Center(
+                  //               child: Icon(
+                  //                 Icons.mic,
+                  //                 size: 15,
+                  //                 color: Colors.green,
+                  //               ),
+                  //             ),
+                  //           )
+                  //         : SizedBox(),
+                  //     isClipped
+                  //         ? Container(
+                  //             height: 20,
+                  //             width: 25,
+                  //             color: Colors.green,
+                  //             child: Center(
+                  //               child: Icon(
+                  //                 Icons.cut,
+                  //                 size: 15,
+                  //                 color: Colors.white,
+                  //               ),
+                  //             ),
+                  //           )
+                  //         : SizedBox(),
+                  //   ],
+                  // ).marginOnly(top: 7, right: 9),
                 ],
               ),
             ),
@@ -196,7 +196,7 @@ class CommonContainer extends StatelessWidget {
                   ),
                   Spacer(),
                   Container(
-                    width: Get.width / 2.8,
+                    width: Get.width / 3.0,
                     child: anchor.toString() == '[]'
                         ? Text(
                             "",
@@ -229,56 +229,100 @@ class CommonContainer extends StatelessWidget {
             Spacer(),
             //Third Column start from here.
             Container(
-              height: MediaQuery.of(context).size.height,
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      height: 2.0,
-                    ),
-                    isShare
-                        ? Row(
-                            children: [
-                              isSend
-                                  ? Transform.rotate(
-                                      angle: 180 * math.pi / 180,
-                                      child: Image.asset(
-                                        'assets/images/video-share.png',
-                                        width: 15.0,
-                                      ),
-                                    )
-                                  : Image.asset(
-                                      'assets/images/video-share.png',
-                                      width: 15.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  isShare
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            isAudio
+                                ? Center(
+                                    child: Icon(
+                                      Icons.mic,
+                                      size: 14,
+                                      color: Colors.green,
                                     ),
-                              SizedBox(
-                                width: 5.0,
-                              ),
-                              SizedBox(
-                                width: receiverName == '' ? 0 : Get.width / 10,
-                                child: Text(
-                                  '$receiverName',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.clip,
-                                  style: TextStyle(
-                                    fontSize: 10.0,
-                                    color: CommonColor.whiteColor,
-                                    fontWeight: FontWeight.w500,
+                                  )
+                                : SizedBox(),
+                            isClipped
+                                ? Center(
+                                    child: Icon(
+                                      Icons.cut,
+                                      size: 14,
+                                      color: Colors.green,
+                                    ),
+                                  )
+                                : SizedBox(),
+                            isSend
+                                ? Transform.rotate(
+                                    angle: 180 * math.pi / 180,
+                                    child: Image.asset(
+                                      'assets/images/video-share.png',
+                                      width: 14.0,
+                                    ),
+                                  )
+                                : Image.asset(
+                                    'assets/images/video-share.png',
+                                    width: 15.0,
                                   ),
+                            SizedBox(
+                              width: 3.0,
+                            ),
+                            SizedBox(
+                              width: receiverName == '' ? 0 : Get.width / 10,
+                              child: Text(
+                                '$receiverName',
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                  fontSize: 10.0,
+                                  color: CommonColor.whiteColor,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              SizedBox(
-                                width: 5.0,
+                            ),
+                            SizedBox(
+                              width: 3.0,
+                            ),
+                            Container(
+                              height: 17,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(2.0),
+                                ),
+                                border: Border.all(
+                                  color: source!.toLowerCase() == 'online'
+                                      ? Color(0xff76d14b)
+                                      : source!.toLowerCase() == 'tv'
+                                          ? Color(0xff00ffd9)
+                                          : source!.toLowerCase() ==
+                                                      'website' ||
+                                                  source!.toLowerCase() ==
+                                                      'blog'
+                                              ? Color(0xffffd76f)
+                                              : source!.toLowerCase() == 'print'
+                                                  ? Color(0xffB48AE8)
+                                                  : Color(0xffc28df),
+                                ),
+                                // colors[widget.index],
                               ),
-                              Container(
-                                height: 17,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(2.0),
-                                  ),
-                                  border: Border.all(
+                              child: Center(
+                                child: Text(
+                                  source!.toLowerCase() == 'online'
+                                      ? "${source!} Video"
+                                      : source!.toLowerCase() == 'website' ||
+                                              source!.toLowerCase() == 'blog'
+                                          ? "Web"
+                                          : "${source!.toUpperCase()}",
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    letterSpacing: 0.4,
                                     color: source!.toLowerCase() == 'online'
                                         ? Color(0xff76d14b)
                                         : source!.toLowerCase() == 'tv'
@@ -292,48 +336,45 @@ class CommonContainer extends StatelessWidget {
                                                         'print'
                                                     ? Color(0xffB48AE8)
                                                     : Color(0xffc28df),
+                                    fontSize: 9.0,
                                   ),
-                                  // colors[widget.index],
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    source!.toLowerCase() == 'online'
-                                        ? "${source!} Video"
-                                        : source!.toLowerCase() == 'website' ||
-                                                source!.toLowerCase() == 'blog'
-                                            ? "Web"
-                                            : "${source!.toUpperCase()}",
-                                    textScaleFactor: 1.0,
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      letterSpacing: 0.4,
-                                      color: source!.toLowerCase() == 'online'
-                                          ? Color(0xff76d14b)
-                                          : source!.toLowerCase() == 'tv'
-                                              ? Color(0xff00ffd9)
-                                              : source!.toLowerCase() ==
-                                                          'website' ||
-                                                      source!.toLowerCase() ==
-                                                          'blog'
-                                                  ? Color(0xffffd76f)
-                                                  : source!.toLowerCase() ==
-                                                          'print'
-                                                      ? Color(0xffB48AE8)
-                                                      : Color(0xffc28df),
-                                      fontSize: 9.0,
-                                    ),
-                                  ).marginOnly(left: 5.0, right: 5.0),
-                                ),
+                                ).marginOnly(left: 5.0, right: 5.0),
                               ),
-                            ],
-                          )
-                        : Container(
-                            height: 17,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(2.0),
-                              ),
-                              border: Border.all(
+                            ),
+                          ],
+                        )
+                      : Container(
+                          height: 17,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(2.0),
+                            ),
+                            border: Border.all(
+                              color: source!.toLowerCase() == 'online'
+                                  ? Color(0xff76d14b)
+                                  : source!.toLowerCase() == 'tv'
+                                      ? Color(0xff00ffd9)
+                                      : source!.toLowerCase() == 'website' ||
+                                              source!.toLowerCase() == 'blog'
+                                          ? Color(0xffffd76f)
+                                          : source!.toLowerCase() == 'print'
+                                              ? Color(0xffB48AE8)
+                                              : Color(0xffc28df),
+                            ),
+                            // colors[widget.index],
+                          ),
+                          child: Center(
+                            child: Text(
+                              source!.toLowerCase() == 'online'
+                                  ? "${source!} Video"
+                                  : source!.toLowerCase() == 'website' ||
+                                          source!.toLowerCase() == 'blog'
+                                      ? "Web"
+                                      : "${source!.toUpperCase()}",
+                              textScaleFactor: 1.0,
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                letterSpacing: 0.4,
                                 color: source!.toLowerCase() == 'online'
                                     ? Color(0xff76d14b)
                                     : source!.toLowerCase() == 'tv'
@@ -344,213 +385,184 @@ class CommonContainer extends StatelessWidget {
                                             : source!.toLowerCase() == 'print'
                                                 ? Color(0xffB48AE8)
                                                 : Color(0xffc28df),
+                                fontSize: 9.0,
                               ),
-                              // colors[widget.index],
-                            ),
-                            child: Center(
-                              child: Text(
-                                source!.toLowerCase() == 'online'
-                                    ? "${source!} Video"
-                                    : source!.toLowerCase() == 'website' ||
-                                            source!.toLowerCase() == 'blog'
-                                        ? "Web"
-                                        : "${source!.toUpperCase()}",
-                                textScaleFactor: 1.0,
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  letterSpacing: 0.4,
-                                  color: source!.toLowerCase() == 'online'
-                                      ? Color(0xff76d14b)
-                                      : source!.toLowerCase() == 'tv'
-                                          ? Color(0xff00ffd9)
-                                          : source!.toLowerCase() ==
-                                                      'website' ||
-                                                  source!.toLowerCase() ==
-                                                      'blog'
-                                              ? Color(0xffffd76f)
-                                              : source!.toLowerCase() == 'print'
-                                                  ? Color(0xffB48AE8)
-                                                  : Color(0xffc28df),
-                                  fontSize: 9.0,
-                                ),
-                              ).marginOnly(left: 5.0, right: 5.0),
-                            ),
-                          ),
-                    SizedBox(
-                      height: 7.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "$channelName",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 9.0,
-                                  letterSpacing: 0.4,
-                                  fontFamily: 'Roboto',
-                                ),
-                              ),
-                            ],
+                            ).marginOnly(left: 5.0, right: 5.0),
                           ),
                         ),
-                        SizedBox(
-                          width: 5.0,
+                  SizedBox(
+                    height: 7.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: "$channelName",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 9.0,
+                                letterSpacing: 0.4,
+                                fontFamily: 'Roboto',
+                              ),
+                            ),
+                          ],
                         ),
-                        // CachedNetworkImage(
-                        //   imageUrl: channelLogo!,
-                        //   placeholder: (c, e) => Lottie.asset(
-                        //       "assets/images/imgload.json",
-                        //       fit: BoxFit.cover),
-                        //   errorWidget: (c, e, r) => Lottie.asset(
-                        //       "assets/images/imgload.json",
-                        //       fit: BoxFit.cover),
-                        //   width: 15,
-                        //   height: 15,
-                        //   fit: BoxFit.cover,
-                        // ),
-                      ],
-                    ),
-                    Spacer(),
-                    //  <================ Progressbar code Comment ==============>
-                    // isProgress
-                    //     ?
-                    //     SizedBox()
-                    // Container(
-                    //     height: 20.0,
-                    //     width: 45,
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(15.0),
-                    //       gradient: LinearGradient(
-                    //         // stops: [0.0, 1.0],
-                    //         // tileMode: TileMode.clamp,
-                    //         colors: [ Color(0xff22b161),Color(0xff88a5ff)],
-                    //         begin: Alignment.bottomLeft,
-                    //         end: Alignment.centerRight
-                    //         //stops: [0.8, 0.4],
-                    //         // begin: Alignment.topLeft,
-                    //         // end: Alignment.bottomRight
-                    //       ),
-                    //     ),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       crossAxisAlignment: CrossAxisAlignment.center,
-                    //       children: [
-                    //         Icon(
-                    //           Icons.arrow_drop_up,
-                    //           size: 18.0,
-                    //           color: Color(0xffffffff),
-                    //         ),
-                    //         Text(
-                    //           '${progressValue.toString()}%',
-                    //           style: TextStyle(
-                    //               fontFamily: 'Roboto',
-                    //               color: Colors.white,
-                    //               fontSize: 9.0,
-                    //               letterSpacing: 0.4,
-                    //               fontWeight: FontWeight.w500),
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ).marginOnly(right: 5.0)
+                      ),
+                      SizedBox(
+                        width: 5.0,
+                      ),
+                      // CachedNetworkImage(
+                      //   imageUrl: channelLogo!,
+                      //   placeholder: (c, e) => Lottie.asset(
+                      //       "assets/images/imgload.json",
+                      //       fit: BoxFit.cover),
+                      //   errorWidget: (c, e, r) => Lottie.asset(
+                      //       "assets/images/imgload.json",
+                      //       fit: BoxFit.cover),
+                      //   width: 15,
+                      //   height: 15,
+                      //   fit: BoxFit.cover,
+                      // ),
+                    ],
+                  ),
+                  Spacer(),
+                  //  <================ Progressbar code Comment ==============>
+                  // isProgress
+                  //     ?
+                  //     SizedBox()
+                  // Container(
+                  //     height: 20.0,
+                  //     width: 45,
+                  //     decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(15.0),
+                  //       gradient: LinearGradient(
+                  //         // stops: [0.0, 1.0],
+                  //         // tileMode: TileMode.clamp,
+                  //         colors: [ Color(0xff22b161),Color(0xff88a5ff)],
+                  //         begin: Alignment.bottomLeft,
+                  //         end: Alignment.centerRight
+                  //         //stops: [0.8, 0.4],
+                  //         // begin: Alignment.topLeft,
+                  //         // end: Alignment.bottomRight
+                  //       ),
+                  //     ),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: [
+                  //         Icon(
+                  //           Icons.arrow_drop_up,
+                  //           size: 18.0,
+                  //           color: Color(0xffffffff),
+                  //         ),
+                  //         Text(
+                  //           '${progressValue.toString()}%',
+                  //           style: TextStyle(
+                  //               fontFamily: 'Roboto',
+                  //               color: Colors.white,
+                  //               fontSize: 9.0,
+                  //               letterSpacing: 0.4,
+                  //               fontWeight: FontWeight.w500),
+                  //         )
+                  //       ],
+                  //     ),
+                  //   ).marginOnly(right: 5.0)
 
-                    // : source!.toLowerCase() == 'website'
-                    //     ? Container(
-                    //         height: 20.0,
-                    //         width: Get.width / 5,
-                    //         color: Colors.transparent,
-                    //       )
-                    //     : Container(
-                    //         height: 20.0,
-                    //         width: Get.width / 5,
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(20.0),
-                    //           color: source!.toLowerCase() == 'online'
-                    //               ? Color(0xff76d14b)
-                    //               : source!.toLowerCase() == 'tv'
-                    //                   ? Color(0xff00ffd9)
-                    //                   : Color(0xffc28df),
-                    //         ),
-                    //         child: Center(
-                    //           child: RichText(
-                    //             text: TextSpan(
-                    //               text: source == 'online' ? '1M' : '3.2 ',
-                    //               style: TextStyle(
-                    //                 fontWeight: FontWeight.w500,
-                    //                 fontSize: 10.0,
-                    //                 fontFamily: 'Roboto',
-                    //                 color: Colors.black,
-                    //               ),
-                    //               children: <TextSpan>[
-                    //                 TextSpan(
-                    //                   text: source == 'online'
-                    //                       ? 'Views'
-                    //                       : 'Rating',
-                    //                   style: TextStyle(
-                    //                     fontWeight: FontWeight.w500,
-                    //                     fontSize: 10.0,
-                    //                     fontFamily: 'Roboto',
-                    //                     color: Colors.black,
-                    //                   ),
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ).marginOnly(right: 5.0),
+                  // : source!.toLowerCase() == 'website'
+                  //     ? Container(
+                  //         height: 20.0,
+                  //         width: Get.width / 5,
+                  //         color: Colors.transparent,
+                  //       )
+                  //     : Container(
+                  //         height: 20.0,
+                  //         width: Get.width / 5,
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.circular(20.0),
+                  //           color: source!.toLowerCase() == 'online'
+                  //               ? Color(0xff76d14b)
+                  //               : source!.toLowerCase() == 'tv'
+                  //                   ? Color(0xff00ffd9)
+                  //                   : Color(0xffc28df),
+                  //         ),
+                  //         child: Center(
+                  //           child: RichText(
+                  //             text: TextSpan(
+                  //               text: source == 'online' ? '1M' : '3.2 ',
+                  //               style: TextStyle(
+                  //                 fontWeight: FontWeight.w500,
+                  //                 fontSize: 10.0,
+                  //                 fontFamily: 'Roboto',
+                  //                 color: Colors.black,
+                  //               ),
+                  //               children: <TextSpan>[
+                  //                 TextSpan(
+                  //                   text: source == 'online'
+                  //                       ? 'Views'
+                  //                       : 'Rating',
+                  //                   style: TextStyle(
+                  //                     fontWeight: FontWeight.w500,
+                  //                     fontSize: 10.0,
+                  //                     fontFamily: 'Roboto',
+                  //                     color: Colors.black,
+                  //                   ),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ).marginOnly(right: 5.0),
 
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.access_time,
-                          size: 10.0,
-                          color: Colors.white,
-                        ).marginOnly(bottom: 7),
-                        SizedBox(
-                          width: 3.0,
-                        ),
-                        Text(
-                          "$date",
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.access_time,
+                        size: 10.0,
+                        color: Colors.white,
+                      ).marginOnly(bottom: 7),
+                      SizedBox(
+                        width: 3.0,
+                      ),
+                      Text(
+                        "$date",
+                        textScaleFactor: 1.0,
+                        // showDate[widget.index],
+                        style: TextStyle(
+                            color: Colors.white,
+                            letterSpacing: 0.4,
+                            fontFamily: 'Roboto',
+                            fontSize: 9),
+                      ).marginOnly(bottom: 5),
+                      Container(
+                        height: 3.0,
+                        width: 3.0,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.white),
+                      ).marginOnly(bottom: 5, left: 4, right: 4),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: Text(
+                          "$time",
                           textScaleFactor: 1.0,
-                          // showDate[widget.index],
+                          // showTime[widget.index],
                           style: TextStyle(
-                              color: Colors.white,
-                              letterSpacing: 0.4,
-                              fontFamily: 'Roboto',
-                              fontSize: 9),
+                            color: Colors.white,
+                            letterSpacing: 0.4,
+                            fontSize: 9.0,
+                          ),
                         ).marginOnly(bottom: 5),
-                        Container(
-                          height: 3.0,
-                          width: 3.0,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.white),
-                        ).marginOnly(bottom: 5, left: 4, right: 4),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Text(
-                            "$time",
-                            textScaleFactor: 1.0,
-                            // showTime[widget.index],
-                            style: TextStyle(
-                              color: Colors.white,
-                              letterSpacing: 0.4,
-                              fontSize: 9.0,
-                            ),
-                          ).marginOnly(bottom: 5),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              //color: Colors.white,
             ),
           ],
         ),

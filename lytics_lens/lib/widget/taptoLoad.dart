@@ -19,12 +19,12 @@ class TapToLoad extends StatelessWidget {
         children: [
           Center(
             child: Container(
-              width: Get.width / 2.0,
-              height: Get.height / 2.5,
+              width: 200,
+              height: 200,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                    'assets/images/no_server.png',
+                    'assets/images/server.png',
                   ),
                 ),
               ),
@@ -37,39 +37,39 @@ class TapToLoad extends StatelessWidget {
             'Could not connect to the server.',
             style: TextStyle(
               fontFamily: 'Roboto',
-              fontSize: 11.0,
+              fontSize: 14.0,
               color: Colors.white,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Text(
             'Please try again.',
             style: TextStyle(
               fontFamily: 'Roboto',
-              fontSize: 11.0,
+              fontSize: 14.0,
               color: Colors.white,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
             ),
           ),
           SizedBox(
             height: 39,
           ),
           Container(
-            width: 163,
+            width: 133,
             height: 48,
             decoration: BoxDecoration(
-                border: Border.all(color: Color(0xff23B662)),
-                color: Color(0xff23B662).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(5.0)),
+                // border: Border.all(color: Color(0xff23B662)),
+                color: Color(0xff109F4F),
+                borderRadius: BorderRadius.circular(7.0)),
             child: Center(
               child: Text(
                 'TRY AGAIN',
                 style: TextStyle(
                   fontFamily: 'Roboto',
-                  fontSize: 16.0,
-                  color: Color(0xff2CE08E),
+                  fontSize: 14.0,
+                  color: Colors.white,
                   letterSpacing: 0.4,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),

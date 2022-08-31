@@ -50,7 +50,7 @@ void main() async {
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) {
-    runApp(
+    runApp( 
       LensApp(),
     );
   });

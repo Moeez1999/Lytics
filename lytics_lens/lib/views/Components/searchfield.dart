@@ -72,7 +72,7 @@ class SearchField extends StatelessWidget {
                   ),
                 ),
                 isDense: true,
-                hintStyle: TextStyle(color: Color(0xFFD3D3D3)),
+                hintStyle: TextStyle(color: Color(0xFFD3D3D3).withOpacity(0.3)),
                 border: InputBorder.none,
               ),
             ),

@@ -299,7 +299,7 @@ class HomeScreen extends StatelessWidget {
                                                                 ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
                                                                 : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}",
                                                         title: _.job[index]
-                                                                ['programName'],
+                                                            ['programName'],
                                                         anchor: _.searchjob
                                                                     .length ==
                                                                 0
@@ -477,152 +477,143 @@ class HomeScreen extends StatelessWidget {
                         _.getSentJobs();
                       })
                     : DefaultTabController(
-                            length: 5,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    child: RefreshIndicator(
-                                        onRefresh: () => _.getSentJobs(),
-                                        child: _.sentjob.length == 0
-                                            ? Center(
-                                                child: Text(
-                                                  "No Job Shared",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 20,
-                                                      letterSpacing: 1.0),
-                                                ),
-                                              )
-                                            : ListView.separated(
-                                                shrinkWrap: true,
-                                                itemCount: _.sentjob.length,
-                                                separatorBuilder: (c, e) {
-                                                  return SizedBox(
-                                                    height: 5.0,
-                                                  );
-                                                },
-                                                itemBuilder: (ctx, index) {
-                                                  return Column(
-                                                    children: [
-                                                      CommonContainer(
-                                                        onPressed: () {
-                                                          Get.to(
-                                                                () =>
-                                                                PlayerScreen(),
-                                                            arguments: {
-                                                              "id": _.sentjob[
-                                                              index]['id'],
-                                                            },
-                                                          );
+                        length: 5,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                child: RefreshIndicator(
+                                    onRefresh: () => _.getSentJobs(),
+                                    child: _.sentjob.length == 0
+                                        ? Center(
+                                            child: Text(
+                                              "No Job Shared",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20,
+                                                  letterSpacing: 1.0),
+                                            ),
+                                          )
+                                        : ListView.separated(
+                                            shrinkWrap: true,
+                                            itemCount: _.sentjob.length,
+                                            separatorBuilder: (c, e) {
+                                              return SizedBox(
+                                                height: 5.0,
+                                              );
+                                            },
+                                            itemBuilder: (ctx, index) {
+                                              return Column(
+                                                children: [
+                                                  CommonContainer(
+                                                    onPressed: () {
+                                                      Get.to(
+                                                        () => PlayerScreen(),
+                                                        arguments: {
+                                                          "id": _.sentjob[index]
+                                                              ['id'],
                                                         },
-                                                        isRead: _.escalationsJob(
-                                                            _.sentjob[index]
-                                                            [
-                                                            'escalations'])
-                                                            .toString() ==
+                                                      );
+                                                    },
+                                                    isRead: _
+                                                                .escalationsJob(_
+                                                                            .sentjob[
+                                                                        index][
+                                                                    'escalations'])
+                                                                .toString() ==
                                                             'false'
-                                                            ? false
-                                                            : true,
-                                                        imgUrl: _.storage
+                                                        ? false
+                                                        : true,
+                                                    imgUrl: _.storage
                                                             .hasData("Url")
-                                                            ? "${_.storage.read("Url").toString()}/uploads/${_.sentjob[index]['thumbnailPath']}"
-                                                            : "${ApiData.thumbnailPath + _.sentjob[index]['thumbnailPath']}",
-                                                        isShare: _.getSharePerson(_
-                                                            .sentjob[
-                                                        index][
-                                                        'sharing']) ==
+                                                        ? "${_.storage.read("Url").toString()}/uploads/${_.sentjob[index]['thumbnailPath']}"
+                                                        : "${ApiData.thumbnailPath + _.sentjob[index]['thumbnailPath']}",
+                                                    isShare: _.getSharePerson(_
+                                                                        .sentjob[
+                                                                    index]
+                                                                ['sharing']) ==
                                                             ''
-                                                            ? false
-                                                            : true,
-                                                        receiverName: "",
-                                                        title: _.sentjob[index][
-                                                        'share'] !=
-                                                            null ||
+                                                        ? false
+                                                        : true,
+                                                    receiverName: "",
+                                                    title: _.sentjob[index]
+                                                                    ['share'] !=
+                                                                null ||
                                                             _.sentjob[index]
-                                                            [
-                                                            'audio'] !=
+                                                                    ['audio'] !=
                                                                 null
-                                                            ? _.sentjob[index]
-                                                        ['title']
-                                                            : _.sentjob[index]
-                                                        ['programName'],
-                                                        anchor: _.sentjob[index]
+                                                        ? _.sentjob[index]
+                                                            ['title']
+                                                        : _.sentjob[index]
+                                                            ['programName'],
+                                                    anchor: _.sentjob[index]
                                                         ['anchor'],
-                                                        segments:
-                                                        _.getTopicString(
-                                                            _.sentjob[index]
-                                                            [
-                                                            'segments']),
-                                                        isClipped: _.sentjob[
-                                                        index]
-                                                        ['share'] !=
-                                                            null
-                                                            ? true
-                                                            : false,
-                                                        isAudio: _.sentjob[
-                                                        index]
-                                                        ['audio'] ==
-                                                            null
-                                                            ? false
-                                                            : true,
-                                                        guests:
-                                                        _.getGuestsString(
-                                                            _.sentjob[index]
-                                                            ['guests']),
-                                                        source: _.sentjob[index]
-                                                        ['source'],
-                                                        channelName:
+                                                    segments: _.getTopicString(
                                                         _.sentjob[index]
-                                                        ['channel'],
-                                                        channelLogo: _.storage
+                                                            ['segments']),
+                                                    isClipped: _.sentjob[index]
+                                                                ['share'] !=
+                                                            null
+                                                        ? true
+                                                        : false,
+                                                    isAudio: _.sentjob[index]
+                                                                ['audio'] ==
+                                                            null
+                                                        ? false
+                                                        : true,
+                                                    guests: _.getGuestsString(
+                                                        _.sentjob[index]
+                                                            ['guests']),
+                                                    source: _.sentjob[index]
+                                                        ['source'],
+                                                    channelName:
+                                                        _.sentjob[index]
+                                                            ['channel'],
+                                                    channelLogo: _.storage
                                                             .hasData("Url")
+                                                        ? _.sentjob[index][
+                                                                    'channelLogoPath']
+                                                                .toString()
+                                                                .contains(
+                                                                    'http')
                                                             ? _.sentjob[index][
-                                                        'channelLogoPath']
-                                                            .toString()
-                                                            .contains(
-                                                            'http')
-                                                            ? _.sentjob[
-                                                        index][
-                                                        'channelLogoPath']
+                                                                'channelLogoPath']
                                                             : "${_.storage.read("Url").toString()}/uploads//${_.sentjob[index]['channelLogoPath']}"
-                                                            : _.sentjob[index][
-                                                        'channelLogoPath']
-                                                            .toString()
-                                                            .contains(
-                                                            'http')
-                                                            ? _.sentjob[index]
-                                                        ['channelLogoPath']
+                                                        : _.sentjob[index][
+                                                                    'channelLogoPath']
+                                                                .toString()
+                                                                .contains(
+                                                                    'http')
+                                                            ? _.sentjob[index][
+                                                                'channelLogoPath']
                                                             : "${ApiData.channelLogoPath + _.sentjob[index]['channelLogoPath']}",
-                                                        date: _.convertDateUtc(_
-                                                            .sentjob[index]
-                                                        ['programDate']
-                                                            .toString()),
-                                                        time: _.convertTime(_
-                                                            .sentjob[index]
-                                                        ['programTime']),
-                                                      ),
-                                                      _.isMore.value
-                                                          ? Center(
-                                                        child:
-                                                        CircularProgressIndicator()
-                                                            .marginOnly(
-                                                          top: 10.0,
-                                                          bottom: 10.0,
-                                                        ),
-                                                      )
-                                                          : SizedBox()
-                                                    ],
-                                                  );
-
-                                                })),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
+                                                    date: _.convertDateUtc(_
+                                                        .sentjob[index]
+                                                            ['programDate']
+                                                        .toString()),
+                                                    time: _.convertTime(
+                                                        _.sentjob[index]
+                                                            ['programTime']),
+                                                  ),
+                                                  _.isMore.value
+                                                      ? Center(
+                                                          child:
+                                                              CircularProgressIndicator()
+                                                                  .marginOnly(
+                                                            top: 10.0,
+                                                            bottom: 10.0,
+                                                          ),
+                                                        )
+                                                      : SizedBox()
+                                                ],
+                                              );
+                                            })),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
       },
     );
   }
