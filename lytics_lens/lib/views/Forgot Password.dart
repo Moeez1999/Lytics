@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import 'package:lytics_lens/Constants/app_strrings.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/forgotpassword_controller.dart';
-import 'package:lytics_lens/views/Components/widget/common_textfield.dart';
+import 'package:lytics_lens/widget/textFields/common_textfield.dart';
 import 'package:lytics_lens/views/CreateNewPasswordScreen.dart';
-import 'package:lytics_lens/widget/common_snackbar.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import '../widget/snackbar/common_snackbar.dart';
 
 class ForgotPassword extends StatelessWidget {
   @override
@@ -58,12 +59,7 @@ class ForgotPassword extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                                _.remoteConfigService.remoteConfig
-                                        .getString('forgot')
-                                        .isNotEmpty
-                                    ? _.remoteConfigService.remoteConfig
-                                        .getString('forgot')
-                                    : "Forgot Your Password?",
+                                "Forgot Your Password?",
                                 textScaleFactor: 1.0,
                                 style: TextStyle(
                                   color: Colors.white,
@@ -81,12 +77,7 @@ class ForgotPassword extends StatelessWidget {
                                 width: Get.width/1.5,
                                 height: 32,
                                 child: Text(
-                                  _.remoteConfigService.remoteConfig
-                                          .getString('password_instructions')
-                                          .isNotEmpty
-                                      ? _.remoteConfigService.remoteConfig
-                                          .getString('password_instructions')
-                                      : "Enter your registered email below to receive password reset instructions",
+                                  "Enter your registered email below to receive password reset instructions",
                                   textScaleFactor: 1.0,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -243,11 +234,7 @@ class ForgotPassword extends StatelessWidget {
                             ),
                             Center(
                               child: Text(
-                                _.remoteConfigService.remoteConfig
-                                      .getString('code')
-                                      .isNotEmpty
-                                  ? _.remoteConfigService.remoteConfig
-                                      .getString('code') : 'ENTER CODE',
+                                'ENTER CODE',
                                 textScaleFactor: 1.0,
                                 style: TextStyle(
                                   fontSize: 12.0,

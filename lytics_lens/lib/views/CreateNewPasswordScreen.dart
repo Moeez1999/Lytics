@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/createnewpassword_controller.dart';
+import 'package:lytics_lens/widget/form_validator/validator.dart';
 
-import 'package:lytics_lens/views/Components/widget/common_textfield.dart';
+import 'package:lytics_lens/widget/textFields/common_textfield.dart';
 
 import '../Constants/app_strrings.dart';
-import '../widget/common_snackbar.dart';
-import '../widget/validator.dart';
+import '../widget/snackbar/common_snackbar.dart';
 // import 'package:resize/resize.dart';
 
 class CreateNewPasswordScreen extends StatelessWidget {
@@ -63,12 +63,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
               children: [
                 Center(
                   child: Text(
-                    _.remoteConfigService.remoteConfig
-                            .getString('create_password')
-                            .isNotEmpty
-                        ? _.remoteConfigService.remoteConfig
-                            .getString('create_password')
-                        : "Create New Password",
+                    "Create New Password",
                     textScaleFactor: 1.0,
                     style: TextStyle(
                         fontSize: 24.0,
@@ -88,12 +83,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                     height: 34,
                     //color: Colors.amber,
                     child: Text(
-                      _.remoteConfigService.remoteConfig
-                              .getString('new_password_detail')
-                              .isNotEmpty
-                          ? _.remoteConfigService.remoteConfig
-                              .getString('new_password_detail')
-                          : "Your new password must be different\n from previously used passwords",
+                       "Your new password must be different\n from previously used passwords",
                       textScaleFactor: 1.0,
                       textAlign: TextAlign.center,
                       style: TextStyle(

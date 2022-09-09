@@ -10,6 +10,8 @@ import 'package:lytics_lens/Services/internetcheck.dart';
 import 'package:lytics_lens/Views/Login_Screen.dart';
 import 'package:lytics_lens/utils/api.dart';
 
+import '../Services/baseurl_service.dart';
+
 class AccountController extends GetxController {
   bool isLoading = true;
   bool selected = false;
@@ -23,6 +25,7 @@ class AccountController extends GetxController {
   final storage = GetStorage();
 
   late NetworkController networkController;
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
 
   late HomeScreenController controller = Get.find<HomeScreenController>();
 
@@ -79,52 +82,28 @@ class AccountController extends GetxController {
           print("CHeck The Version Txt ${value.data()}");
         }
         update();
-
-        
-      }).catchError((e) {
-        // CustomSnackBar.showSnackBar(title: AppStrings.unable, message: "", backgroundColor: Color(0xff48beeb));
-      });
+      }).catchError((e) {});
     } on FirebaseException catch (e) {
       print(e);
-      // CustomSnackBar.showSnackBar(title: AppStrings.unable, message: "", backgroundColor: Color(0xff48beeb));
     }
   }
 
   Future<void> sendDeviceToken() async {
-    print('check Send Device Token');
-    print('Token ${storage.read("AccessToken")}');
     String token = await storage.read("AccessToken");
-    if (storage.hasData("Url") == true) {
-      String url = storage.read("Url");
-      var res = await http.post(Uri.parse(url + ApiData.deviceToken),
-          headers: {
-            'Authorization': 'Bearer $token',
-            "Content-type": 'application/json',
-          },
-          body: json.encode({
-            "userId": storage.read('id'),
-            "deviceToken": Constants.token,
-            "addToken": "false",
-          }));
-      var data = json.decode(res.body);
-      print("response of device token api" + res.statusCode.toString());
-      print("response of device token api" + data.toString());
-    } else {
-      var res = await http.post(
-        Uri.parse(ApiData.baseUrl + ApiData.deviceToken),
-        headers: {
-          'Authorization': 'Bearer $token',
-          "Content-type": 'application/json',
-        },
-        body: json.encode({
-          "userId": storage.read('id'),
-          "deviceToken": Constants.token,
-          "addToken": "false",
-        }),
-      );
-      var data = json.decode(res.body);
-      print("response of device token api" + data.toString());
-    }
+    var res = await http.post(
+      Uri.parse(baseUrlService.baseUrl + ApiData.deviceToken),
+      headers: {
+        'Authorization': 'Bearer $token',
+        "Content-type": 'application/json',
+      },
+      body: json.encode({
+        "userId": storage.read('id'),
+        "deviceToken": Constants.token,
+        "addToken": "false",
+      }),
+    );
+    var data = json.decode(res.body);
+    print("response of device token api" + data.toString());
   }
 
   Future<void> logout() async {
@@ -139,10 +118,10 @@ class AccountController extends GetxController {
       await storage.remove("firstName");
       await storage.remove("lastName");
       await storage.remove("UsersChannels");
-       await storage.remove("isOnboard");
-       controller.job.clear();
-       controller.receivedJobsList.clear();
-       controller.sentjob.clear();
+      await storage.remove("isOnboard");
+      controller.job.clear();
+      controller.receivedJobsList.clear();
+      controller.sentjob.clear();
       Constants.index = 0;
 
       Get.offAll(() => LoginScreen());

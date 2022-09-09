@@ -3,13 +3,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/playerController.dart';
-import 'package:lytics_lens/views/Components/widget/common_textfield.dart';
-import 'package:lytics_lens/views/Components/widget/text_highlight.dart';
+import 'package:lytics_lens/widget/common_containers/webview_container.dart';
+import 'package:lytics_lens/widget/textFields/common_textfield.dart';
+import 'package:lytics_lens/widget/text_highlight/text_highlight.dart';
 import 'package:lytics_lens/views/clipping_screen.dart';
-import 'package:lytics_lens/widget/webview_container.dart';
-import 'package:lottie/lottie.dart';
 
 class PlayerScreen extends StatelessWidget {
   @override
@@ -888,7 +888,6 @@ class PlayerScreen extends StatelessWidget {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Row(
-
                                                       children: [
                                                         Container(
                                                           width: 110,
@@ -956,25 +955,23 @@ class PlayerScreen extends StatelessWidget {
                                                                             ),
                                                                           )
                                                                         : GestureDetector(
-                                                                      onTap: (){
-                                                                        _.stopPlayer();
-                                                                      },
-                                                                          child: Container(
-                                                                              height:
-                                                                              34,
-                                                                              width:
-                                                                              34,
-                                                                              decoration:
-                                                                                  BoxDecoration(
+                                                                            onTap:
+                                                                                () {
+                                                                              _.stopPlayer();
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              height: 34,
+                                                                              width: 34,
+                                                                              decoration: BoxDecoration(
                                                                                 shape: BoxShape.circle,
                                                                                 border: Border.all(color: CommonColor.greenBorderColor),
                                                                               ),
-                                                                              child:
-                                                                                  Center(
+                                                                              child: Center(
                                                                                 child: Lottie.asset('assets/images/waves.json').marginOnly(left: 3.0, right: 3.0),
                                                                               ),
                                                                             ),
-                                                                        ),
+                                                                          ),
                                                                   )
                                                                 : SizedBox(),
                                                         _.source.toLowerCase() ==
@@ -1027,7 +1024,9 @@ class PlayerScreen extends StatelessWidget {
                                                                               Colors.white,
                                                                         ),
                                                                       ),
-                                                                    ).marginOnly(left: 7),
+                                                                    ).marginOnly(
+                                                                            left:
+                                                                                7),
                                                                   )
                                                                 : SizedBox(),
                                                       ],
@@ -1177,7 +1176,7 @@ class PlayerScreen extends StatelessWidget {
                                                                     .white),
                                                           ).marginOnly(
                                                               top: 12.0),
-                                                         ),
+                                                        ),
                                                         SizedBox(
                                                           width:
                                                               Get.width / 2.2,
@@ -1404,64 +1403,32 @@ class PlayerScreen extends StatelessWidget {
   //<--------------------------------- QueryWords --------------------------
   Widget showQueryWords(_, String source) {
     List<Widget> g = [];
-    if (source.toLowerCase() == 'tv') {
-      for (int i = 0; i < _.queryWords.length; i++) {
-        g.add(FittedBox(
-          fit: BoxFit.fill,
-          child: Container(
-            height: 27,
-            decoration: BoxDecoration(
-              color: Color(0xff393D63),
-              border: Border.all(color: Color(0xff000000).withOpacity(0.1)),
-              borderRadius: BorderRadius.circular(14.0),
-            ),
-            child: Center(
-              child: Text(
-                "${_.queryWords[i]['word']}",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 12.0,
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white),
-              ).marginOnly(left: 15.0, right: 15.0),
-            ),
+    for (int i = 0; i < _.queryWords.length; i++) {
+      g.add(FittedBox(
+        fit: BoxFit.fill,
+        child: Container(
+          height: 27,
+          decoration: BoxDecoration(
+            color: Color(0xff393D63),
+            border: Border.all(color: Color(0xff000000).withOpacity(0.1)),
+            borderRadius: BorderRadius.circular(14.0),
           ),
-        ).marginAll(5.0));
-      }
-    } else {
-      for (int i = 0; i < _.queryWords.length; i++) {
-        _.queryWords[i]['words'].forEach((e) {
-          g.add(FittedBox(
-            fit: BoxFit.fill,
-            child: Container(
-              height: 27,
-              decoration: BoxDecoration(
-                color: Color(0xff393D63),
-                border: Border.all(color: Color(0xff000000).withOpacity(0.1)),
-                borderRadius: BorderRadius.circular(14.0),
-              ),
-              child: Center(
-                child: Text(
-                  "$e",
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 12.0,
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white),
-                ).marginOnly(left: 15.0, right: 15.0),
-              ),
-            ),
-          ).marginAll(5.0));
-        });
-      }
+          child: Center(
+            child: Text(
+              "${_.queryWords[i]['word']}",
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 12.0,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white),
+            ).marginOnly(left: 15.0, right: 15.0),
+          ),
+        ),
+      ).marginAll(5.0));
     }
-
     return Wrap(
       // alignment: WrapAlignment.center,
       // crossAxisAlignment: WrapCrossAlignment.center,

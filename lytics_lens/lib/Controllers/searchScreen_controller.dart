@@ -13,7 +13,7 @@ import 'package:lytics_lens/Constants/app_strrings.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/playerController.dart';
 import 'package:lytics_lens/views/player_Screen.dart';
-import 'package:lytics_lens/widget/common_snackbar.dart';
+import 'package:lytics_lens/widget/snackbar/common_snackbar.dart';
 import 'package:lytics_lens/Models/alltopicmodel.dart';
 import 'package:lytics_lens/Models/channelmodel.dart';
 import 'package:lytics_lens/Models/programtypemodel.dart';
@@ -22,6 +22,7 @@ import 'package:lytics_lens/utils/api.dart';
 import '../Models/channel.dart';
 import '../Models/guestmodel.dart';
 import '../Models/hostmodel.dart';
+import '../Services/baseurl_service.dart';
 import '../widget/multiselectDropdown/utils/multi_select_item.dart';
 
 class SearchController extends GetxController {
@@ -29,6 +30,7 @@ class SearchController extends GetxController {
   bool isExpanded1 = false;
 
   late NetworkController networkController;
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
 
   Random random = new Random();
   List listofRamdomNo = [];
@@ -238,57 +240,30 @@ class SearchController extends GetxController {
     programType.clear();
     responseprogramtyperesult.clear();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res =
-            await http.get(Uri.parse(url + ApiData.programTypes), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Programtype Response $response');
-        responseprogramtyperesult.addAll(response['results']);
-        responseprogramtyperesult.forEach((element) {
-          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training')
-          {}
-          else
-          {
-            responseprogramlist
-                .add({'id': element['name'], 'name': element['name']});
-          }
-          // programTypesList.add({"id": element['name'], "name": element['name']});
-        });
-        update();
-        responseprogramlist.forEach((element) {
-          programType.add(ProgramTypeModel.fromJSON(element));
-        });
-        update();
-      } else {
-        String token = await storage.read("AccessToken");
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.programTypes), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Programtype Response $response');
-        responseprogramtyperesult.addAll(response['results']);
-        responseprogramtyperesult.forEach((element) {
-          print("Program Type is $element");
-          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training')
-            {}
-          else
-            {
-              responseprogramlist
-                  .add({'id': element['name'], 'name': element['name']});
-            }
-          // programTypesList.add({"id": element['name'], "name": element['name']});
-        });
-        update();
-        responseprogramlist.forEach((element) {
-          programType.add(ProgramTypeModel.fromJSON(element));
-        });
-        update();
-      }
+      String token = await storage.read("AccessToken");
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.programTypes), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      var response = json.decode(res.body);
+      print('Programtype Response $response');
+      responseprogramtyperesult.addAll(response['results']);
+      responseprogramtyperesult.forEach((element) {
+        print("Program Type is $element");
+        if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training')
+        {}
+        else
+        {
+          responseprogramlist
+              .add({'id': element['name'], 'name': element['name']});
+        }
+        // programTypesList.add({"id": element['name'], "name": element['name']});
+      });
+      update();
+      responseprogramlist.forEach((element) {
+        programType.add(ProgramTypeModel.fromJSON(element));
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
       // CustomSnackBar.showSnackBar(
@@ -310,66 +285,35 @@ class SearchController extends GetxController {
     List host = [];
     update();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res = await http.get(Uri.parse(url + ApiData.hosts), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        allanchorList.addAll(response['results']);
-        update();
-        allanchorList.forEach((e) {
-          aList.add(e['name']);
-        });
-        aList = Set.of(aList).toList();
-        aList.forEach((e) {
-          anchorList.add(e);
-        });
-        anchorList.sort((a, b) => a.toString().compareTo(b.toString()));
+      String token = await storage.read("AccessToken");
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.hosts), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      var response = json.decode(res.body);
+      print('Hosts $response');
+      allanchorList.addAll(response['results']);
 
-        anchorList.forEach((e) {
-          host.add({
-            "id": e,
-            "name": e,
-          });
-        });
+      allanchorList.forEach((e) {
+        aList.add(e['name']);
+      });
+      aList = Set.of(aList).toList();
+      aList.forEach((e) {
+        anchorList.add(e);
+      });
+      anchorList.sort((a, b) => a.toString().compareTo(b.toString()));
 
-        host.forEach((element) {
-          hostList.add(HostModel.fromJSON(element));
+      anchorList.forEach((e) {
+        host.add({
+          "id": e,
+          "name": e,
         });
-        update();
-      } else {
-        String token = await storage.read("AccessToken");
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.hosts), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Hosts $response');
-        allanchorList.addAll(response['results']);
+      });
 
-        allanchorList.forEach((e) {
-          aList.add(e['name']);
-        });
-        aList = Set.of(aList).toList();
-        aList.forEach((e) {
-          anchorList.add(e);
-        });
-        anchorList.sort((a, b) => a.toString().compareTo(b.toString()));
-
-        anchorList.forEach((e) {
-          host.add({
-            "id": e,
-            "name": e,
-          });
-        });
-
-        host.forEach((element) {
-          hostList.add(HostModel.fromJSON(element));
-        });
-        update();
-      }
+      host.forEach((element) {
+        hostList.add(HostModel.fromJSON(element));
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
       // CustomSnackBar.showSnackBar(
@@ -391,55 +335,30 @@ class SearchController extends GetxController {
     List guest = [];
     update();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res = await http.get(Uri.parse(url + ApiData.guest), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        allGuestsList.addAll(response['results']);
-        allGuestsList.forEach((e) {
-          gList.add(e['name']);
-        });
-        gList = Set.of(gList).toList();
-        gList.forEach((e) {
-          guestsList.add(e);
-        });
-        guestsList.sort((a, b) => a.toString().compareTo(b.toString()));
-        guestsList.forEach((e) {
-          guest.add({"id": e, "name": e});
-        });
-        guest.forEach((ele) {
-          guestModelList.add(GuestModel.fromJSON(ele));
-        });
-        update();
-      } else {
-        String token = await storage.read("AccessToken");
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.guest), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Hosts $response');
-        allGuestsList.addAll(response['results']);
+      String token = await storage.read("AccessToken");
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.guest), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      var response = json.decode(res.body);
+      print('Hosts $response');
+      allGuestsList.addAll(response['results']);
 
-        allGuestsList.forEach((e) {
-          gList.add(e['name']);
-        });
-        gList = Set.of(gList).toList();
-        gList.forEach((e) {
-          guestsList.add(e);
-        });
-        guestsList.sort((a, b) => a.toString().compareTo(b.toString()));
-        guestsList.forEach((e) {
-          guest.add({"id": e, "name": e});
-        });
-        guest.forEach((ele) {
-          guestModelList.add(GuestModel.fromJSON(ele));
-        });
-        update();
-      }
+      allGuestsList.forEach((e) {
+        gList.add(e['name']);
+      });
+      gList = Set.of(gList).toList();
+      gList.forEach((e) {
+        guestsList.add(e);
+      });
+      guestsList.sort((a, b) => a.toString().compareTo(b.toString()));
+      guestsList.forEach((e) {
+        guest.add({"id": e, "name": e});
+      });
+      guest.forEach((ele) {
+        guestModelList.add(GuestModel.fromJSON(ele));
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
       // CustomSnackBar.showSnackBar(
@@ -455,49 +374,39 @@ class SearchController extends GetxController {
   Future<void> gettopic() async {
     try {
       String token = await storage.read("AccessToken");
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        var res = await http.get(Uri.parse(url + ApiData.topic), headers: {
-          'Authorization': "Bearer $token",
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.topic), headers: {
+        'Authorization': "Bearer $token",
+      });
+      var data = json.decode(res.body);
+      Get.log('Data is $data');
+      // print('Data is $data');
+      allData.addAll(data['results']);
+      update();
+      allData.forEach((e) {
+        topiclist.add({'id': e['name'], 'name': e['name']});
+        e['topic2'].forEach((a) {
+          topic2allData.add(a);
         });
-        var data = json.decode(res.body);
-        topiclist.addAll(data['results']);
-        update();
-      } else {
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.topic), headers: {
-          'Authorization': "Bearer $token",
+      });
+      update();
+      topic2allData.forEach((element) {
+        topiclist.add({'id': element['name'], 'name': element['name']});
+        element['topic3'].forEach((a) {
+          topic3list.add(a);
         });
-        var data = json.decode(res.body);
-        Get.log('Data is $data');
-        // print('Data is $data');
-        allData.addAll(data['results']);
-        update();
-        allData.forEach((e) {
-          topiclist.add({'id': e['name'], 'name': e['name']});
-          e['topic2'].forEach((a) {
-            topic2allData.add(a);
-          });
-        });
-        update();
-        topic2allData.forEach((element) {
-          topiclist.add({'id': element['name'], 'name': element['name']});
-          element['topic3'].forEach((a) {
-            topic3list.add(a);
-          });
-        });
-        update();
-        topic3list.forEach((q) {
-          topiclist.add({'id': q['name'], 'name': q['name']});
-        });
-        update();
-        topiclist = Set.of(topiclist).toList();
-        update();
-        topiclist.forEach((w) {
-          alltopic.add(AllTopicModel.fromJSON(w));
-        });
-        update();
-      }
+      });
+      update();
+      topic3list.forEach((q) {
+        topiclist.add({'id': q['name'], 'name': q['name']});
+      });
+      update();
+      topiclist = Set.of(topiclist).toList();
+      update();
+      topiclist.forEach((w) {
+        alltopic.add(AllTopicModel.fromJSON(w));
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
       isLoading.value = false;
@@ -546,383 +455,6 @@ class SearchController extends GetxController {
     }
   }
 
-  // Future<void> getSearchJobs(String searchText, int p) async {
-  //   // isLoading = true;
-  //   // update();
-  //   print("Search Text $searchText");
-  //   var formatter = DateFormat('yyyy-MM-dd');
-  //   // ignore: unused_local_variable
-  //   var sd = formatter.format(selectedDays);
-  //   var pm =
-  //       DateTime(selectedDays.year, selectedDays.month - 1, selectedDays.day);
-  //   // ignore: unused_local_variable
-  //   var ed = formatter.format(pm);
-  //   bool searchValid = RegExp(r'^[a-zA-Z]*$').hasMatch(searchText);
-  //   print('Search Valid $searchValid');
-  //   // job.clear();
-  //   jobsdate.clear();
-  //   var res;
-  //   try {
-  //     if (storage.hasData("Url") == true) {
-  //       if (p == 1) {
-  //         isLoading.value = true;
-  //         print('Check Storage Function');
-  //         job.clear();
-  //
-  //         clist.clear();
-  //         uniquechanellist.clear();
-  //         programList.clear();
-  //         uniqueProgramList.clear();
-  //         aList.clear();
-  //         uniqueanchorlist.clear();
-  //         anchorlistonly.clear();
-  //         gList.clear();
-  //         uniqueguestsList.clear();
-  //         guestListonly.clear();
-  //
-  //         filterlist.clear();
-  //         filterChannelList.clear();
-  //         filterProgramType.clear();
-  //
-  //         String url = storage.read("Url");
-  //         String token = await storage.read("AccessToken");
-  //         print("Bearer $token");
-  //         searchValid == true
-  //             ? res = await http.get(
-  //                 Uri.parse(
-  //                     '$url${ApiData.jobs}?start_date=${now.year}/${now.month - 1}/${now.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&searchEnglish=$searchText'),
-  //                 headers: {
-  //                     'Authorization': "Bearer $token",
-  //                   })
-  //             : res = await http.get(
-  //                 Uri.parse(
-  //                     '$url${ApiData.jobs}?start_date=${now.year}/${now.month - 1}/${now.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&searchUrdu=$searchText'),
-  //                 headers: {
-  //                     'Authorization': "Bearer $token",
-  //                   });
-  //         print('Check Storage Function ${res.statusCode}');
-  //         print(res.statusCode);
-  //         print('Else FUnction');
-  //         var data = json.decode(res.body);
-  //         job.addAll(data['results']);
-  //         if (p == 1) {
-  //           totalPages = data['totalPages'];
-  //           update();
-  //         }
-  //
-  //         // <---------- Filter Screen -------->
-  //
-  //         job.forEach((j) {
-  //           clist.add(j['channel']);
-  //           programList.add(j['programType']);
-  //           aList.add(j['anchor']);
-  //           if (j['guests'].toString().length != 2) {
-  //             gList.add(j['guests']);
-  //           }
-  //           print(
-  //               'Job Date is ${j['programDate'].toString().split('T').first}');
-  //         });
-  //         update();
-  //         if (aList.length != 0) {
-  //           aList.forEach((element) {
-  //             anchorlistonly.add(element[0]);
-  //           });
-  //         }
-  //         print('break ${gList.length}');
-  //         if (gList.length != 0) {
-  //           for (int i = 0; i < gList.length; i++) {
-  //             gList[i].forEach((e) {
-  //               guestListonly.add(e['name']);
-  //             });
-  //           }
-  //           update();
-  //         }
-  //         print('break');
-  //         // guestListonly.forEach((element) {
-  //         //   print('All Guests ${element['name']}');
-  //         // });
-  //         uniquechanellist = Set.of(clist).toList();
-  //         uniqueProgramList = Set.of(programList).toList();
-  //         uniqueanchorlist = Set.of(anchorlistonly).toList();
-  //         uniqueguestsList = Set.of(guestListonly).toList();
-  //         update();
-  //
-  //         //<-------- Program List ---------->
-  //
-  //         uniqueProgramList.forEach((e) {
-  //           programTypeList.add({
-  //             'id': '$e',
-  //             'name': '$e',
-  //           });
-  //         });
-  //
-  //         update();
-  //         channellist.forEach((element) {
-  //           // print('All channellist is $element');
-  //         });
-  //         isLoading.value = false;
-  //       } else {
-  //         if (tpageno.value <= totalPages) {
-  //           isMore.value = true;
-  //           String url = storage.read("Url");
-  //           String token = await storage.read("AccessToken");
-  //           searchValid == true
-  //               ? res = await http.get(
-  //                   Uri.parse(
-  //                       '$url${ApiData.jobs}?start_date=${now.year}/${now.month - 1}/${now.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&searchEnglish=$searchText'),
-  //                   headers: {
-  //                       'Authorization': "Bearer $token",
-  //                     })
-  //               : res = await http.get(
-  //                   Uri.parse(
-  //                       '$url${ApiData.jobs}?start_date=${now.year}/${now.month - 1}/${now.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&searchUrdu=$searchText'),
-  //                   headers: {
-  //                       'Authorization': "Bearer $token",
-  //                     });
-  //           print(res.statusCode);
-  //           print('Else FUnction');
-  //           var data = json.decode(res.body);
-  //           // debugPrint('Search Data $data');
-  //           // print('chanels ${data['results'][0]['channel']}');
-  //           job.addAll(data['results']);
-  //           if (p == 1) {
-  //             totalPages = data['totalPages'];
-  //             update();
-  //           }
-  //           // <---------- Filter Screen -------->
-  //
-  //           job.forEach((j) {
-  //             clist.add(j['channel']);
-  //             programList.add(j['programType']);
-  //             aList.add(j['anchor']);
-  //             if (j['guests'].toString().length != 2) {
-  //               gList.add(j['guests']);
-  //             }
-  //             print(
-  //                 'Job Date is ${j['programDate'].toString().split('T').first}');
-  //           });
-  //           update();
-  //           if (aList.length != 0) {
-  //             aList.forEach((element) {
-  //               anchorlistonly.add(element[0]);
-  //             });
-  //           }
-  //           print('break ${gList.length}');
-  //           if (gList.length != 0) {
-  //             for (int i = 0; i < gList.length; i++) {
-  //               gList[i].forEach((e) {
-  //                 guestListonly.add(e['name']);
-  //               });
-  //             }
-  //             update();
-  //           }
-  //           print('break');
-  //           // guestListonly.forEach((element) {
-  //           //   print('All Guests ${element['name']}');
-  //           // });
-  //           uniquechanellist = Set.of(clist).toList();
-  //           uniqueProgramList = Set.of(programList).toList();
-  //           uniqueanchorlist = Set.of(anchorlistonly).toList();
-  //           uniqueanchorlist = Set.of(anchorlistonly).toList();
-  //           uniqueguestsList = Set.of(guestListonly).toList();
-  //
-  //
-  //
-  //           update();
-  //           channellist.forEach((element) {
-  //             // print('All channellist is $element');
-  //           });
-  //           isLoading.value = false;
-  //           isMore.value = false;
-  //         } else {
-  //           isMore.value = false;
-  //           print('Result Not Found');
-  //         }
-  //       }
-  //     } else {
-  //       if (p == 1) {
-  //         isLoading.value = true;
-  //
-  //         print('Check Storage Function');
-  //         job.clear();
-  //
-  //         clist.clear();
-  //         uniquechanellist.clear();
-  //         programList.clear();
-  //         programTypeList.clear();
-  //         uniqueProgramList.clear();
-  //         aList.clear();
-  //         uniqueanchorlist.clear();
-  //         anchorlistonly.clear();
-  //         gList.clear();
-  //         uniqueguestsList.clear();
-  //         guestListonly.clear();
-  //
-  //         filterlist.clear();
-  //         filterChannelList.clear();
-  //         filterProgramType.clear();
-  //
-  //         String token = await storage.read("AccessToken");
-  //         print("Bearer $token");
-  //         searchValid == true
-  //             ? res = await http.get(
-  //                 Uri.parse(
-  //                     '${ApiData.baseUrl}${ApiData.jobs}?start_date=${now.year}/${now.month - 1}/${now.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&searchEnglish=$searchText'),
-  //                 headers: {
-  //                     'Authorization': "Bearer $token",
-  //                   })
-  //             : res = await http.get(
-  //                 Uri.parse(
-  //                     '${ApiData.baseUrl}${ApiData.jobs}?start_date=${now.year}/${now.month - 1}/${now.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&searchUrdu=$searchText'),
-  //                 headers: {
-  //                     'Authorization': "Bearer $token",
-  //                   });
-  //         print('Check Storage Function ${res.statusCode}');
-  //         print(res.statusCode);
-  //         print('Else FUnction');
-  //         var data = json.decode(res.body);
-  //         job.addAll(data['results']);
-  //         if (p == 1) {
-  //           totalPages = data['totalPages'];
-  //           update();
-  //         }
-  //
-  //         // <---------- Filter Screen -------->
-  //
-  //         job.forEach((j) {
-  //           clist.add(j['channel']);
-  //           programList.add(j['programType']);
-  //           aList.add(j['anchor']);
-  //           if (j['guests'].toString().length != 2) {
-  //             gList.add(j['guests']);
-  //           }
-  //           print(
-  //               'Job Date is ${j['programDate'].toString().split('T').first}');
-  //         });
-  //         update();
-  //         if (aList.length != 0) {
-  //           aList.forEach((element) {
-  //             anchorlistonly.add(element[0]);
-  //           });
-  //         }
-  //         print('break ${gList.length}');
-  //         if (gList.length != 0) {
-  //           for (int i = 0; i < gList.length; i++) {
-  //             gList[i].forEach((e) {
-  //               guestListonly.add(e['name']);
-  //             });
-  //           }
-  //           update();
-  //         }
-  //         print('break');
-  //         // guestListonly.forEach((element) {
-  //         //   print('All Guests ${element['name']}');
-  //         // });
-  //         uniquechanellist = Set.of(clist).toList();
-  //         uniqueProgramList = Set.of(programList).toList();
-  //         uniqueanchorlist = Set.of(anchorlistonly).toList();
-  //         uniqueanchorlist = Set.of(anchorlistonly).toList();
-  //         uniqueguestsList = Set.of(guestListonly).toList();
-  //
-  //         update();
-  //         channellist.forEach((element) {
-  //           // print('All channellist is $element');
-  //         });
-  //         isLoading.value = false;
-  //       } else {
-  //         if (tpageno.value <= totalPages) {
-  //           isMore.value = true;
-  //
-  //           String token = await storage.read("AccessToken");
-  //           print("Bearer $token");
-  //           searchValid == true
-  //               ? res = await http.get(
-  //                   Uri.parse(
-  //                       '${ApiData.baseUrl}${ApiData.jobs}?start_date=${now.year}/${now.month - 1}/${now.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&searchEnglish=$searchText'),
-  //                   headers: {
-  //                       'Authorization': "Bearer $token",
-  //                     })
-  //               : res = await http.get(
-  //                   Uri.parse(
-  //                       '${ApiData.baseUrl}${ApiData.jobs}?start_date=${now.year}/${now.month - 1}/${now.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&searchUrdu=$searchText'),
-  //                   headers: {
-  //                       'Authorization': "Bearer $token",
-  //                     });
-  //           print(res.statusCode);
-  //           print('Else FUnction');
-  //           var data = json.decode(res.body);
-  //           // debugPrint('Search Data $data');
-  //           // print('chanels ${data['results'][0]['channel']}');
-  //           job.addAll(data['results']);
-  //           if (p == 1) {
-  //             totalPages = data['totalPages'];
-  //             update();
-  //           }
-  //           // <---------- Filter Screen -------->
-  //
-  //           job.forEach((j) {
-  //             clist.add(j['channel']);
-  //             programList.add(j['programType']);
-  //             aList.add(j['anchor']);
-  //             if (j['guests'].toString().length != 2) {
-  //               gList.add(j['guests']);
-  //             }
-  //             print(
-  //                 'Job Date is ${j['programDate'].toString().split('T').first}');
-  //           });
-  //           update();
-  //           if (aList.length != 0) {
-  //             aList.forEach((element) {
-  //               anchorlistonly.add(element[0]);
-  //             });
-  //           }
-  //           print('break ${gList.length}');
-  //           if (gList.length != 0) {
-  //             for (int i = 0; i < gList.length; i++) {
-  //               gList[i].forEach((e) {
-  //                 guestListonly.add(e['name']);
-  //               });
-  //             }
-  //             update();
-  //           }
-  //
-  //           update();
-  //           print('break');
-  //           // guestListonly.forEach((element) {
-  //           //   print('All Guests ${element['name']}');
-  //           // });
-  //           uniquechanellist = Set.of(clist).toList();
-  //           uniqueProgramList = Set.of(programList).toList();
-  //           uniqueanchorlist = Set.of(anchorlistonly).toList();
-  //           uniqueanchorlist = Set.of(anchorlistonly).toList();
-  //           uniqueguestsList = Set.of(guestListonly).toList();
-  //
-  //           update();
-  //           channellist.forEach((element) {
-  //             // print('All channellist is $element');
-  //           });
-  //           isLoading.value = false;
-  //           isMore.value = false;
-  //         } else {
-  //           isMore.value = false;
-  //           print('Result Not Found');
-  //         }
-  //       }
-  //     }
-  //   } on SocketException catch (e) {
-  //     isLoading.value = false;
-  //     isSocketError.value = true;
-  //     CustomSnackBar.showSnackBar(
-  //         title: e.message.toString(),
-  //         message: "",
-  //         backgroundColor: CommonColor.snackbarColour);
-  //   } catch (e) {
-  //     isLoading.value = false;
-  //     print(e.toString());
-  //     // Get.snackbar("Error", e.toString(), backgroundColor: Colors.red);
-  //   }
-  // }
-
   Future<void> getFilterJobs(String searchText, int p) async {
     print('filter function');
     isSocketError.value = false;
@@ -938,215 +470,93 @@ class SearchController extends GetxController {
     // job.clear();
     var res;
     try {
-      if (storage.hasData("Url") == true) {
+      if (p == 1) {
+        print('filter function if condition');
+        tpageno.value = 1;
+        var fh = json.encode(filterHost);
+        var fg = json.encode(filterGuests);
+        var fpt = json.encode(filterProgramType);
+        print('Filter host  $fh');
+        isLoading.value = true;
+        job.clear();
+        searchjob.clear();
+        String token = await storage.read("AccessToken");
+        print("Bearer $token");
+        Get.log(
+            'Check Query ${baseUrlService.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}');
+        searchValid == true
+            ? res = await http.get(
+            Uri.parse(
+                '${baseUrlService.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
+            headers: {
+              'Authorization': "Bearer $token",
+            })
+            : res = await http.get(
+            Uri.parse(
+                '${baseUrlService.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
+            headers: {
+              'Authorization': "Bearer $token",
+            });
+
+        var data = json.decode(res.body);
+        print('Result is filter${res.body}');
+        searchjob.addAll(data['results']);
+        // searchjob
+        //     .sort((b, a) => a["programDate"].compareTo(b["programDate"]));
+
         if (p == 1) {
-          String url = storage.read("Url");
-          print('filter function if condition');
-          var fh = json.encode(filterHost);
-          var fg = json.encode(filterGuests);
-          var fpt = json.encode(filterProgramType);
-          print(fg);
-          print(fpt);
-          print('Filter host  $fh');
-          isLoading.value = true;
-          job.clear();
-          searchjob.clear();
-
-          String token = await storage.read("AccessToken");
-          print("Bearer $token");
-          Get.log(
-              'Check Query $url${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}');
-          searchValid == true
-              ? res = await http.get(
-                  Uri.parse(
-                      '$url${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-                  headers: {
-                      'Authorization': "Bearer $token",
-                    })
-              : res = await http.get(
-                  Uri.parse(
-                      '$url${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-                  headers: {
-                      'Authorization': "Bearer $token",
-                    });
-          // searchValid == true
-          //     ? res = await http.get(
-          //         Uri.parse(
-          //             '$url${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&device=mobile'),
-          //         headers: {
-          //             'Authorization': "Bearer $token",
-          //           })
-          //     : res = await http.get(
-          //         Uri.parse(
-          //             '$url${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&device=mobile'),
-          //         headers: {
-          //             'Authorization': "Bearer $token",
-          //           });
-
-          var data = json.decode(res.body);
-          print('Result is filter${res.body}');
-
-          searchjob.addAll(data['results']);
-          // searchjob
-          //     .sort((b, a) => a["programDate"].compareTo(b["programDate"]));
-          if (p == 1) {
-            totalPages = data['totalPages'];
-            update();
-          }
-          getRandomNumberList(searchjob.length);
-          isLoading.value = false;
-          searchjob.forEach((element) {
-            print('Serach Job $element');
-          });
-        } else {
-          print('filter function else function');
-          if (tpageno.value <= totalPages.value) {
-            isMore.value = true;
-            String token = await storage.read("AccessToken");
-            String url = storage.read("Url");
-            print("Bearer $token");
-            var fh = json.encode(filterHost);
-            var fg = json.encode(filterGuests);
-            var fpt = json.encode(filterProgramType);
-            print('Filter host  $fg');
-            print('CHeck Function Work');
-            searchValid == true
-                ? res = await http.get(
-                    Uri.parse(
-                        '$url${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-                    headers: {
-                        'Authorization': "Bearer $token",
-                      })
-                : res = await http.get(
-                    Uri.parse(
-                        '$url${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-                    headers: {
-                        'Authorization': "Bearer $token",
-                      });
-            // searchValid == true
-            //     ? res = await http.get(
-            //         Uri.parse(
-            //             '${ApiData.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-            //         headers: {
-            //             'Authorization': "Bearer $token",
-            //           })
-            //     : res = await http.get(
-            //         Uri.parse(
-            //             '${ApiData.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-            //         headers: {
-            //             'Authorization': "Bearer $token",
-            // });
-            print(res.statusCode);
-            print('Else FUnction');
-
-            var data = json.decode(res.body);
-            // debugPrint('Search Data $data');
-            // print('chanels ${data['results'][0]['channel']}');
-            searchjob.addAll(data['results']);
-            // searchjob
-            //     .sort((b, a) => a["programDate"].compareTo(b["programDate"]));
-
-            if (p == 1) {
-              totalPages = data['totalPages'];
-              update();
-            }
-            getRandomNumberList(searchjob.length);
-            isLoading.value = false;
-            isMore.value = false;
-          } else {
-            isMore.value = false;
-            print('Result Not Found');
-          }
+          print('Total No of Pages ${data['totalPages']}');
+          print('Total No of Pages ${tpageno.value}');
+          totalPages.value = data['totalPages'];
+          update();
         }
+        getRandomNumberList(searchjob.length);
+        isLoading.value = false;
+        searchjob.forEach((element) {
+          print('Serach Job $element');
+        });
       } else {
-        if (p == 1) {
-          print('filter function if condition');
-          tpageno.value = 1;
+        print('filter function else function');
+        if (tpageno.value <= totalPages.value) {
+          isMore.value = true;
+          String token = await storage.read("AccessToken");
+          print("Bearer $token");
           var fh = json.encode(filterHost);
           var fg = json.encode(filterGuests);
           var fpt = json.encode(filterProgramType);
-          print('Filter host  $fh');
-          isLoading.value = true;
-          job.clear();
-          searchjob.clear();
-          String token = await storage.read("AccessToken");
-          print("Bearer $token");
-          Get.log(
-              'Check Query ${ApiData.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}');
+          print('Filter host  $fg');
           searchValid == true
               ? res = await http.get(
-                  Uri.parse(
-                      '${ApiData.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-                  headers: {
-                      'Authorization': "Bearer $token",
-                    })
+              Uri.parse(
+                  '${baseUrlService.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
+              headers: {
+                'Authorization': "Bearer $token",
+              })
               : res = await http.get(
-                  Uri.parse(
-                      '${ApiData.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-                  headers: {
-                      'Authorization': "Bearer $token",
-                    });
-
+              Uri.parse(
+                  '${baseUrlService.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
+              headers: {
+                'Authorization': "Bearer $token",
+              });
+          print(res.statusCode);
+          print('Else FUnction');
           var data = json.decode(res.body);
-          print('Result is filter${res.body}');
+          // debugPrint('Search Data $data');
+          // print('chanels ${data['results'][0]['channel']}');
           searchjob.addAll(data['results']);
           // searchjob
           //     .sort((b, a) => a["programDate"].compareTo(b["programDate"]));
 
-          if (p == 1) {
-            print('Total No of Pages ${data['totalPages']}');
-            print('Total No of Pages ${tpageno.value}');
-            totalPages.value = data['totalPages'];
-            update();
-          }
+          // if (p == 1) {
+          //   totalPages = data['totalPages'];
+          //   update();
+          // }
           getRandomNumberList(searchjob.length);
           isLoading.value = false;
-          searchjob.forEach((element) {
-            print('Serach Job $element');
-          });
+          isMore.value = false;
         } else {
-          print('filter function else function');
-          if (tpageno.value <= totalPages.value) {
-            isMore.value = true;
-            String token = await storage.read("AccessToken");
-            print("Bearer $token");
-            var fh = json.encode(filterHost);
-            var fg = json.encode(filterGuests);
-            var fpt = json.encode(filterProgramType);
-            print('Filter host  $fg');
-            searchValid == true
-                ? res = await http.get(
-                    Uri.parse(
-                        '${ApiData.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-                    headers: {
-                        'Authorization': "Bearer $token",
-                      })
-                : res = await http.get(
-                    Uri.parse(
-                        '${ApiData.baseUrl}${ApiData.jobs}?start_date=${startDate.text}&end_date=${endDate.text}&limit=30&page=$p&source=All&searchEnglish=$searchText&hosts=$fh&guest=$fg&programType=$fpt&device=mobile&channel=${json.encode(filterChannelList)}'),
-                    headers: {
-                        'Authorization': "Bearer $token",
-                      });
-            print(res.statusCode);
-            print('Else FUnction');
-            var data = json.decode(res.body);
-            // debugPrint('Search Data $data');
-            // print('chanels ${data['results'][0]['channel']}');
-            searchjob.addAll(data['results']);
-            // searchjob
-            //     .sort((b, a) => a["programDate"].compareTo(b["programDate"]));
-
-            // if (p == 1) {
-            //   totalPages = data['totalPages'];
-            //   update();
-            // }
-            getRandomNumberList(searchjob.length);
-            isLoading.value = false;
-            isMore.value = false;
-          } else {
-            isMore.value = false;
-            print('Result Not Found');
-          }
+          isMore.value = false;
+          print('Result Not Found');
         }
       }
     } on SocketException catch (e) {
@@ -1353,50 +763,6 @@ class SearchController extends GetxController {
     return isRead;
   }
 
-  // Future<void> jobStatus(String id) async {
-  //   print('Job Function Call');
-
-  //   String token = await storage.read("AccessToken");
-
-  //   if (storage.hasData('Url') == true) {
-  //     String url = storage.read("Url");
-  //     var res = await http.post(
-  //       Uri.parse(url + ApiData.escalationsread),
-  //       // body: json.encode({'id': id}),
-  //       body: {'id': id},
-  //       headers: {
-  //         'Authorization': "Bearer $token",
-  //       },
-  //     );
-
-  //     print('Job Request is ${res.body}');
-  //     await getFilterJobs(searchdata.value.text, 1);
-  //     Get.to(
-  //       () => PlayerScreen(),
-  //       arguments: {
-  //         "id": id,
-  //       },
-  //     );
-  //   } else {
-  //     var res = await http.post(
-  //       Uri.parse(ApiData.baseUrl + ApiData.escalationsread),
-  //       body: json.encode({'id': id}),
-  //       headers: {
-  //         'Authorization': "Bearer $token",
-  //       },
-  //     );
-
-  //     print('Job Read Request is ${res.body}');
-  //     await getFilterJobs(searchdata.value.text, 1);
-  //     Get.to(
-  //       () => PlayerScreen(),
-  //       arguments: {
-  //         "id": id,
-  //       },
-  //     );
-  //   }
-  // }
-
   String escalationsJob(List escalationsList) {
     String c = '';
     var name = '${storage.read("firstName")} ${storage.read("lastName")}';
@@ -1415,40 +781,20 @@ class SearchController extends GetxController {
 
     String token = await storage.read("AccessToken");
 
-    if (storage.hasData('Url') == true) {
-      String url = storage.read("Url");
-      var res = await http.post(
-        Uri.parse(url + ApiData.escalationsread),
-        // body: json.encode({'id': id}),
-        body: {'id': id},
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-
-      print('Job Request is ${res.body}');
-      await getFilterJobs(searchdata.value.text, 1);
-      Get.delete<VideoController>();
-      Get.to(
-        () => PlayerScreen(),
-        arguments: {"id": id},
-      );
-    } else {
-      var res = await http.post(
-        Uri.parse(ApiData.baseUrl + ApiData.escalationsread),
-        body: {'id': id},
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-      print('Job Read Request is ${res.body}');
-      await getFilterJobs(searchdata.value.text, 1);
-      Get.delete<VideoController>();
-      Get.to(
-        () => PlayerScreen(),
-        arguments: {"id": id},
-      );
-    }
+    var res = await http.post(
+      Uri.parse(baseUrlService.baseUrl + ApiData.escalationsread),
+      body: {'id': id},
+      headers: {
+        'Authorization': "Bearer $token",
+      },
+    );
+    print('Job Read Request is ${res.body}');
+    await getFilterJobs(searchdata.value.text, 1);
+    Get.delete<VideoController>();
+    Get.to(
+          () => PlayerScreen(),
+      arguments: {"id": id},
+    );
   }
 
   String listToString(List c) {

@@ -10,13 +10,10 @@ import 'package:lytics_lens/utils/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../Services/remoteconfig_service.dart';
+import '../Services/baseurl_service.dart';
 
 class ForgotPasswordController extends GetxController {
   bool isLoading = true;
-
-
-  RemoteConfigService remoteConfigService =  Get.find<RemoteConfigService>();
 
   // ignore: close_sinks
   StreamController<ErrorAnimationType>? errorController;
@@ -24,6 +21,7 @@ class ForgotPasswordController extends GetxController {
   final formkey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController pin = TextEditingController();
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
 
   String lastcode = '';
 
@@ -61,45 +59,23 @@ class ForgotPasswordController extends GetxController {
     if (formkey.currentState!.validate()) {
       pin.clear();
       print("email is " + emailController.text);
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        print(url);
-        var res = await http.post(Uri.parse(url + ApiData.forgot),
-            body: {'email': emailController.text});
-        print("status code is" + res.statusCode.toString());
-        var data = jsonDecode(res.body);
-        if (res.statusCode == 200) {
-          storage.write('forgetemail', emailController.text);
-          lastcode = data.toString();
-          update();
-          if (start == 0) {
-            start = 60;
-            startTimer();
-          } else {
-            start = 60;
-            startTimer();
-          }
+      print("Check All data ");
+      var res = await http.post(Uri.parse(baseUrlService.baseUrl + ApiData.forgot),
+          body: {'email': emailController.text});
+      print("status code is" + res.statusCode.toString());
+      var data = jsonDecode(res.body);
+      if (res.statusCode == 200) {
+        lastcode = data.toString();
+        update();
+        if (start == 0) {
+          start = 60;
+          startTimer();
+        } else {
+          start = 60;
+          startTimer();
         }
-        print(data);
-      } else {
-        print("Check All data ");
-        var res = await http.post(Uri.parse(ApiData.baseUrl + ApiData.forgot),
-            body: {'email': emailController.text});
-        print("status code is" + res.statusCode.toString());
-        var data = jsonDecode(res.body);
-        if (res.statusCode == 200) {
-          lastcode = data.toString();
-          update();
-          if (start == 0) {
-            start = 60;
-            startTimer();
-          } else {
-            start = 60;
-            startTimer();
-          }
-        }
-        print(data);
       }
+      print(data);
     }
   }
 

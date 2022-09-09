@@ -1,20 +1,23 @@
 import 'dart:collection';
 
 import 'package:get/get.dart';
+import 'package:lytics_lens/Controllers/global_controller.dart';
+import 'package:lytics_lens/Controllers/home_controller.dart';
 import 'package:lytics_lens/views/player_Screen.dart';
 
 class DashboardController extends GetxController {
 
   int currentindex=0;
   ListQueue<int> navigationQueue =ListQueue();
-
+  GlobalController g = Get.put(GlobalController());
 
   @override
   void onInit() {
-    print('Dashboard Arrgument is ${Get.arguments}');
+    Get.delete<HomeScreenController>();
+    print('Dashboard Argument is ${Get.arguments}');
     if(Get.arguments != null)
     {
-      print('Dashboard Arrgument is ${Get.arguments}');
+      print('Dashboard Argument is ${Get.arguments}');
       Get.to(() =>PlayerScreen(), arguments: {
         "id": Get.arguments.toString()});
     }
@@ -23,10 +26,8 @@ class DashboardController extends GetxController {
 
   @override
   void onReady() {
-
     super.onReady();
   }
-// this is a very useless application made by hamza, hammad and moeez
 
   void changeTabIndex(int index) {
     currentindex = index;

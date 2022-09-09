@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-
-// import 'dart:math';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
@@ -14,14 +12,16 @@ import 'package:lottie/lottie.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/clipping_controller.dart';
 import 'package:lytics_lens/utils/api.dart';
-import 'package:lytics_lens/views/Components/widget/common_textfield.dart';
-import 'package:lytics_lens/widget/common_snackbar.dart';
+import 'package:lytics_lens/widget/textFields/common_textfield.dart';
+import 'package:lytics_lens/widget/snackbar/common_snackbar.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:video_editor/video_editor.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../Services/baseurl_service.dart';
 
 class ClippingScreen extends StatefulWidget {
   const ClippingScreen({Key? key, required this.fileurl, required this.jobId})
@@ -41,6 +41,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
   late VideoEditorController _controller;
   ClippingController clippingController = Get.put(ClippingController());
   ClippingController clipController = Get.find<ClippingController>();
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
   var audioFile;
   final storage = new GetStorage();
   dynamic start;
@@ -257,103 +258,25 @@ class _ClippingScreenState extends State<ClippingScreen> {
       // var c = json.encode(clipController.sharingUser);
       String token = await storage.read("AccessToken");
       if (audioFile.path == null || audioFile.path == '') {
-        if (storage.hasData("Url") == true) {
-          String url = storage.read("Url");
-          Map<String, String> h = {'Authorization': 'Bearer $token'};
-          var uri = Uri.parse(url + ApiData.createClipJob);
-          var res = http.MultipartRequest('POST', uri)
-            ..headers.addAll(h)
-            ..fields['id'] = widget.jobId
-            ..fields['title'] = clipController.title.text
-            ..fields['comments'] = clipController.des.text
-            ..fields['startDuration'] = s.toString()
-            ..fields['endDuration'] = e.toString()
-            ..fields['share'] = "true"
-            ..fields['sharing'] = json.encode(clipController.sharingUser)
-            ..files.add(
-                await http.MultipartFile.fromPath('videoPath', vpath.path));
-          var response = await res.send();
-          print('Check Response ${response.statusCode}');
-          var result = await response.stream.bytesToString();
-          if (response.statusCode == 200) {
-            Get.log('Check Response ${result}');
-            clipController.sharingUser.clear();
-            clipController.homeScreenController.isLoading.value = true;
-            await clipController.homeScreenController.getSentJobs();
-            clipController.homeScreenController.isLoading.value = false;
-            clipController.isBottomLoading.value = false;
-            Get.back();
-            Get.back();
-            CustomSnackBar.showSnackBar(
-                title: "Job shared successfully",
-                message: "",
-                isWarning: false,
-                backgroundColor: CommonColor.greenColor);
-          }
-          else {
-            Get.back();
-            clipController.isBottomLoading.value = false;
-          }
-        } else {
-          print("Audio Function Call");
-          Map<String, String> h = {'Authorization': 'Bearer $token'};
-          var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
-          var res = http.MultipartRequest('POST', uri)
-            ..headers.addAll(h)
-            ..fields['id'] = widget.jobId
-            ..fields['title'] = clipController.title.text
-            ..fields['comments'] = clipController.des.text
-            ..fields['share'] = "true"
-            ..fields['startDuration'] = s.toString()
-            ..fields['endDuration'] = e.toString()
-            ..fields['sharing'] = json.encode(clipController.sharingUser)
-            ..files.add(
-                await http.MultipartFile.fromPath('videoPath', vpath.path));
-          var response = await res.send();
-          print('Check Response ${response.statusCode}');
-          var result = await response.stream.bytesToString();
-          Get.log('Check Response ${result}');
-          if (response.statusCode == 200) {
-            clipController.sharingUser.clear();
-            clipController.homeScreenController.isLoading.value = true;
-            await clipController.homeScreenController.getSentJobs();
-            clipController.homeScreenController.isLoading.value = false;
-            clipController.isBottomLoading.value = false;
-            Get.back();
-            Get.back();
-            CustomSnackBar.showSnackBar(
-                title: "Job shared successfully",
-                message: "",
-                isWarning: false,
-                backgroundColor: CommonColor.greenColor);
-          } else {
-            Get.back();
-            clipController.isBottomLoading.value = false;
-          }
-        }
-      }
-      else {
-        if (storage.hasData("Url") == true) {
-          String url = storage.read("Url");
-          Map<String, String> h = {'Authorization': 'Bearer $token'};
-          var uri = Uri.parse(url + ApiData.createClipJob);
-          var res = http.MultipartRequest('POST', uri)
-            ..headers.addAll(h)
-            ..fields['id'] = widget.jobId
-            ..fields['title'] = clipController.title.text
-            ..fields['comments'] = clipController.des.text
-            ..fields['startDuration'] = s.toString()
-            ..fields['endDuration'] = e.toString()
-            ..fields['share'] = "true"
-            ..fields['sharing'] = json.encode(clipController.sharingUser)
-            ..files
-                .add(await http.MultipartFile.fromPath('audio', audioFile.path))
-            ..files.add(
-                await http.MultipartFile.fromPath('videoPath', vpath.path));
-          var response = await res.send();
-          print('Check Response ${response.statusCode}');
-          var result = await response.stream.bytesToString();
-          Get.log('Check Response ${result}');
+        print("Audio Function Call");
+        Map<String, String> h = {'Authorization': 'Bearer $token'};
+        var uri = Uri.parse(baseUrlService.baseUrl + ApiData.createClipJob);
+        var res = http.MultipartRequest('POST', uri)
+          ..headers.addAll(h)
+          ..fields['id'] = widget.jobId
+          ..fields['title'] = clipController.title.text
+          ..fields['comments'] = clipController.des.text
+          ..fields['share'] = "true"
+          ..fields['startDuration'] = s.toString()
+          ..fields['endDuration'] = e.toString()
+          ..fields['sharing'] = json.encode(clipController.sharingUser)
+          ..files.add(
+              await http.MultipartFile.fromPath('videoPath', vpath.path));
+        var response = await res.send();
+        print('Check Response ${response.statusCode}');
+        var result = await response.stream.bytesToString();
+        Get.log('Check Response ${result}');
+        if (response.statusCode == 200) {
           clipController.sharingUser.clear();
           clipController.homeScreenController.isLoading.value = true;
           await clipController.homeScreenController.getSentJobs();
@@ -366,42 +289,45 @@ class _ClippingScreenState extends State<ClippingScreen> {
               message: "",
               isWarning: false,
               backgroundColor: CommonColor.greenColor);
-        }
-        else {
-          Map<String, String> h = {'Authorization': 'Bearer $token'};
-          var uri = Uri.parse(ApiData.baseUrl + ApiData.createClipJob);
-          var res = http.MultipartRequest('POST', uri)
-            ..headers.addAll(h)
-            ..fields['id'] = widget.jobId
-            ..fields['title'] = clipController.title.text
-            ..fields['comments'] = clipController.des.text
-            ..fields['startDuration'] = s.toString()
-            ..fields['endDuration'] = e.toString()
-            ..fields['share'] = "true"
-            ..fields['sharing'] = json.encode(clipController.sharingUser)
-            ..files
-                .add(await http.MultipartFile.fromPath('audio', audioFile.path))
-            ..files.add(
-                await http.MultipartFile.fromPath('videoPath', vpath.path));
-          var response = await res.send();
-          print(
-              'Check Response audio/video status code ${response.statusCode}');
-          var result = await response.stream.bytesToString();
-          Get.log('Check Response audio/video ${result}');
-          clipController.sharingUser.clear();
-          clipController.homeScreenController.isLoading.value = true;
-          await clipController.homeScreenController.getSentJobs();
-          clipController.homeScreenController.isLoading.value = false;
+        } else {
+          Get.back();
           clipController.isBottomLoading.value = false;
-          Get.back();
-          Get.back();
-          CustomSnackBar.showSnackBar(
-            title: "Job shared successfully",
-            message: "",
-            isWarning: false,
-            backgroundColor: CommonColor.greenColor,
-          );
         }
+      }
+      else {
+        Map<String, String> h = {'Authorization': 'Bearer $token'};
+        var uri = Uri.parse(baseUrlService.baseUrl + ApiData.createClipJob);
+        var res = http.MultipartRequest('POST', uri)
+          ..headers.addAll(h)
+          ..fields['id'] = widget.jobId
+          ..fields['title'] = clipController.title.text
+          ..fields['comments'] = clipController.des.text
+          ..fields['startDuration'] = s.toString()
+          ..fields['endDuration'] = e.toString()
+          ..fields['share'] = "true"
+          ..fields['sharing'] = json.encode(clipController.sharingUser)
+          ..files
+              .add(await http.MultipartFile.fromPath('audio', audioFile.path))
+          ..files.add(
+              await http.MultipartFile.fromPath('videoPath', vpath.path));
+        var response = await res.send();
+        print(
+            'Check Response audio/video status code ${response.statusCode}');
+        var result = await response.stream.bytesToString();
+        Get.log('Check Response audio/video ${result}');
+        clipController.sharingUser.clear();
+        clipController.homeScreenController.isLoading.value = true;
+        await clipController.homeScreenController.getSentJobs();
+        clipController.homeScreenController.isLoading.value = false;
+        clipController.isBottomLoading.value = false;
+        Get.back();
+        Get.back();
+        CustomSnackBar.showSnackBar(
+          title: "Job shared successfully",
+          message: "",
+          isWarning: false,
+          backgroundColor: CommonColor.greenColor,
+        );
       }
     } catch (e) {
       print("Error Uploading ${e.toString()}");
@@ -862,17 +788,17 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                 color: CommonColor.greenColorWithOpacity,
                                 shape: RoundedRectangleBorder(
                                     side: BorderSide(
-                                      color: Color(0xff23B662),
+                                      color:_.sharingUser.length == 0 ? Colors.grey : Color(0xff23B662),
                                     ),
                                     borderRadius: BorderRadius.circular(9.0)),
-                                onPressed: () async {
+                                onPressed:_.sharingUser.length == 0 ? null : () async {
                                   shareDialougebox(context, _);
                                 },
                                 child: Text(
                                   "SHARE",
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
-                                      color: CommonColor.greenButtonTextColor,
+                                      color:_.sharingUser.length == 0 ? Colors.grey : CommonColor.greenButtonTextColor,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700),
                                 ),
@@ -1162,7 +1088,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
 
 //<--------------------------------Dialouge Box Confirmation Share information-----------------
 
-  Future<void> shareDialougebox(context, ClippingController _) async {
+  Future<void> shareDialougebox(context, ClippingController _) {
     return showDialog(
       context: context,
       barrierDismissible: true, // user must tap button!

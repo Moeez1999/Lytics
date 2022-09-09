@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lytics_lens/Constants/app_strrings.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
-import 'package:lytics_lens/widget/common_snackbar.dart';
+import 'package:lytics_lens/widget/snackbar/common_snackbar.dart';
 import 'package:lytics_lens/Controllers/changepassword_controller.dart';
-import 'package:lytics_lens/views/Components/widget/common_textfield.dart';
+import 'package:lytics_lens/widget/textFields/common_textfield.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
   const ChangePasswordScreen({Key? key}) : super(key: key);

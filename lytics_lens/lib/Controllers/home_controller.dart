@@ -14,13 +14,15 @@ import 'package:http/http.dart' as http;
 import 'package:lytics_lens/utils/api.dart';
 import 'package:lytics_lens/views/player_Screen.dart';
 
+import '../Services/baseurl_service.dart';
+
 class HomeScreenController extends GetxController {
   TextEditingController searchController = TextEditingController();
-  final controller = Get.put(AccountController());
 
   var isLoading = true.obs;
   var isLoading1 = true.obs;
   var isSendLoading = true.obs;
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
 
   String id = '';
 
@@ -78,14 +80,17 @@ class HomeScreenController extends GetxController {
 
   @override
   void onReady() async {
-    id = await storage.read('id');
-    FlutterAppBadger.removeBadge();
-    await getReceiveJob();
-    await getSentJobs();
-    await getJobs(pageno.value);
-    await sendDeviceToken();
+    if(storage.read('id') != null)
+      {
+        id = await storage.read('id');
+        FlutterAppBadger.removeBadge();
+        await getReceiveJob();
+        await getSentJobs();
+        await getJobs(pageno.value);
+        await sendDeviceToken();
+        update();
+      }
 
-    update();
 
     isLoading.value = false;
     isLoading1.value = false;
@@ -177,40 +182,21 @@ class HomeScreenController extends GetxController {
     print('check Send Device Token');
     print('Token ${Constants.token}');
     String token = await storage.read("AccessToken");
-    if (storage.hasData("Url") == true) {
-      String url = storage.read("Url");
-      String id = await storage.read('id');
-      print('User Id $id');
-      var res = await http.post(Uri.parse(url + ApiData.deviceToken),
-          headers: {
-            'Authorization': 'Bearer $token',
-            "Content-type": 'application/json',
-          },
-          body: json.encode({
-            "userId": id,
-            "deviceToken": Constants.token,
-            "addToken": "true",
-          }));
-      var data = json.decode(res.body);
-      print("response of device token api" + res.statusCode.toString());
-      print("response of device token api" + data.toString());
-    } else {
-      String id = await storage.read('id');
-      var res = await http.post(
-        Uri.parse(ApiData.baseUrl + ApiData.deviceToken),
-        headers: {
-          'Authorization': 'Bearer $token',
-          "Content-type": 'application/json',
-        },
-        body: json.encode({
-          "userId": id,
-          "deviceToken": Constants.token,
-          "addToken": "true",
-        }),
-      );
-      var data = json.decode(res.body);
-      print("response of device token api" + data.toString());
-    }
+    String id = await storage.read('id');
+    var res = await http.post(
+      Uri.parse(baseUrlService.baseUrl + ApiData.deviceToken),
+      headers: {
+        'Authorization': 'Bearer $token',
+        "Content-type": 'application/json',
+      },
+      body: json.encode({
+        "userId": id,
+        "deviceToken": Constants.token,
+        "addToken": "true",
+      }),
+    );
+    var data = json.decode(res.body);
+    print("response of device token api" + data.toString());
   }
 
   searchFunction(String v) {
@@ -263,20 +249,49 @@ class HomeScreenController extends GetxController {
       isSocketError.value = false;
       isDataFailed.value = false;
       // update();
-      if (storage.hasData("Url") == true) {
+      String id = await storage.read('id');
+      print("User Id is $id");
+      String token = await storage.read("AccessToken");
+      print("Bearer $token");
+      if (p == 1) {
+        isLoading.value = true;
+        job.clear();
+        update();
+        tpageno.value = 1;
+        print("Page No is $p");
+        String token = await storage.read("AccessToken");
+        print("Bearer $token");
+        var res = await http.get(
+          Uri.parse(
+              '${baseUrlService.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+          headers: {
+            'Authorization': 'Bearer $token',
+            "Content-type": 'application/json',
+          },
+        );
+        var data = json.decode(res.body);
+        Get.log('Home Api $data');
         if (p == 1) {
-          isLoading.value = true;
-          job.clear();
-          tpageno.value = 1;
+          totalPages = data['totalPages'];
+          update();
+        }
+        print('Total Pages ${data['totalPages']}');
+        print('Total Pages ${tpageno.value}');
+        job.addAll(data['results']);
+        // job.assignAll(List.from(job.reversed));
+        // job.toList().sort((b ,a) => b['programDate'].compareTo(a))
+        // job.sort((a,b) => a['programDate'].compareTo(b['programDate']));
+        isLoading.value = false;
+      } else {
+        if (tpageno.value <= totalPages) {
+          isMore.value = true;
+          // update();
           print("Page No is $p");
-          String url = storage.read("Url");
           String token = await storage.read("AccessToken");
-          String id = await storage.read('id');
-          print('User Id $id');
           print("Bearer $token");
           var res = await http.get(
             Uri.parse(
-                '$url${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
+                '${baseUrlService.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
             headers: {
               'Authorization': 'Bearer $token',
               "Content-type": 'application/json',
@@ -289,104 +304,13 @@ class HomeScreenController extends GetxController {
             update();
           }
           print('Total Pages ${data['totalPages']}');
-          print('Total Pages ${tpageno.value}');
-          job.addAll(data['results']);
-          isLoading.value = false;
-        } else {
-          if (tpageno.value <= totalPages) {
-            isMore.value = true;
-            // update();
-            print("Page No is $p");
-            String url = storage.read("Url");
-            String token = await storage.read("AccessToken");
-            String id = await storage.read('id');
-            print('User Id $id');
-            print("Bearer $token");
-            var res = await http.get(
-              Uri.parse(
-                  '$url${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
-              headers: {
-                'Authorization': 'Bearer $token',
-                "Content-type": 'application/json',
-              },
-            );
-
-            print('Home Api ${res.body}');
-            var data = json.decode(res.body);
-
-            print('Total Pages ${data['totalPages']}');
-            print('Total Pages ${tpageno.value}');
-            job.addAll(data['results']);
-            isMore.value = false;
-          } else {
-            isMore.value = false;
-            print('Result Not Found');
-          }
-        }
-      } else {
-        String id = await storage.read('id');
-        print("User Id is $id");
-        String token = await storage.read("AccessToken");
-        print("Bearer $token");
-        if (p == 1) {
-          isLoading.value = true;
-          job.clear();
-          update();
-          tpageno.value = 1;
-          print("Page No is $p");
-          String token = await storage.read("AccessToken");
-          print("Bearer $token");
-          var res = await http.get(
-            Uri.parse(
-                '${ApiData.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
-            headers: {
-              'Authorization': 'Bearer $token',
-              "Content-type": 'application/json',
-            },
-          );
-          var data = json.decode(res.body);
-          Get.log('Home Api $data');
-          if (p == 1) {
-            totalPages = data['totalPages'];
-            update();
-          }
-          print('Total Pages ${data['totalPages']}');
-          print('Total Pages ${tpageno.value}');
+          // job.assignAll(List.from(job.reversed));
           job.addAll(data['results']);
           // job.assignAll(List.from(job.reversed));
-          // job.toList().sort((b ,a) => b['programDate'].compareTo(a))
-          // job.sort((a,b) => a['programDate'].compareTo(b['programDate']));
-          isLoading.value = false;
+          isMore.value = false;
         } else {
-          if (tpageno.value <= totalPages) {
-            isMore.value = true;
-            // update();
-            print("Page No is $p");
-            String token = await storage.read("AccessToken");
-            print("Bearer $token");
-            var res = await http.get(
-              Uri.parse(
-                  '${ApiData.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
-              headers: {
-                'Authorization': 'Bearer $token',
-                "Content-type": 'application/json',
-              },
-            );
-            print('Home Api ${res.body}');
-            var data = json.decode(res.body);
-            if (p == 1) {
-              totalPages = data['totalPages'];
-              update();
-            }
-            print('Total Pages ${data['totalPages']}');
-            // job.assignAll(List.from(job.reversed));
-            job.addAll(data['results']);
-            // job.assignAll(List.from(job.reversed));
-            isMore.value = false;
-          } else {
-            isMore.value = false;
-            print('Result Not Found');
-          }
+          isMore.value = false;
+          print('Result Not Found');
         }
       }
     } on SocketException catch (e) {
@@ -405,39 +329,19 @@ class HomeScreenController extends GetxController {
       isSocketError.value = false;
       isDataFailed.value = false;
       isSendLoading.value = true;
-      // receivedJobsList.clear();
-      // update();
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        String id = await storage.read('id');
-        var res = await http.get(
-          Uri.parse('$url${ApiData.shareJobs}' + id),
-          headers: {
-            'Authorization': 'Bearer $token',
-            "Content-type": 'application/json',
-          },
-        );
-        var data = json.decode(res.body);
-        sentjob.addAll(data);
-        isSendLoading.value = false;
-        // await getJobs(pageno.value);
-      } else {
-        String id = await storage.read('id');
-        String token = await storage.read("AccessToken");
-        var res = await http.get(
-          Uri.parse(ApiData.baseUrl + ApiData.shareJobs + id),
-          headers: {
-            'Authorization': 'Bearer $token',
-            "Content-type": 'application/json',
-          },
-        );
-        var data = json.decode(res.body);
-        // Get.log("Check ALL Shared Data ${res.body}");
-        sentjob.addAll(data);
-        isSendLoading.value =  false;
-        // await getJobs(pageno.value);
-      }
+      String id = await storage.read('id');
+      String token = await storage.read("AccessToken");
+      var res = await http.get(
+        Uri.parse(baseUrlService.baseUrl + ApiData.shareJobs + id),
+        headers: {
+          'Authorization': 'Bearer $token',
+          "Content-type": 'application/json',
+        },
+      );
+      var data = json.decode(res.body);
+      // Get.log("Check ALL Shared Data ${res.body}");
+      sentjob.addAll(data);
+      isSendLoading.value =  false;
     } on SocketException catch (e) {
       print(e);
       isSendLoading.value = false;
@@ -461,38 +365,20 @@ class HomeScreenController extends GetxController {
     isLoading1.value = true;
     receivedJobsList.clear();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        String id = await storage.read('id');
-        var res = await http.get(
-          Uri.parse(url + ApiData.receiveJobs + id),
-          headers: {
-            'Authorization': 'Bearer $token',
-            "Content-type": 'application/json',
-          },
-        );
-        var data = json.decode(res.body);
-        // Get.log("Receiver Jobs $data");
-        receivedJobsList.addAll(data);
-        isLoading1.value = false;
-      }
-      else {
-        String token = await storage.read("AccessToken");
-        String id = await storage.read('id');
-        print("User Id is $id");
-        var res = await http.get(
-          Uri.parse(ApiData.baseUrl + ApiData.receiveJobs + id),
-          headers: {
-            'Authorization': 'Bearer $token',
-            "Content-type": 'application/json',
-          },
-        );
-        var data = json.decode(res.body);
-        // Get.log("Receiver Jobs $data");
-        receivedJobsList.addAll(data);
-        isLoading1.value = false;
-      }
+      String token = await storage.read("AccessToken");
+      String id = await storage.read('id');
+      print("User Id is $id");
+      var res = await http.get(
+        Uri.parse(baseUrlService.baseUrl + ApiData.receiveJobs + id),
+        headers: {
+          'Authorization': 'Bearer $token',
+          "Content-type": 'application/json',
+        },
+      );
+      var data = json.decode(res.body);
+      // Get.log("Receiver Jobs $data");
+      receivedJobsList.addAll(data);
+      isLoading1.value = false;
     } on SocketException catch (e) {
       print(e);
       isLoading1.value = false;
@@ -665,33 +551,18 @@ class HomeScreenController extends GetxController {
     String token = await storage.read("AccessToken");
     print("Bearer $token");
     print("Bearer $jobId");
-    if (storage.hasData('Url') == true) {
-      String url = storage.read("Url");
-      var res =
-          await http.get(Uri.parse(url + ApiData.singleJob + jobId), headers: {
-        'Authorization': "Bearer $token",
-      });
-      var data = json.decode(res.body);
-      // Get.log('Check Data $data');
+    var res = await http.get(
+        Uri.parse(baseUrlService.baseUrl + ApiData.singleJob + jobId),
+        headers: {
+          'Authorization': "Bearer $token",
+        });
+    var data = json.decode(res.body);
+    // Get.log('Check Data $data');
 
-      data['escalations'].forEach((e) {
-        escalation.add(e);
-      });
-      await checkEscalation(data, jobId);
-    } else {
-      var res = await http.get(
-          Uri.parse(ApiData.baseUrl + ApiData.singleJob + jobId),
-          headers: {
-            'Authorization': "Bearer $token",
-          });
-      var data = json.decode(res.body);
-      // Get.log('Check Data $data');
-
-      data['escalations'].forEach((e) {
-        escalation.add(e);
-      });
-      await checkEscalation(data, jobId);
-    }
+    data['escalations'].forEach((e) {
+      escalation.add(e);
+    });
+    await checkEscalation(data, jobId);
   }
 
   Future<void> checkEscalation(Map jobMap, String id) async {
@@ -715,34 +586,17 @@ class HomeScreenController extends GetxController {
     s.forEach((element) {
       print('Check Job Escalation $element');
     });
-
-    if (storage.hasData('Url') == true) {
-      String url = storage.read("Url");
-      var res = await http.patch(
-        Uri.parse(url + ApiData.singleJob + id),
-        body: {'escalations': json.encode(s), 'device': 'mobile'},
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-
-      print('Job Request is ${res.body}');
-      tpageno.value = 1;
-      // await receivedJobsList();
-      await getJobs(1);
-    } else {
-      var res = await http.patch(
-        Uri.parse(ApiData.baseUrl + ApiData.singleJob + id),
-        body: {'escalations': json.encode(s), 'device': 'mobile'},
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-      print('Job Request is ${res.body}');
-      tpageno.value = 1;
-      // await receivedJobsList();
-      await getJobs(1);
-    }
+    var res = await http.patch(
+      Uri.parse(baseUrlService.baseUrl + ApiData.singleJob + id),
+      body: {'escalations': json.encode(s), 'device': 'mobile'},
+      headers: {
+        'Authorization': "Bearer $token",
+      },
+    );
+    print('Job Request is ${res.body}');
+    tpageno.value = 1;
+    // await receivedJobsList();
+    await getJobs(1);
   }
 
   String escalationsJob(List escalationsList) {
@@ -766,37 +620,19 @@ class HomeScreenController extends GetxController {
     String token = await storage.read("AccessToken");
     try
     {
-      if (storage.hasData('Url') == true)
+      for(int i =0 ; i < sharingId.length ; i++)
       {
-        String url = storage.read("Url");
-        for(int i =0 ; i < sharingId.length ; i++)
-        {
-          await http.patch(
-            Uri.parse(url + ApiData.deleteSharedJob + sharingId[i]['_id']),
-            headers: {
-              'Authorization': "Bearer $token",
-            },
-          );
-        }
-        await getSentJobs();
-        isSendLoading.value = false;
+        print("Job Type Id is ${sharingId[i]['_id']}");
+        var d = await http.patch(
+          Uri.parse(baseUrlService.baseUrl + ApiData.deleteSharedJob + sharingId[i]['_id']),
+          headers: {
+            'Authorization': "Bearer $token",
+          },
+        );
+        print("Check Data is delete${d.body}");
       }
-      else
-      {
-        for(int i =0 ; i < sharingId.length ; i++)
-        {
-          print("Job Type Id is ${sharingId[i]['_id']}");
-          var d = await http.patch(
-            Uri.parse(ApiData.baseUrl + ApiData.deleteSharedJob + sharingId[i]['_id']),
-            headers: {
-              'Authorization': "Bearer $token",
-            },
-          );
-          print("Check Data is delete${d.body}");
-        }
-        await getSentJobs();
-        isSendLoading.value = false;
-      }
+      await getSentJobs();
+      isSendLoading.value = false;
     }catch(e)
     {
       isSendLoading.value = false;
@@ -808,43 +644,22 @@ class HomeScreenController extends GetxController {
     print('Job Function Call');
 
     String token = await storage.read("AccessToken");
+    var res = await http.post(
+      Uri.parse(baseUrlService.baseUrl + ApiData.escalationsread),
+      body: {'id': id},
+      headers: {
+        'Authorization': "Bearer $token",
+      },
+    );
 
-    if (storage.hasData('Url') == true) {
-      String url = storage.read("Url");
-      var res = await http.post(
-        Uri.parse(url + ApiData.escalationsread),
-        // body: json.encode({'id': id}),
-        body: {'id': id},
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
+    print('Job Read Request is ${res.body}');
+    await getJobs(1);
+    // await receivedJobsList();
+    Get.delete<VideoController>();
+    Get.to(
+          () => PlayerScreen(),
+      arguments: {"id": id},
+    );
 
-      print('Job Request is ${res.body}');
-      await getJobs(1);
-      // await receivedJobsList();
-      Get.delete<VideoController>();
-      Get.to(
-        () => PlayerScreen(),
-        arguments: {"id": id},
-      );
-    } else {
-      var res = await http.post(
-        Uri.parse(ApiData.baseUrl + ApiData.escalationsread),
-        body: {'id': id},
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-
-      print('Job Read Request is ${res.body}');
-      await getJobs(1);
-      // await receivedJobsList();
-      Get.delete<VideoController>();
-      Get.to(
-        () => PlayerScreen(),
-        arguments: {"id": id},
-      );
-    }
   }
 }

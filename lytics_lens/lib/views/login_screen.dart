@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/login_screen_controller.dart';
 import 'package:lytics_lens/Views/Forgot%20Password.dart';
-import 'package:lytics_lens/views/Components/widget/common_textfield.dart';
-import 'package:lytics_lens/widget/common_snackbar.dart';
-import '../widget/validator.dart';
-import 'Components/Global_TextField.dart';
+import 'package:lytics_lens/widget/textFields/common_textfield.dart';
+import 'package:lytics_lens/widget/snackbar/common_snackbar.dart';
+import '../widget/form_validator/validator.dart';
+import '../widget/textFields/Global_TextField.dart';
 import 'package:resize/resize.dart';
 import 'package:get/get.dart';
 
@@ -167,12 +167,7 @@ class LoginScreen extends StatelessWidget {
                                       await _.verifyEmailPassword();
                                     },
                                     child: Text(
-                                      _.remoteConfigService.remoteConfig
-                                              .getString('logintext')
-                                              .isNotEmpty
-                                          ? _.remoteConfigService.remoteConfig
-                                              .getString('logintext')
-                                          : "LOGIN",
+                                      "LOGIN",
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
                                           color: Color(0xff2CE08E),
@@ -227,12 +222,7 @@ class LoginScreen extends StatelessWidget {
                                     _.checkBio();
                                   },
                                   child: Text(
-                                    _.remoteConfigService.remoteConfig
-                                            .getString('biometric')
-                                            .isNotEmpty
-                                        ? _.remoteConfigService.remoteConfig
-                                            .getString('biometric')
-                                        : "Use Biometric",
+                                    "Use Biometric",
                                     textScaleFactor: 1.0,
                                     style: TextStyle(color: Colors.white),
                                   ),

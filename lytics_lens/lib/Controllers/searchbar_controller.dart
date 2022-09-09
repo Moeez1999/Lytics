@@ -8,12 +8,16 @@ import 'package:http/http.dart' as http;
 import 'package:lytics_lens/Models/alltopicmodel.dart';
 import 'package:lytics_lens/utils/api.dart';
 
+import '../Services/baseurl_service.dart';
+
 class SearchBarController extends GetxController {
   bool isLoading = true;
 
   final storage = new GetStorage();
   static CollectionReference headline =
       FirebaseFirestore.instance.collection('Headline');
+
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
 
   List headlinelist = [];
 
@@ -90,49 +94,39 @@ class SearchBarController extends GetxController {
       isSocket = false;
       update();
       String token = await storage.read("AccessToken");
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        var res = await http.get(Uri.parse(url + ApiData.topic), headers: {
-          'Authorization': "Bearer $token",
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.topic), headers: {
+        'Authorization': "Bearer $token",
+      });
+      var data = json.decode(res.body);
+      Get.log('Data is $data');
+      // print('Data is $data');
+      allData.addAll(data['results']);
+      update();
+      allData.forEach((e) {
+        topiclist.add({'id': e['name'], 'name': e['name']});
+        e['topic2'].forEach((a) {
+          topic2allData.add(a);
         });
-        var data = json.decode(res.body);
-        topiclist.addAll(data['results']);
-        update();
-      } else {
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.topic), headers: {
-          'Authorization': "Bearer $token",
+      });
+      update();
+      topic2allData.forEach((element) {
+        topiclist.add({'id': element['name'], 'name': element['name']});
+        element['topic3'].forEach((a) {
+          topic3list.add(a);
         });
-        var data = json.decode(res.body);
-        Get.log('Data is $data');
-        // print('Data is $data');
-        allData.addAll(data['results']);
-        update();
-        allData.forEach((e) {
-          topiclist.add({'id': e['name'], 'name': e['name']});
-          e['topic2'].forEach((a) {
-            topic2allData.add(a);
-          });
-        });
-        update();
-        topic2allData.forEach((element) {
-          topiclist.add({'id': element['name'], 'name': element['name']});
-          element['topic3'].forEach((a) {
-            topic3list.add(a);
-          });
-        });
-        update();
-        topic3list.forEach((q) {
-          topiclist.add({'id': q['name'], 'name': q['name']});
-        });
-        update();
-        topiclist = Set.of(topiclist).toList();
-        update();
-        topiclist.forEach((w) {
-          alltopic.add(AllTopicModel.fromJSON(w));
-        });
-        update();
-      }
+      });
+      update();
+      topic3list.forEach((q) {
+        topiclist.add({'id': q['name'], 'name': q['name']});
+      });
+      update();
+      topiclist = Set.of(topiclist).toList();
+      update();
+      topiclist.forEach((w) {
+        alltopic.add(AllTopicModel.fromJSON(w));
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
       isLoading = false;

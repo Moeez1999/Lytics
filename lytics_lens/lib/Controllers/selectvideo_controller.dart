@@ -5,10 +5,13 @@ import 'package:http/http.dart' as http;
 import 'package:lytics_lens/Services/internetcheck.dart';
 import 'package:lytics_lens/utils/api.dart';
 
+import '../Services/baseurl_service.dart';
+
 class SelectVideoController extends GetxController {
   bool isLoading = true;
 
   late NetworkController networkController;
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
 
   var arrg;
   final storage = new GetStorage();
@@ -61,56 +64,29 @@ class SelectVideoController extends GetxController {
   }
 
   Future<void> getSingleJob() async {
-    if (storage.hasData("Url") == true) {
-      String url = storage.read("Url");
-      String token = await storage.read("AccessToken");
-      print("Bearer $token");
-      var res =
-          await http.get(Uri.parse(url + ApiData.singleJob + jobId), headers: {
-        'Authorization': "Bearer $token",
-      });
-      var data = json.decode(res.body);
-      print("Url Data $data");
-      print('Sub Topic ${data['segments'][0]['topics']['topic2']}');
-      videoPath = data["videoPath"];
-      event = data['programName'];
-      topic = data['segments'][0]['topics']['topic1'];
-      subTopic = data['segments'][0]['topics']['topic2'];
-      source = data["source"];
-      guest = data["guests"];
-      anchor = data['anchor'];
-      speaker = data['anchor'][0];
-      statment = data['programDescription'];
-      channelLogo = data['channelLogoPath'];
-      thumbnailpath = data['thumbnailPath'];
-      description = data['programDescription'];
-
-      // print("video path is "+data["VideoPath"]);
-    } else {
-      String token = await storage.read("AccessToken");
-
-      print("Bearer $token");
-      var res = await http.get(
-          Uri.parse(ApiData.baseUrl + ApiData.singleJob + jobId),
-          headers: {
-            'Authorization': "Bearer $token",
-          });
-      var data = json.decode(res.body);
-      print("All Data $data");
-      print('Sub Topic ${data['segments'][0]['topics']['topic2']}');
-      videoPath = data["videoPath"];
-      event = data['programName'];
-      topic = data['segments'][0]['topics']['topic1'];
-      // subTopic = data['segments'][0]['topics']['topic2'][0];
-      subTopic = data['segments'][0]['topics']['topic2'];
-      source = data["source"];
-      guest = data["guests"];
-      anchor = data['anchor'];
-      speaker = data['anchor'][0];
-      statment = data['programDescription'];
-      channelLogo = data['channelLogoPath'];
-      thumbnailpath = data['thumbnailPath'];
-      description = data['programDescription'];
-    }
+    String token = await storage.read("AccessToken");
+    print("Bearer $token");
+    var res = await http.get(
+        Uri.parse(baseUrlService.baseUrl + ApiData.singleJob + jobId),
+        headers: {
+          'Authorization': "Bearer $token",
+        });
+    var data = json.decode(res.body);
+    print("All Data $data");
+    print('Sub Topic ${data['segments'][0]['topics']['topic2']}');
+    videoPath = data["videoPath"];
+    event = data['programName'];
+    topic = data['segments'][0]['topics']['topic1'];
+    // subTopic = data['segments'][0]['topics']['topic2'][0];
+    subTopic = data['segments'][0]['topics']['topic2'];
+    source = data["source"];
+    guest = data["guests"];
+    anchor = data['anchor'];
+    speaker = data['anchor'][0];
+    statment = data['programDescription'];
+    channelLogo = data['channelLogoPath'];
+    thumbnailpath = data['thumbnailPath'];
+    description = data['programDescription'];
+    update();
   }
 }

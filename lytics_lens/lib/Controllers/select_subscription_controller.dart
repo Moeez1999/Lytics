@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:lytics_lens/Services/internetcheck.dart';
 
 import '../Models/subscriptionmodel.dart';
+import '../Services/baseurl_service.dart';
 import '../utils/api.dart';
 
 class SelectSubscriptionController extends GetxController {
@@ -26,6 +27,7 @@ class SelectSubscriptionController extends GetxController {
   Map allData = {};
 
   final TreeController treeController = TreeController(allNodesExpanded: false);
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
 
   List<Map<String, dynamic>> check = [];
   List<Map<String, dynamic>> check1 = [];
@@ -78,42 +80,23 @@ class SelectSubscriptionController extends GetxController {
   Future<void> getUserInformation() async {
     temp.clear();
     filter.clear();
-    if (storage.hasData("Url") == true) {
-      String url = await storage.read("Url");
-      String id = await storage.read("id");
+    String token = await storage.read("AccessToken");
+    String id = await storage.read("id");
+    print("Current User Id is $id");
 
-      String token = await storage.read("AccessToken");
+    var res = await http.get(
+        Uri.parse(baseUrlService.baseUrl + ApiData.getUserInformation + id),
+        headers: {
+          'Authorization': "Bearer $token",
+        });
+    var data = json.decode(res.body);
 
-      var res = await http
-          .get(Uri.parse(url + ApiData.getUserInformation + id), headers: {
-        'Authorization': "Bearer $token",
-      });
-      var data = json.decode(res.body);
-      Get.log("All Data $data");
-      Map response = data["subscription"];
+    Get.log("All Data $data");
+    Map response = data["subscription"];
 
-      checkMap(response);
+    checkMap(response);
 
-      update();
-    } else {
-      String token = await storage.read("AccessToken");
-      String id = await storage.read("id");
-      print("Current User Id is $id");
-
-      var res = await http.get(
-          Uri.parse(ApiData.baseUrl + ApiData.getUserInformation + id),
-          headers: {
-            'Authorization': "Bearer $token",
-          });
-      var data = json.decode(res.body);
-
-      Get.log("All Data $data");
-      Map response = data["subscription"];
-
-      checkMap(response);
-
-      update();
-    }
+    update();
   }
 
   void checkMap(Map a) {
@@ -180,34 +163,18 @@ class SelectSubscriptionController extends GetxController {
   }
 
   Future<void> sendData() async {
-    if (storage.hasData('Url') == true) {
-      String url = storage.read("Url");
-      String id = storage.read("id");
-      print("Current User Id is $id");
-      String token = storage.read("AccessToken");
-      var res = await http.patch(
-        Uri.parse(url + ApiData.getUserInformation + id),
-        body: json.encode({'escalations': allData, 'device': 'mobile'}),
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-
-      print('Job Request is ${res.body}');
-    } else {
-      String token = await storage.read("AccessToken");
-      // var d = json.encode(allData);
-      String id = storage.read("id");
-      print("Current User Id is $id");
-      print("Current User Token is $token");
-      var res = await http.patch(
-        Uri.parse(ApiData.baseUrl + ApiData.getUserInformation + id),
-        body: json.encode({'escalations': allData,'device': 'mobile'}),
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-      print('Job Request is ${res.body}');
-    }
+    String token = await storage.read("AccessToken");
+    // var d = json.encode(allData);
+    String id = storage.read("id");
+    print("Current User Id is $id");
+    print("Current User Token is $token");
+    var res = await http.patch(
+      Uri.parse(baseUrlService.baseUrl + ApiData.getUserInformation + id),
+      body: json.encode({'escalations': allData, 'device': 'mobile'}),
+      headers: {
+        'Authorization': "Bearer $token",
+      },
+    );
+    print('Job Request is ${res.body}');
   }
 }

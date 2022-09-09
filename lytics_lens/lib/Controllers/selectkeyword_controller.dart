@@ -11,10 +11,13 @@ import 'package:flutter/material.dart';
 import '../Models/topicmodel.dart';
 import 'package:flutter_simple_treeview/flutter_simple_treeview.dart';
 
+import '../Services/baseurl_service.dart';
+
 class SelectKeyWordController extends GetxController {
   RxInt counter = 10.obs;
   var currentindex = 0;
   late NetworkController networkController;
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
 
   bool isSocket = false;
   bool isLoading = true;
@@ -35,13 +38,14 @@ class SelectKeyWordController extends GetxController {
   RxList topicsList = [].obs;
   final storage = new GetStorage();
 
-  var keyWordsList = [];//List for add All data at once from api
+  var keyWordsList = []; //List for add All data at once from api
 
-  List<String> listOfQueryWords = [];//List for add query data
-    List<String> urduQueryWords = [];// List for add urdu querrywords from api function
+  List<String> listOfQueryWords = []; //List for add query data
+  List<String> urduQueryWords =
+      []; // List for add urdu querrywords from api function
 
-  var showListOfWords = [].obs;//List for show keywords in ui
-  var showListOfUrduWords = [].obs;//List for show Urdu Keywords in ui
+  var showListOfWords = [].obs; //List for show keywords in ui
+  var showListOfUrduWords = [].obs; //List for show Urdu Keywords in ui
 
   List allKeyword = [];
 
@@ -101,44 +105,30 @@ class SelectKeyWordController extends GetxController {
   }
 
   Future<void> getKeyWords() async {
-    if (storage.hasData("Url") == true) {
-      String url = storage.read("Url");
-      String token = await storage.read("AccessToken");
-      print("Bearer $token");
-      var res = await http.get(Uri.parse(url + ApiData.getKeyWords), headers: {
-        'Authorization': "Bearer $token",
-      });
-      var data = json.decode(res.body);
-      print("Url Data $data");
-      print("Lenght of list is " + keyWordsList.length.toString());
-    }
-    // print('Sub Topic ${data['segments'][0]['topics']['topic2']}');
-    else {
-      String token = await storage.read("AccessToken");
-      print("Bearer $token");
-      var res = await http
-          .get(Uri.parse(ApiData.baseUrl + ApiData.getKeyWords), headers: {
-        'Authorization': "Bearer $token",
-      });
-      print("status code is" + res.statusCode.toString());
-      var data = json.decode(res.body);
-      // print("All Data $data");
-      Get.log("All Data $data");
+    String token = await storage.read("AccessToken");
+    print("Bearer $token");
+    var res = await http
+        .get(Uri.parse(baseUrlService.baseUrl + ApiData.getKeyWords), headers: {
+      'Authorization': "Bearer $token",
+    });
+    print("status code is" + res.statusCode.toString());
+    var data = json.decode(res.body);
+    // print("All Data $data");
+    Get.log("All Data $data");
 
-      keyWordsList.addAll(data['results']);
-      keyWordsList.forEach((element) {
-        if (element["language"].toString() == 'Urdu') {
-          urduQueryWords.add(element["queryWord"]);
-        } else {
-          listOfQueryWords.add(element["queryWord"]);
-        }
-        print("Lenght of urdu query words is " +
-            urduQueryWords.length.toString());
-        print("Lenght of english query words is " +
-            listOfQueryWords.length.toString());
-      });
-      update();
-    }
+    keyWordsList.addAll(data['results']);
+    keyWordsList.forEach((element) {
+      if (element["language"].toString() == 'Urdu') {
+        urduQueryWords.add(element["queryWord"]);
+      } else {
+        listOfQueryWords.add(element["queryWord"]);
+      }
+      print(
+          "Lenght of urdu query words is " + urduQueryWords.length.toString());
+      print("Lenght of english query words is " +
+          listOfQueryWords.length.toString());
+    });
+    update();
   }
 
   Future<void> gettopic() async {
@@ -147,30 +137,20 @@ class SelectKeyWordController extends GetxController {
       topicList.clear();
       update();
       String token = await storage.read("AccessToken");
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        var res = await http.get(Uri.parse(url + ApiData.topic), headers: {
-          'Authorization': "Bearer $token",
-        });
-        var data = json.decode(res.body);
-        topicList.add(TopicModel.fromJson(data['results']));
-        update();
-      } else {
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.topic), headers: {
-          'Authorization': "Bearer $token",
-        });
-        var data = json.decode(res.body);
-        // Get.log('Data is $data');
-        // print('Data is $data');
-        data['results'].forEach((e) {
-          topicList.add(TopicModel.fromJson(e));
-        });
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.topic), headers: {
+        'Authorization': "Bearer $token",
+      });
+      var data = json.decode(res.body);
+      // Get.log('Data is $data');
+      // print('Data is $data');
+      data['results'].forEach((e) {
+        topicList.add(TopicModel.fromJson(e));
+      });
 
-        update();
-        for (int i = 0; i < topicList.length; i++) {
-          print('Check All Data ${topicList[i].name}');
-        }
+      update();
+      for (int i = 0; i < topicList.length; i++) {
+        print('Check All Data ${topicList[i].name}');
       }
     } on SocketException catch (e) {
       isLoading = false;
@@ -212,66 +192,34 @@ class SelectKeyWordController extends GetxController {
   }
 
   Future<void> updateTopic() async {
-    if (storage.hasData('Url') == true) {
-      String url = storage.read("Url");
-      String id = storage.read("id");
-      print("Current User Id is $id");
-      String token = storage.read("AccessToken");
-      var res = await http.patch(
-        Uri.parse(url + ApiData.getUserInformation + id),
-        body: json.encode({'topics': selectedtopicList, 'device': 'mobile'}),
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-
-      print('Job Request is ${res.body}');
-    } else {
-      String token = await storage.read("AccessToken");
-      // var d = json.encode(allData);
-      String id = storage.read("id");
-      print("Current User Id is $id");
-      print("Current User Token is $token");
-      var res = await http.patch(
-        Uri.parse(ApiData.baseUrl + ApiData.getUserInformation + id),
-        body: json.encode({'topics': selectedtopicList, 'device': 'mobile'}),
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-      print('Job Request is ${res.body}');
-    }
+    String token = await storage.read("AccessToken");
+    // var d = json.encode(allData);
+    String id = storage.read("id");
+    print("Current User Id is $id");
+    print("Current User Token is $token");
+    var res = await http.patch(
+      Uri.parse(baseUrlService.baseUrl + ApiData.getUserInformation + id),
+      body: json.encode({'topics': selectedtopicList, 'device': 'mobile'}),
+      headers: {
+        'Authorization': "Bearer $token",
+      },
+    );
+    print('Job Request is ${res.body}');
   }
 
   Future<void> updatekeyword() async {
-    if (storage.hasData('Url') == true) {
-      String url = storage.read("Url");
-      String id = storage.read("id");
-      print("Current User Id is $id");
-      String token = storage.read("AccessToken");
-      var res = await http.patch(
-        Uri.parse(url + ApiData.getUserInformation + id),
-        body: json.encode({'keyWords': allKeyword, 'device': 'mobile'}),
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-
-      print('Job Request is ${res.body}');
-    } else {
-      String token = await storage.read("AccessToken");
-      // var d = json.encode(allData);
-      String id = storage.read("id");
-      print("Current User Id is $id");
-      print("Current User Token is $token");
-      var res = await http.patch(
-        Uri.parse(ApiData.baseUrl + ApiData.getUserInformation + id),
-        body: json.encode({'keyWords': allKeyword, 'device': 'mobile'}),
-        headers: {
-          'Authorization': "Bearer $token",
-        },
-      );
-      print('Job Request is ${res.body}');
-    }
+    String token = await storage.read("AccessToken");
+    // var d = json.encode(allData);
+    String id = storage.read("id");
+    print("Current User Id is $id");
+    print("Current User Token is $token");
+    var res = await http.patch(
+      Uri.parse(baseUrlService.baseUrl + ApiData.getUserInformation + id),
+      body: json.encode({'keyWords': allKeyword, 'device': 'mobile'}),
+      headers: {
+        'Authorization': "Bearer $token",
+      },
+    );
+    print('Job Request is ${res.body}');
   }
 }

@@ -1,33 +1,19 @@
 import 'package:flutter/material.dart';
-
-// import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
-
-// import 'package:lens_app/Views/Components/SearchBarTextField.dart';
-
-
-// import 'package:lens_app/views/Components/SelectVideoScreen.dart';
-
 import 'package:lytics_lens/Views/player_Screen.dart';
-import 'package:lytics_lens/views/Components/searchfield.dart';
+import 'package:lytics_lens/widget/textFields/searchfield.dart';
 import '../Constants/app_strrings.dart';
 import '../Constants/common_color.dart';
 import '../Controllers/playerController.dart';
 import '../Controllers/searchScreen_controller.dart';
 import '../Controllers/searchbar_controller.dart';
 import '../Models/channel.dart';
-import '../utils/api.dart';
-import '../widget/common_container.dart';
-import '../widget/common_snackbar.dart';
-import '../widget/internetconnectivity_screen.dart';
+import '../widget/common_containers/common_container.dart';
+import '../widget/common_containers/trendingkeyword_container.dart';
+import '../widget/snackbar/common_snackbar.dart';
+import '../widget/internet_connectivity/internetconnectivity_screen.dart';
 import '../widget/multiselectDropdown/multi_select_bottom_sheet.dart';
-import '../widget/trendingkeyword_container.dart';
-// import 'Components/Global_BottmNav.dart';
-
-// import 'package:resize/resize.dart';
-// import 'package:shimmer_animation/shimmer_animation.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -297,12 +283,12 @@ class SearchScreen extends StatelessWidget {
                                                                         .hasData(
                                                                             "Url")
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.job[index]['thumbnailPath']}"
-                                                                    : "${ApiData.thumbnailPath + _.job[index]['thumbnailPath']}"
+                                                                    : "${_.baseUrlService.baseUrl + '/uploads/' + _.job[index]['thumbnailPath']}"
                                                                 : _.storage
                                                                         .hasData(
                                                                             "Url")
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
-                                                                    : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}");
+                                                                    : "${_.baseUrlService.baseUrl + '/uploads/' + _.searchjob[index]['thumbnailPath']}");
                                                       } else {
                                                         Get.delete<VideoController>();
                                                         Get.to(
@@ -323,12 +309,12 @@ class SearchScreen extends StatelessWidget {
                                                                         .hasData(
                                                                             "Url")
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.job[index]['thumbnailPath']}"
-                                                                    : "${ApiData.thumbnailPath + _.job[index]['thumbnailPath']}"
+                                                                    : "${_.baseUrlService.baseUrl + '/uploads/' + _.job[index]['thumbnailPath']}"
                                                                 : _.storage
                                                                         .hasData(
                                                                             "Url")
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
-                                                                    : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}",
+                                                                    : "${_.baseUrlService.baseUrl + '/uploads/'+ _.searchjob[index]['thumbnailPath']}",
                                                           },
                                                         );
                                                       }
@@ -350,12 +336,12 @@ class SearchScreen extends StatelessWidget {
                                                                         .hasData(
                                                                             "Url")
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.job[index]['thumbnailPath']}"
-                                                                    : "${ApiData.thumbnailPath + _.job[index]['thumbnailPath']}"
+                                                                    : "${_.baseUrlService.baseUrl + '/uploads/' + _.job[index]['thumbnailPath']}"
                                                                 : _.storage
                                                                         .hasData(
                                                                             "Url")
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
-                                                                    : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}");
+                                                                    : "${_.baseUrlService.baseUrl + '/uploads/' + _.searchjob[index]['thumbnailPath']}");
                                                       } else {
                                                         Get.delete<VideoController>();
                                                         Get.to(
@@ -376,12 +362,12 @@ class SearchScreen extends StatelessWidget {
                                                                         .hasData(
                                                                             "Url")
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.job[index]['thumbnailPath']}"
-                                                                    : "${ApiData.thumbnailPath + _.job[index]['thumbnailPath']}"
+                                                                    : "${_.baseUrlService.baseUrl + '/uploads/' + _.job[index]['thumbnailPath']}"
                                                                 : _.storage
                                                                         .hasData(
                                                                             "Url")
                                                                     ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
-                                                                    : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}",
+                                                                    : "${_.baseUrlService.baseUrl + '/uploads/' + _.searchjob[index]['thumbnailPath']}",
                                                           },
                                                         );
                                                       }
@@ -413,10 +399,10 @@ class SearchScreen extends StatelessWidget {
                                                           0
                                                       ? _.storage.hasData("Url")
                                                           ? "${_.storage.read("Url").toString()}/uploads/${_.job[index]['thumbnailPath']}"
-                                                          : "${ApiData.thumbnailPath + _.job[index]['thumbnailPath']}"
+                                                          : "${_.baseUrlService.baseUrl + '/uploads/' + _.job[index]['thumbnailPath']}"
                                                       : _.storage.hasData("Url")
                                                           ? "${_.storage.read("Url").toString()}/uploads/${_.searchjob[index]['thumbnailPath']}"
-                                                          : "${ApiData.thumbnailPath + _.searchjob[index]['thumbnailPath']}",
+                                                          : "${_.baseUrlService.baseUrl + '/uploads/' + _.searchjob[index]['thumbnailPath']}",
                                                   title: _.searchjob.length == 0
                                                       ? _.job[index]
                                                           ['programName']
@@ -471,7 +457,7 @@ class SearchScreen extends StatelessWidget {
                                                                       'http')
                                                               ? _.job[index][
                                                                   'channelLogoPath']
-                                                              : "${ApiData.channelLogoPath + _.job[index]['channelLogoPath']}"
+                                                              : "${_.baseUrlService.baseUrl + '/uploads//' + _.job[index]['channelLogoPath']}"
                                                       : _.storage.hasData("Url")
                                                           ? _.searchjob[index]['channelLogoPath']
                                                                   .toString()
@@ -482,7 +468,7 @@ class SearchScreen extends StatelessWidget {
                                                               : "${_.storage.read("Url").toString()}/uploads//${_.searchjob[index]['channelLogoPath']}"
                                                           : _.searchjob[index]['channelLogoPath'].toString().contains('http')
                                                               ? _.searchjob[index]['channelLogoPath']
-                                                              : "${ApiData.channelLogoPath + _.searchjob[index]['channelLogoPath']}",
+                                                              : "${_.baseUrlService.baseUrl + '/uploads//' + _.searchjob[index]['channelLogoPath']}",
                                                   date: _.searchjob.length == 0
                                                       ? _.convertDateUtc(
                                                           _.job[index]

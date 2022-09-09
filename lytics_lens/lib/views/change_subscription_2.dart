@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lytics_lens/Controllers/change_subscription_2_controller.dart';
-import 'package:lytics_lens/views/Components/widget/common_textfield.dart';
+import 'package:lytics_lens/widget/textFields/common_textfield.dart';
 
 class ChangeSubscription2 extends StatelessWidget {
   const ChangeSubscription2({Key? key}) : super(key: key);

@@ -12,15 +12,14 @@ import 'package:lytics_lens/views/dashboard_screen.dart';
 import 'package:lytics_lens/views/login_screen.dart';
 import 'package:resize/resize.dart';
 import 'Controllers/global_controller.dart';
-import 'Services/remoteconfig_service.dart';
+import 'Services/baseurl_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await GetStorage.init();
   //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  await initService();
+  await initServices();
   AwesomeNotifications().initialize(
     // set the icon to null if you want to use the default app icon
     null,
@@ -55,9 +54,12 @@ void main() async {
   });
 }
 
-Future<void> initService() async {
-  RemoteConfigService remoteConfigService = RemoteConfigService();
-  await Get.putAsync(() => remoteConfigService.init());
+Future<void> initServices() async {
+  await GetStorage.init();
+  BaseUrlService baseUrlService = BaseUrlService();
+  await Get.putAsync(() => baseUrlService.init());
+  print("Check Base Url ${baseUrlService.baseUrl}");
+
 }
 
 class LensApp extends StatelessWidget {

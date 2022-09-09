@@ -10,6 +10,8 @@ import 'package:lytics_lens/Models/datesmodel.dart';
 import 'package:lytics_lens/Models/datesmodel1.dart';
 import 'package:lytics_lens/utils/api.dart';
 
+import '../Services/baseurl_service.dart';
+
 class PreferencesPageController extends GetxController {
   bool isLoading = false;
   bool isExpanded = false;
@@ -34,6 +36,9 @@ class PreferencesPageController extends GetxController {
   DateTime quarter = DateTime.now().subtract(Duration(days: 15));
   DateTime now = DateTime.now();
   List datelist = [];
+
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
+
   @override
   void onInit() {
     datelist = [
@@ -227,46 +232,24 @@ class PreferencesPageController extends GetxController {
     programType.clear();
     responseprogramtyperesult.clear();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res =
-            await http.get(Uri.parse(url + ApiData.programTypes), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Programtype Response $response');
-        responseprogramtyperesult.addAll(response['results']);
-        responseprogramtyperesult.forEach((element) {
-          responseprogramlist
-              .add({'id': element['name'], 'name': element['name']});
-          // programTypesList.add({"id": element['name'], "name": element['name']});
-        });
-        update();
-        responseprogramlist.forEach((element) {
-          programType.add(AllTopicModel.fromJSON(element));
-        });
-        update();
-      } else {
-        String token = await storage.read("AccessToken");
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.programTypes), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Programtype Response $response');
-        responseprogramtyperesult.addAll(response['results']);
-        responseprogramtyperesult.forEach((element) {
-          responseprogramlist
-              .add({'id': element['name'], 'name': element['name']});
-          // programTypesList.add({"id": element['name'], "name": element['name']});
-        });
-        update();
-        responseprogramlist.forEach((element) {
-          programType.add(AllTopicModel.fromJSON(element));
-        });
-        update();
-      }
+      String token = await storage.read("AccessToken");
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.programTypes), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      var response = json.decode(res.body);
+      print('Programtype Response $response');
+      responseprogramtyperesult.addAll(response['results']);
+      responseprogramtyperesult.forEach((element) {
+        responseprogramlist
+            .add({'id': element['name'], 'name': element['name']});
+        // programTypesList.add({"id": element['name'], "name": element['name']});
+      });
+      update();
+      responseprogramlist.forEach((element) {
+        programType.add(AllTopicModel.fromJSON(element));
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
       // CustomSnackBar.showSnackBar(

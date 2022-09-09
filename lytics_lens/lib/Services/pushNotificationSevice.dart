@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
@@ -20,10 +20,7 @@ class PushNotificationService {
   PushNotificationService(this._fcm);
 
   Future initialise() async {
-    if (Platform.isIOS) {
-      // _fcm.requestNotificationPermissions(IosNotificationSettings());
-      _fcm.requestPermission();
-    }
+
     Constants.token = await _fcm.getToken();
     print("FirebaseMessaging token: ${Constants.token}");
 
@@ -52,15 +49,12 @@ class PushNotificationService {
         print("Notification message Body ${message.notification!.title}");
         print("Notification message Body ${message.notification!.body}");
         print("Notification message Body length${message.data.length}");
-        // var messagejobid = message.data["jobID"];
 
         Get.snackbar(
             "${message.notification!.title}", "${message.notification!.body}",
             backgroundColor: CommonColor.snackbarColour, onTap: (value) {
           Get.to(() => PlayerScreen(),
               arguments: {"id": message.data["jobID"]});
-          // var messagejobid = message.data["jobID"];
-          // var messagejobid = message.data["jobID"];
         });
         if (message.data["jobID"] != '') {
           _.getSingleJob(message.data["jobID"]);

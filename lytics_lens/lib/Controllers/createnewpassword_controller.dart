@@ -6,9 +6,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/utils/api.dart';
-import 'package:lytics_lens/widget/common_snackbar.dart';
+import 'package:lytics_lens/widget/snackbar/common_snackbar.dart';
 
-import '../Services/remoteconfig_service.dart';
+import '../Services/baseurl_service.dart';
 
 class CreatenewpasswordController extends GetxController {
   bool isLoading = true;
@@ -17,7 +17,7 @@ class CreatenewpasswordController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController retypePasswordController = TextEditingController();
 
-  RemoteConfigService remoteConfigService =  Get.find<RemoteConfigService>();
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
 
   final formkey = GlobalKey<FormState>();
 
@@ -51,49 +51,27 @@ class CreatenewpasswordController extends GetxController {
   Future<void> createNewPassword() async {
     if (formkey.currentState!.validate()) {
       try {
-        if (storage.hasData("Url") == true) {
-          String url = storage.read("Url").toString();
-          print(url);
-          var data =
-              await http.post(Uri.parse(url + ApiData.resetpassword), body: {
-            'email': email,
-            'newPassword': retypePasswordController.text,
-          });
-          if (data.statusCode == 200) {
-            Get.back();
-            Get.back();
-            Get.back();
-            CustomSnackBar.showSnackBar(
-                title: 'Password updated successfully',
-                message: "",
-                backgroundColor: CommonColor.snackbarColour,
-                isWarning: false);
-          } else {
-            print(data.body);
-          }
+        print("email is "+ email);
+        print('All Email is ${storage.read('forgetemail').toString()}');
+        var data = await http
+            .post(Uri.parse(baseUrlService.baseUrl + ApiData.resetpassword), body: {
+          'email': email.toString(),
+          'newPassword': retypePasswordController.text,
+        });
+        var res = json.decode(data.body);
+        print('Data result is $res');
+        print('Data Code is ${data.statusCode}');
+        if (data.statusCode == 200) {
+          Get.back();
+          Get.back();
+          Get.back();
+          CustomSnackBar.showSnackBar(
+              title: 'Password updated successfully',
+              message: "",
+              backgroundColor: CommonColor.snackbarColour,
+              isWarning: false);
         } else {
-          print("email is "+ email);
-          print('All Email is ${storage.read('forgetemail').toString()}');
-          var data = await http
-              .post(Uri.parse(ApiData.baseUrl + ApiData.resetpassword), body: {
-            'email': email.toString(),
-            'newPassword': retypePasswordController.text,
-          });
-          var res = json.decode(data.body);
-          print('Data result is $res');
-          print('Data Code is ${data.statusCode}');
-          if (data.statusCode == 200) {
-            Get.back();
-            Get.back();
-            Get.back();
-            CustomSnackBar.showSnackBar(
-                title: 'Password updated successfully',
-                message: "",
-                backgroundColor: CommonColor.snackbarColour,
-                isWarning: false);
-          } else {
-            print(res);
-          }
+          print(res);
         }
       } catch (e) {
         CustomSnackBar.showSnackBar(

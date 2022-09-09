@@ -3,7 +3,7 @@ import 'package:flutter_simple_treeview/flutter_simple_treeview.dart';
 import 'package:get/get.dart';
 import '../Constants/common_color.dart';
 import '../Controllers/select_subscription_controller.dart';
-import 'Components/widget/common_textfield.dart';
+import '../widget/textFields/common_textfield.dart';
 import 'package:change_case/change_case.dart';
 
 class SelectSubscriptionScreen extends StatelessWidget {

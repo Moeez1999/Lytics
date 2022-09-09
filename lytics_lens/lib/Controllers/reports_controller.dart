@@ -21,6 +21,8 @@ import 'package:lytics_lens/Views/graphs.dart';
 import 'package:http/http.dart' as http;
 import 'package:lytics_lens/utils/api.dart';
 
+import '../Services/baseurl_service.dart';
+
 class ReportsController extends GetxController {
   bool isLoading = true;
   bool isPieChartData = true;
@@ -79,6 +81,8 @@ class ReportsController extends GetxController {
   Rx<TextEditingController> hostselect = TextEditingController().obs;
   Rx<TextEditingController> hostselect1 = TextEditingController().obs;
 
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
+
   // List channels = [];
   List programTypesList = [];
   String channelSelected = "Geo News";
@@ -117,7 +121,6 @@ class ReportsController extends GetxController {
 
   var filterHost = [].obs;
   List<String> anchorList = [];
-
 
   List anchorList1 = [];
 
@@ -378,71 +381,38 @@ class ReportsController extends GetxController {
     List host = [];
     update();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res = await http.get(Uri.parse(url + ApiData.hosts), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        allanchorList.addAll(response['results']);
-        update();
-        allanchorList.forEach((e) {
-          aList.add(e['name']);
-        });
-        aList = Set.of(aList).toList();
-        aList.forEach((e) {
-          anchorList.add(e);
-        });
-        anchorList.sort((a, b) => a.toString().compareTo(b.toString()));
+      String token = await storage.read("AccessToken");
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.hosts), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      var response = json.decode(res.body);
+      print('Hosts $response');
+      allanchorList.addAll(response['results']);
 
-        anchorList.forEach((e) {
-          host.add({
-            "id": e,
-            "name": e,
-          });
-        });
+      allanchorList.forEach((e) {
+        aList.add(e['name']);
+      });
+      aList = Set.of(aList).toList();
+      aList.forEach((e) {
+        anchorList.add(e);
+      });
+      anchorList.sort((a, b) => a.toString().compareTo(b.toString()));
 
-        host.forEach((element) {
-          hostList.add(ReportHostModel.fromJSON(element));
+      anchorList.forEach((e) {
+        host.add({
+          "id": e,
+          "name": e,
         });
-        update();
-      } else {
-        String token = await storage.read("AccessToken");
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.hosts), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Hosts $response');
-        allanchorList.addAll(response['results']);
+      });
 
-        allanchorList.forEach((e) {
-          aList.add(e['name']);
-        });
-        aList = Set.of(aList).toList();
-        aList.forEach((e) {
-          anchorList.add(e);
-        });
-        anchorList.sort((a, b) => a.toString().compareTo(b.toString()));
-
-        anchorList.forEach((e) {
-          host.add({
-            "id": e,
-            "name": e,
-          });
-        });
-
-        host.forEach((element) {
-          hostList.add(ReportHostModel.fromJSON(element));
-        });
-        update();
-      }
+      host.forEach((element) {
+        hostList.add(ReportHostModel.fromJSON(element));
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
-    } catch (e) {
-
-    }
+    } catch (e) {}
   }
 
   // <------------- Get Program type ------------>
@@ -455,64 +425,33 @@ class ReportsController extends GetxController {
     programType1.clear();
     responseprogramtyperesult.clear();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res =
-            await http.get(Uri.parse(url + ApiData.programTypes), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Programtype Response $response');
-        responseprogramtyperesult.addAll(response['results']);
-        responseprogramtyperesult.forEach((element) {
-          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training')
-            {}
-          else
-            {
-              responseprogramlist
-                  .add({'id': element['name'], 'name': element['name']});
-              programTypefilter.add(element['name']);
-              programTypefilterdata
-                  .add({'id': element['name'], 'name': element['name']});
-            }
-          // programTypesList.add({"id": element['name'], "name": element['name']});
-        });
-        update();
-        responseprogramlist.forEach((element) {
-          programType.add(ProgramTypeModel.fromJSON(element));
-          programType1.add(ProgramTypeModel1.fromJSON(element));
-        });
-        update();
-      } else {
-        String token = await storage.read("AccessToken");
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.programTypes), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Programtype Response $response');
-        responseprogramtyperesult.addAll(response['results']);
-        responseprogramtyperesult.forEach((element) {
-          if(element['name'] == 'EE - Training' || element['name'] == 'UU - Training'){}
-          else
-            {
-              responseprogramlist
-                  .add({'id': element['name'], 'name': element['name']});
-              programTypefilter.add(element['name']);
-              programTypefilterdata
-                  .add({'id': element['name'], 'name': element['name']});
-            }
-
-          // programTypesList.add({"id": element['name'], "name": element['name']});
-        });
-        update();
-        responseprogramlist.forEach((element) {
-          programType.add(ProgramTypeModel.fromJSON(element));
-          programType1.add(ProgramTypeModel1.fromJSON(element));
-        });
-        update();
-      }
+      String token = await storage.read("AccessToken");
+      var res = await http.get(
+          Uri.parse(baseUrlService.baseUrl + ApiData.programTypes),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+      var response = json.decode(res.body);
+      print('Programtype Response $response');
+      responseprogramtyperesult.addAll(response['results']);
+      responseprogramtyperesult.forEach((element) {
+        if (element['name'] == 'EE - Training' ||
+            element['name'] == 'UU - Training') {
+        } else {
+          responseprogramlist
+              .add({'id': element['name'], 'name': element['name']});
+          programTypefilter.add(element['name']);
+          programTypefilterdata
+              .add({'id': element['name'], 'name': element['name']});
+        }
+        // programTypesList.add({"id": element['name'], "name": element['name']});
+      });
+      update();
+      responseprogramlist.forEach((element) {
+        programType.add(ProgramTypeModel.fromJSON(element));
+        programType1.add(ProgramTypeModel1.fromJSON(element));
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
       isLoading = false;
@@ -538,59 +477,31 @@ class ReportsController extends GetxController {
     responseTopic2result.clear();
     topic2list.clear();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res = await http.get(Uri.parse(url + ApiData.topic), headers: {
-          'Authorization': 'Bearer $token',
+      String token = await storage.read("AccessToken");
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.topic), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      var response = json.decode(res.body);
+      // log('Topic Response $response');
+      responseTopicresult.addAll(response['results']);
+      responseTopicresult.forEach((element) {
+        topiclist.add(element['name']);
+        responseTopic2result.add(element['topic2']);
+        // responseprogramlist.add(element['name']);
+        // programTypesList.add({"id": element['name'], "name": element['name']});
+      });
+      responseTopic2result.forEach((e) {
+        topic2list.add({
+          'id': e['name'],
+          'name': e['name'],
         });
-        var response = json.decode(res.body);
-        // log('Topic Response $response');
-        responseTopicresult.addAll(response['results']);
-        responseTopicresult.forEach((element) {
-          topiclist.add(element['name']);
-          responseTopic2result.add(element['topic2']);
-          // responseprogramlist.add(element['name']);
-          // programTypesList.add({"id": element['name'], "name": element['name']});
-        });
-        responseTopic2result.forEach((e) {
-          topic2list.add({
-            'id': e['name'],
-            'name': e['name'],
-          });
-        });
-        update();
-        topic2list.forEach((element) {
-          // programType.add(ProgramTypeModel.fromJSON(element));
-        });
-        update();
-      } else {
-        String token = await storage.read("AccessToken");
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.topic), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        // log('Topic Response $response');
-        responseTopicresult.addAll(response['results']);
-        responseTopicresult.forEach((element) {
-          topiclist.add(element['name']);
-          responseTopic2result.add(element['topic2']);
-          // responseprogramlist.add(element['name']);
-          // programTypesList.add({"id": element['name'], "name": element['name']});
-        });
-        responseTopic2result.forEach((e) {
-          topic2list.add({
-            'id': e['name'],
-            'name': e['name'],
-          });
-        });
-        update();
-        topic2list.forEach((element) {
-          // programType.add(ProgramTypeModel.fromJSON(element));
-        });
-        update();
-      }
+      });
+      update();
+      topic2list.forEach((element) {
+        // programType.add(ProgramTypeModel.fromJSON(element));
+      });
+      update();
     } on SocketException catch (e) {
       isLoading = false;
       print(e);
@@ -617,84 +528,47 @@ class ReportsController extends GetxController {
     // allChanelsList.clear();
     channelsAll.clear();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res = await http.get(Uri.parse(url + ApiData.channels), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print('Chanel Response $response');
-        responseresult.addAll(response['results']);
-        responseresult.forEach((element) {
-          if(element['name'].toString().isLowerCase == 'all')
-            {}
-          else
-            {
-              responsechannellist.add(element['name']);
-              filterchannellist.add(element['name']);
-            }
-        });
-        update();
-        channelsAll.add({'id': 'All Channels', 'name': 'All Channels'});
-        channellistonly.add('All Channels');
-        responsechannellist.forEach((e) {
-          channellistonly.add(e);
-          channelsearchlist.add(e);
-          channelsAll.add({'id': e, 'name': e});
-          allChanelsList.add(e);
-          allDropdownChannels.add(e);
-        });
-        channelsAll.forEach((element) {
-          channellist.add(ChannelModel.fromJSON(element));
-          channellist2.add(ChannelModel2.fromJSON(element));
-        });
-        update();
-      } else {
-        String token = await storage.read("AccessToken");
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.channels), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        // log('Chanel Response $response');
-        responseresult.addAll(response['results']);
-        responseresult.forEach((element) {
-          if(element['name'].toString().isLowerCase == 'all')
-            {}
-          else
-            {
-              responsechannellist.add(element['name']);
-              filterchannellist.add(element['name']);
-            }
-        });
-        reverse = responsechannellist.reversed.toList();
-        channelsAll.add({'id': 'All Channels', 'name': 'All Channels'});
-        channellistonly.add('All Channels');
-        reverse.forEach((e) {
-          allChanelsList.add(e);
-          channelsearchlist.add(e);
-          allDropdownChannels.add(e);
-          channellistonly.add(e);
-          channelsAll.add({'id': e, 'name': e});
-        });
+      String token = await storage.read("AccessToken");
+      var res = await http
+          .get(Uri.parse(baseUrlService.baseUrl + ApiData.channels), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      var response = json.decode(res.body);
+      // log('Chanel Response $response');
+      responseresult.addAll(response['results']);
+      responseresult.forEach((element) {
+        if (element['name'].toString().isLowerCase == 'all') {
+        } else {
+          responsechannellist.add(element['name']);
+          filterchannellist.add(element['name']);
+        }
+      });
+      reverse = responsechannellist.reversed.toList();
+      channelsAll.add({'id': 'All Channels', 'name': 'All Channels'});
+      channellistonly.add('All Channels');
+      reverse.forEach((e) {
+        allChanelsList.add(e);
+        channelsearchlist.add(e);
+        allDropdownChannels.add(e);
+        channellistonly.add(e);
+        channelsAll.add({'id': e, 'name': e});
+      });
 
-        channelsAll.forEach((element) {
-          channellist.add(ChannelModel.fromJSON(element));
-          channellist2.add(ChannelModel2.fromJSON(element));
-        });
-        channellist2.forEach((e) {
-          if (e.name == "All Channels") {
-            e.check.value = true;
-          }
-        });
-        channellist.forEach((q) {
-          if (q.name == "All Channels") {
-            q.check.value = true;
-          }
-        });
-        update();
-      }
+      channelsAll.forEach((element) {
+        channellist.add(ChannelModel.fromJSON(element));
+        channellist2.add(ChannelModel2.fromJSON(element));
+      });
+      channellist2.forEach((e) {
+        if (e.name == "All Channels") {
+          e.check.value = true;
+        }
+      });
+      channellist.forEach((q) {
+        if (q.name == "All Channels") {
+          q.check.value = true;
+        }
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
       isLoading = false;
@@ -722,65 +596,29 @@ class ReportsController extends GetxController {
     List programlist = [];
     update();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res =
-            await http.get(Uri.parse(url + ApiData.programNames), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        print("Program res $response");
-        programresult.addAll(response['results']);
-        programresult.forEach((element) {
-          allprogramresult.add(element['title']);
-        });
-        update();
-        allprogramresult = Set.of(allprogramresult).toList();
-        update();
-        allprogramresult.forEach((element) {
-          allprogramList.add(element);
-          programlist.add({
-            'id': '$element',
-            'name': '$element',
+      String token = await storage.read("AccessToken");
+      var res = await http.get(
+          Uri.parse(baseUrlService.baseUrl + ApiData.programNames),
+          headers: {
+            'Authorization': 'Bearer $token',
           });
+      var response = json.decode(res.body);
+      // log("Program res $response");
+      programresult.addAll(response['results']);
+      programresult.forEach((element) {
+        allprogramresult.add(element['title']);
+      });
+      update();
+      allprogramresult = Set.of(allprogramresult).toList();
+      update();
+      allprogramresult.forEach((element) {
+        allprogramList.add(element);
+        programlist.add({
+          'id': '$element',
+          'name': '$element',
         });
-        update();
-        // programlist.forEach((element) {
-        //   print('All Program is $element');
-        //   programslist.add(element);
-        //   // programslist.add(ProgramNameModel.fromJSON(element));
-        // });
-      } else {
-        String token = await storage.read("AccessToken");
-        var res = await http
-            .get(Uri.parse(ApiData.baseUrl + ApiData.programNames), headers: {
-          'Authorization': 'Bearer $token',
-        });
-        var response = json.decode(res.body);
-        // log("Program res $response");
-        programresult.addAll(response['results']);
-        programresult.forEach((element) {
-          allprogramresult.add(element['title']);
-        });
-        update();
-        allprogramresult = Set.of(allprogramresult).toList();
-        update();
-        allprogramresult.forEach((element) {
-          allprogramList.add(element);
-          programlist.add({
-            'id': '$element',
-            'name': '$element',
-          });
-        });
-        update();
-        // programlist.forEach((element) {
-        //   print('All Program is $element');
-        //   programslist.add(element);
-        //   // programslist.add(ProgramNameModel.fromJSON(element));
-        // });
-        update();
-      }
+      });
+      update();
     } on SocketException catch (e) {
       print(e);
       isLoading = false;
@@ -884,33 +722,36 @@ class ReportsController extends GetxController {
     selectedprogramresult.add(programselect.text);
     update();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res = await http.post(Uri.parse(url + ApiData.guestsgraph),
-            headers: {
-              'Authorization': 'Bearer $token',
-              'Content-type': 'application/json',
-              "Accept": "application/json",
-            },
-            body: json.encode({
-              "startDate": endpaichartSearchDate.text,
-              "endDate": startpaichartSearchDate.text,
-              "channel": paichartchannel,
-              "programType": paichartprogramtype,
-              "programName": [],
-              "anchor": filterHost,
-            }));
-        var data1 = json.decode(res.body);
-        piechartlist.addAll(data1);
-        update();
-        print("Check Data piechartlist $data1");
+      String token = await storage.read("AccessToken");
+      print("Bearer $token");
+      print('Date is ${endpaichartSearchDate.text}');
+      print('Date is ${startpaichartSearchDate.text}');
+      var res = await http.post(
+          Uri.parse(baseUrlService.baseUrl + ApiData.guestsgraph),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-type': 'application/json',
+            "Accept": "application/json",
+          },
+          body: json.encode({
+            "startDate": endpaichartSearchDate.text,
+            "endDate": startpaichartSearchDate.text,
+            "channel": paichartchannel,
+            "programType": paichartprogramtype,
+            "programName": [],
+            "anchor": filterHost,
+          }));
+      var data1 = json.decode(res.body);
+      piechartlist.addAll(data1);
+      update();
+      print("Check Data piechartlist $data1");
+      if (piechartlist.length > 5) {
         // for (var i = 0; i < 5; i++) {
         //   chartdata.add(
         //     ChartSampleData(
         //         x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
         //   );
-        //   // chartdata.add(PieChartSectionData(
+        //   // data.add(PieChartSectionData(
         //   //     //title: piechartlist[i]['guest'],
         //   //     titleStyle: TextStyle(color: Colors.white),
         //   //     value: piechartlist[i]['count'].toDouble(),
@@ -922,7 +763,7 @@ class ReportsController extends GetxController {
           //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
           // );
           total1 += piechartlist[i]['count'];
-          print("The total value after filter is $total1 ");
+          print("The total value is after filter $total1 ");
 
           // data.add(PieChartSectionData(
           //     //title: piechartlist[i]['guest'],
@@ -933,124 +774,57 @@ class ReportsController extends GetxController {
         for (var i = 0; i < 5; i++) {
           percentage1 = (piechartlist[i]['count'] * 100 / total1);
           update();
-          print("The total after filter is  $percentage1 ");
+          print("The total  $percentage1 ");
           chartdata.add(
             ChartSampleData(
-                x: piechartlist[i]['guest'],
-                y: percentage1!.roundToDouble(),
-                text: '${percentage!.roundToDouble()}% '),
+                x: piechartlist[i]['guest'], y: percentage1!.roundToDouble()),
           );
           // chartdata.add(percentage);
           // update();
         }
-
-        isLoading = false;
-        update();
       } else {
-        String token = await storage.read("AccessToken");
-        print("Bearer $token");
-        print('Date is ${endpaichartSearchDate.text}');
-        print('Date is ${startpaichartSearchDate.text}');
-        var res =
-            await http.post(Uri.parse(ApiData.baseUrl + ApiData.guestsgraph),
-                headers: {
-                  'Authorization': 'Bearer $token',
-                  'Content-type': 'application/json',
-                  "Accept": "application/json",
-                },
-                body: json.encode({
-                  "startDate": endpaichartSearchDate.text,
-                  "endDate": startpaichartSearchDate.text,
-                  "channel": paichartchannel,
-                  "programType": paichartprogramtype,
-                  "programName": [],
-                  "anchor": filterHost,
-                }));
-        var data1 = json.decode(res.body);
-        piechartlist.addAll(data1);
-        update();
-        print("Check Data piechartlist $data1");
-        if (piechartlist.length > 5) {
-          // for (var i = 0; i < 5; i++) {
-          //   chartdata.add(
-          //     ChartSampleData(
-          //         x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
-          //   );
-          //   // data.add(PieChartSectionData(
-          //   //     //title: piechartlist[i]['guest'],
-          //   //     titleStyle: TextStyle(color: Colors.white),
-          //   //     value: piechartlist[i]['count'].toDouble(),
-          //   //     color: Color(0xff22B161)));
-          // }
-          for (var i = 0; i < 5; i++) {
-            // chartdata.add(
-            //   ChartSampleData(
-            //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
-            // );
-            total1 += piechartlist[i]['count'];
-            print("The total value is after filter $total1 ");
+        // for (var i = 0; i < piechartlist.length; i++) {
+        //   chartdata.add(
+        //     ChartSampleData(
+        //         x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
+        //   );
+        //   // data.add(PieChartSectionData(
+        //   //     //title: piechartlist[i]['guest'],
+        //   //     titleStyle: TextStyle(color: Colors.white),
+        //   //     value: piechartlist[i]['count'].toDouble(),
+        //   //     color: Color(0xff22B161)));
+        // }
+        total1 = 0.0;
+        for (var i = 0; i < piechartlist.length; i++) {
+          print("data is of pie chart ${piechartlist[i]} ");
+          // chartdata.add(
+          //   ChartSampleData(
+          //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
+          // );
+          total1 = total1 + piechartlist[i]['count'];
+          print("The total value is after filter  $total1 ");
 
-            // data.add(PieChartSectionData(
-            //     //title: piechartlist[i]['guest'],
-            //     titleStyle: TextStyle(color: Colors.white),
-            //     value: piechartlist[i]['count'].toDouble(),
-            //     color: Color(0xff22B161)));
-          }
-          for (var i = 0; i < 5; i++) {
-            percentage1 = (piechartlist[i]['count'] * 100 / total1);
-            update();
-            print("The total  $percentage1 ");
-            chartdata.add(
-              ChartSampleData(
-                  x: piechartlist[i]['guest'], y: percentage1!.roundToDouble()),
-            );
-            // chartdata.add(percentage);
-            // update();
-          }
-        } else {
-          // for (var i = 0; i < piechartlist.length; i++) {
-          //   chartdata.add(
-          //     ChartSampleData(
-          //         x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
-          //   );
-          //   // data.add(PieChartSectionData(
-          //   //     //title: piechartlist[i]['guest'],
-          //   //     titleStyle: TextStyle(color: Colors.white),
-          //   //     value: piechartlist[i]['count'].toDouble(),
-          //   //     color: Color(0xff22B161)));
-          // }
-          total1 = 0.0;
-          for (var i = 0; i < piechartlist.length; i++) {
-            print("data is of pie chart ${piechartlist[i]} ");
-            // chartdata.add(
-            //   ChartSampleData(
-            //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
-            // );
-            total1 = total1 + piechartlist[i]['count'];
-            print("The total value is after filter  $total1 ");
-
-            // data.add(PieChartSectionData(
-            //     //title: piechartlist[i]['guest'],
-            //     titleStyle: TextStyle(color: Colors.white),
-            //     value: piechartlist[i]['count'].toDouble(),
-            //     color: Color(0xff22B161)));
-          }
-          for (var i = 0; i < piechartlist.length; i++) {
-            percentage1 = (piechartlist[i]['count'] * 100 / total1);
-            update();
-            print("The total  $percentage1 ");
-            chartdata.add(
-              ChartSampleData(
-                  x: piechartlist[i]['guest'], y: percentage1!.roundToDouble()),
-            );
-            // chartdata.add(percentage);
-            // update();
-          }
+          // data.add(PieChartSectionData(
+          //     //title: piechartlist[i]['guest'],
+          //     titleStyle: TextStyle(color: Colors.white),
+          //     value: piechartlist[i]['count'].toDouble(),
+          //     color: Color(0xff22B161)));
         }
-
-        isLoading = false;
-        update();
+        for (var i = 0; i < piechartlist.length; i++) {
+          percentage1 = (piechartlist[i]['count'] * 100 / total1);
+          update();
+          print("The total  $percentage1 ");
+          chartdata.add(
+            ChartSampleData(
+                x: piechartlist[i]['guest'], y: percentage1!.roundToDouble()),
+          );
+          // chartdata.add(percentage);
+          // update();
+        }
       }
+
+      isLoading = false;
+      update();
     } on SocketException catch (e) {
       isSocketFirstGraph2 = true;
       isLoading = false;
@@ -1069,30 +843,34 @@ class ReportsController extends GetxController {
     selectedchannellist.add(channelselect.text);
     selectedprogramresult.add(programselect.text);
     update();
-    if (storage.hasData("Url") == true) {
-      String url = storage.read("Url");
-      String token = await storage.read("AccessToken");
-      var res = await http.post(Uri.parse(url + ApiData.guestsgraph),
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-type': 'application/json',
-            "Accept": "application/json",
-          },
-          body: json.encode({
-            "endDate": '${now.year}-${now.month}-${now.day}',
-            "startDate": now.month - 1 == 0
-                ? '${now.year - 1}-12-${now.day}'
-                : '${now.year}-${now.month - 1}-${now.day}',
-            "channel": filterchannellist,
-            "programType": programTypefilter,
-            "programName": [],
-            "anchor": anchorList,
-          }));
-      var data1 = json.decode(res.body);
-      piechartlist.addAll(data1);
-      print("The pie chart is $piechartlist");
-      update();
-      print("Check Data piechartlist $data1");
+    String token = await storage.read("AccessToken");
+    print("Bearer $token");
+    print('Date is ${endpaichartSearchDate.text}');
+    print('Date is ${startpaichartSearchDate.text}');
+    var res =
+        await http.post(Uri.parse(baseUrlService.baseUrl + ApiData.guestsgraph),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-type': 'application/json',
+              "Accept": "application/json",
+            },
+            body: json.encode({
+              "endDate": '${now.year}/${now.month}/${now.day}',
+              "startDate": now.month - 1 == 0
+                  ? '${now.year - 1}/12/${now.day}'
+                  : '${now.year}/${now.month - 1}/${now.day}',
+              "channel": filterchannellist,
+              "programType": programTypefilter,
+              "programName": [],
+              "anchor": anchorList,
+            }));
+
+    var data1 = json.decode(res.body);
+    Get.log('print All Map  for Graph is $data1');
+    piechartlist.addAll(data1);
+    update();
+    print("Check Data piechartlist $data1");
+    if (piechartlist.length >= 5) {
       for (var i = 0; i < 5; i++) {
         // chartdata.add(
         //   ChartSampleData(
@@ -1101,112 +879,55 @@ class ReportsController extends GetxController {
         total += piechartlist[i]['count'];
         print("The total value is $total ");
 
-        // data.add(PieChartSectionData(
-        //     //title: piechartlist[i]['guest'],
-        //     titleStyle: TextStyle(color: Colors.white),
-        //     value: piechartlist[i]['count'].toDouble(),
-        //     color: Color(0xff22B161)));
+        // data.add(
+        //   PieChartSectionData(
+        //       //title: piechartlist[i]['guest'],
+        //       titleStyle: TextStyle(color: Colors.white),
+        //       value: piechartlist[i]['count'].toDouble(),
+        //       color: Color(0xff22B161)),
+        // );
       }
       for (var i = 0; i < 5; i++) {
         percentage = (piechartlist[i]['count'] * 100 / total);
         update();
         print("The total  $percentage ");
         chartdata.add(
-          ChartSampleData(x: piechartlist[i]['guest'], y: percentage),
+          ChartSampleData(
+              x: piechartlist[i]['guest'], y: percentage!.roundToDouble()),
         );
         // chartdata.add(percentage);
         // update();
       }
-
-      isLoading = false;
-      update();
     } else {
-      String token = await storage.read("AccessToken");
-      print("Bearer $token");
-      print('Date is ${endpaichartSearchDate.text}');
-      print('Date is ${startpaichartSearchDate.text}');
-      var res =
-          await http.post(Uri.parse(ApiData.baseUrl + ApiData.guestsgraph),
-              headers: {
-                'Authorization': 'Bearer $token',
-                'Content-type': 'application/json',
-                "Accept": "application/json",
-              },
-              body: json.encode({
-                "endDate": '${now.year}/${now.month}/${now.day}',
-                "startDate": now.month - 1 == 0
-                    ? '${now.year - 1}/12/${now.day}'
-                    : '${now.year}/${now.month - 1}/${now.day}',
-                "channel": filterchannellist,
-                "programType": programTypefilter,
-                "programName": [],
-                "anchor": anchorList,
-              }));
+      for (var i = 0; i < piechartlist.length; i++) {
+        // chartdata.add(
+        //   ChartSampleData(
+        //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
+        // );
+        total += piechartlist[i]['count'];
+        print("The total value is $total ");
 
-      var data1 = json.decode(res.body);
-      Get.log('print All Map  for Graph is $data1');
-      piechartlist.addAll(data1);
-      update();
-      print("Check Data piechartlist $data1");
-      if (piechartlist.length >= 5) {
-        for (var i = 0; i < 5; i++) {
-          // chartdata.add(
-          //   ChartSampleData(
-          //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
-          // );
-          total += piechartlist[i]['count'];
-          print("The total value is $total ");
-
-          // data.add(
-          //   PieChartSectionData(
-          //       //title: piechartlist[i]['guest'],
-          //       titleStyle: TextStyle(color: Colors.white),
-          //       value: piechartlist[i]['count'].toDouble(),
-          //       color: Color(0xff22B161)),
-          // );
-        }
-        for (var i = 0; i < 5; i++) {
-          percentage = (piechartlist[i]['count'] * 100 / total);
-          update();
-          print("The total  $percentage ");
-          chartdata.add(
-            ChartSampleData(
-                x: piechartlist[i]['guest'], y: percentage!.roundToDouble()),
-          );
-          // chartdata.add(percentage);
-          // update();
-        }
-      } else {
-        for (var i = 0; i < piechartlist.length; i++) {
-          // chartdata.add(
-          //   ChartSampleData(
-          //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
-          // );
-          total += piechartlist[i]['count'];
-          print("The total value is $total ");
-
-          // data.add(
-          //   PieChartSectionData(
-          //       //title: piechartlist[i]['guest'],
-          //       titleStyle: TextStyle(color: Colors.white),
-          //       value: piechartlist[i]['count'].toDouble(),
-          //       color: Color(0xff22B161)),
-          // );
-        }
-        for (var i = 0; i < 5; i++) {
-          percentage = piechartlist[i]['count'] * 100 / total;
-          update();
-          print("The total  $percentage ");
-          chartdata.add(
-            ChartSampleData(
-                x: piechartlist[i]['guest'], y: percentage!.roundToDouble()),
-          );
-          // chartdata.add(percentage);
-        }
+        // data.add(
+        //   PieChartSectionData(
+        //       //title: piechartlist[i]['guest'],
+        //       titleStyle: TextStyle(color: Colors.white),
+        //       value: piechartlist[i]['count'].toDouble(),
+        //       color: Color(0xff22B161)),
+        // );
       }
-      isLoading = false;
-      update();
+      for (var i = 0; i < 5; i++) {
+        percentage = piechartlist[i]['count'] * 100 / total;
+        update();
+        print("The total  $percentage ");
+        chartdata.add(
+          ChartSampleData(
+              x: piechartlist[i]['guest'], y: percentage!.roundToDouble()),
+        );
+        // chartdata.add(percentage);
+      }
     }
+    isLoading = false;
+    update();
   }
 
   // <========== barChart =========>
@@ -1225,88 +946,52 @@ class ReportsController extends GetxController {
     selectedprogramresult.add(programselect.text);
     update();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res = await http.post(Uri.parse(url + ApiData.media),
-            headers: {
-              'Content-type': 'application/json',
-              "Accept": "application/json",
-              'Authorization': 'Bearer $token',
-            },
-            body: json.encode({
-              "endDate": '${now.year}-${now.month}-${now.day}',
-              "startDate": now.month - 1 == 0
-                  ? '${now.year - 1}-12-${now.day}'
-                  : '${now.year}-${now.month - 1}-${now.day}',
-              // "endDate": endSearchDate.text,
-              "channel": allChanelsList,
-              "programType": programTypefilter,
-              "topics": [topicstop]
-            }));
-        var data1 = json.decode(res.body);
-        graphchartlist.addAll(data1);
-        update();
-        for (int i = 0; i < graphchartlist.length; i++) {
-          print('Graph Data is ${graphchartlist[i]}');
-          search(graphchartlist[i]);
-        }
-        getAllData(topicstop);
-        isLoading = false;
-        update();
-        // await getPieChartData();
-        isLoading = false;
-        update();
-        print(data1);
-      }
-      else {
-        isLoading = true;
-        update();
-        Get.log('CHeck ProgramTypes Data ${json.encode(programTypefilter)}');
-        String token = await storage.read("AccessToken");
-        var res = await http.post(
-          Uri.parse(ApiData.baseUrl + ApiData.media),
-          headers: {
-            'Content-type': 'application/json',
-            "Accept": "application/json",
-            'Authorization': 'Bearer $token',
+      isLoading = true;
+      update();
+      Get.log('CHeck ProgramTypes Data ${json.encode(programTypefilter)}');
+      String token = await storage.read("AccessToken");
+      var res = await http.post(
+        Uri.parse(baseUrlService.baseUrl + ApiData.media),
+        headers: {
+          'Content-type': 'application/json',
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(
+          {
+            "endDate": '${now.year}-${now.month}-${now.day}',
+            "startDate": now.month - 1 == 0
+                ? '${now.year - 1}-12-${now.day}'
+                : '${now.year}-${now.month - 1}-${now.day}',
+            "channel": allChanelsList,
+            "programType": programTypefilter,
+            "topics": [topicstop]
           },
-          body: json.encode(
-            {
-              "endDate": '${now.year}-${now.month}-${now.day}',
-              "startDate": now.month - 1 == 0
-                  ? '${now.year - 1}-12-${now.day}'
-                  : '${now.year}-${now.month - 1}-${now.day}',
-              "channel": allChanelsList,
-              "programType": programTypefilter,
-              "topics": [topicstop]
-            },
-          ),
-        );
-        Get.log('ALl Graph data first time is ${json.encode({
-              "endDate": '${now.year}-${now.month}-${now.day}',
-              "startDate": now.month - 1 == 0
-                  ? '${now.year - 1}-12-${now.day}'
-                  : '${now.year}-${now.month - 1}-${now.day}',
-              // "endDate": endSearchDate.text,
-              "channel": allChanelsList,
-              "programType": programTypefilter,
-              "topics": [topicstop]
-            })}');
-        var data1 = json.decode(res.body);
-        Get.log("1st time Graph data is Main Topics: $data1");
-        graphchartlist.addAll(data1);
-        graphData.clear();
-        update();
-        for (int i = 0; i < graphchartlist.length; i++) {
-          // print('Graph Data is ${graphchartlist[i]}');
-          search(graphchartlist[i]);
-        }
-        getAllData(topicstop);
-        isLoading = false;
-        update();
-        // print(body.toString());
+        ),
+      );
+      Get.log('ALl Graph data first time is ${json.encode({
+            "endDate": '${now.year}-${now.month}-${now.day}',
+            "startDate": now.month - 1 == 0
+                ? '${now.year - 1}-12-${now.day}'
+                : '${now.year}-${now.month - 1}-${now.day}',
+            // "endDate": endSearchDate.text,
+            "channel": allChanelsList,
+            "programType": programTypefilter,
+            "topics": [topicstop]
+          })}');
+      var data1 = json.decode(res.body);
+      Get.log("1st time Graph data is Main Topics: $data1");
+      graphchartlist.addAll(data1);
+      graphData.clear();
+      update();
+      for (int i = 0; i < graphchartlist.length; i++) {
+        // print('Graph Data is ${graphchartlist[i]}');
+        search(graphchartlist[i]);
       }
+      getAllData(topicstop);
+      isLoading = false;
+      update();
+      // print(body.toString());
     } on SocketException catch (e) {
       isLoading = false;
       isDefaultGraph = true;
@@ -1361,8 +1046,7 @@ class ReportsController extends GetxController {
           ));
         }
       }
-    }
-    else {
+    } else {
       print("Total  Graph Length is ${result.length}");
       if (result.length >= 10) {
         for (int i = 0; i < 10; i++) {
@@ -1401,73 +1085,40 @@ class ReportsController extends GetxController {
     selectedprogramresult.add(programselect.text);
     update();
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res = await http.post(Uri.parse(url + ApiData.media),
-            headers: {
-              'Content-type': 'application/json',
-              "Accept": "application/json",
-              'Authorization': 'Bearer $token',
-            },
-            body: json.encode({
-              "endDate": startSearchDate.text,
-              "startDate": endSearchDate.text,
-              // "endDate": endSearchDate.text,
-              "channel": channelsearchlist,
-              "programType": programtypegraph,
-              "topics": ["Top 10"]
-            }));
-        var data1 = json.decode(res.body);
-        graphchartlist.addAll(data1);
-        update();
-
-        for (int i = 0; i < graphchartlist.length; i++) {
-          // print('Graph Data is ${graphchartlist[i]}');
-          search1(graphchartlist[i]);
-        }
-        getAllData1();
-        isLoading = false;
-        update();
-        // await getPieChartData();
-
-      } else {
-        isLoading = true;
-        update();
-        String token = await storage.read("AccessToken");
-        var res = await http.post(Uri.parse(ApiData.baseUrl + ApiData.media),
-            headers: {
-              'Content-type': 'application/json',
-              "Accept": "application/json",
-              'Authorization': 'Bearer $token',
-            },
-            body: json.encode({
-              "endDate": startSearchDate.text,
-              "startDate": endSearchDate.text,
-              "channel": channelsearchlist,
-              "programType": programtypegraph,
-              "topics": ["Top 10"]
-            }));
-        print('ALl Graph data is ${json.encode({
-              "startDate": startSearchDate.text,
-              "endDate": endSearchDate.text,
-              "channel": channelsearchlist,
-              "programType": programtypegraph,
-              "topics": ["Top 10"]
-            })}');
-        var data1 = json.decode(res.body);
-        print("Graph data is Main Topics: $data1");
-        graphchartlist.addAll(data1);
-        update();
-        for (int i = 0; i < graphchartlist.length; i++) {
-          search1(graphchartlist[i]);
-        }
-        getAllData1();
-        isLoading = false;
-        update();
-        // print(body.toString());
-
+      isLoading = true;
+      update();
+      String token = await storage.read("AccessToken");
+      var res =
+          await http.post(Uri.parse(baseUrlService.baseUrl + ApiData.media),
+              headers: {
+                'Content-type': 'application/json',
+                "Accept": "application/json",
+                'Authorization': 'Bearer $token',
+              },
+              body: json.encode({
+                "endDate": startSearchDate.text,
+                "startDate": endSearchDate.text,
+                "channel": channelsearchlist,
+                "programType": programtypegraph,
+                "topics": ["Top 10"]
+              }));
+      print('ALl Graph data is ${json.encode({
+            "startDate": startSearchDate.text,
+            "endDate": endSearchDate.text,
+            "channel": channelsearchlist,
+            "programType": programtypegraph,
+            "topics": ["Top 10"]
+          })}');
+      var data1 = json.decode(res.body);
+      print("Graph data is Main Topics: $data1");
+      graphchartlist.addAll(data1);
+      update();
+      for (int i = 0; i < graphchartlist.length; i++) {
+        search1(graphchartlist[i]);
       }
+      getAllData1();
+      isLoading = false;
+      update();
     } on SocketException catch (e) {
       isLoading = false;
       isSocketFirstGraph1 = true;

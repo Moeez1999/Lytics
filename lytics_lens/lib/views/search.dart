@@ -7,11 +7,11 @@ import 'package:get/get.dart';
 
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/views/Search_Screen.dart';
-import 'package:lytics_lens/widget/headline_container.dart';
+import 'package:lytics_lens/widget/common_containers/headline_container.dart';
 
 
 import '../Controllers/searchbar_controller.dart';
-import '../widget/internetconnectivity_screen.dart';
+import '../widget/internet_connectivity/internetconnectivity_screen.dart';
 
 // import 'Components/Global_BottmNav.dart';
 

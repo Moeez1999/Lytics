@@ -9,7 +9,8 @@ import 'package:lytics_lens/utils/api.dart';
 import 'package:http/http.dart' as http;
 
 import '../Constants/common_color.dart';
-import '../widget/common_snackbar.dart';
+import '../Services/baseurl_service.dart';
+import '../widget/snackbar/common_snackbar.dart';
 
 class ClippingController extends GetxController
 {
@@ -23,6 +24,7 @@ class ClippingController extends GetxController
   TextEditingController des = TextEditingController();
   TextEditingController searchContact = TextEditingController();
   HomeScreenController homeScreenController = Get.find<HomeScreenController>();
+  BaseUrlService baseUrlService = Get.find<BaseUrlService>();
   //<-------------- CompanyUser ----------------->
 
   var companyUser = [].obs;
@@ -58,39 +60,21 @@ class ClippingController extends GetxController
 
   Future<void> getCompanyUser() async {
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        String id = await storage.read('company_id');
-        companyUser.clear();
-        var res =
-        await http.get(Uri.parse(url + ApiData.companyuser + id), headers: {
-          'Authorization': "Bearer $token",
-        });
-        var data = json.decode(res.body);
-        data['users'].forEach((e) {
-          companyUser.add(e);
-        });
-        Get.log("Company data is $data");
-        isLoading = false;
-        update();
-      } else {
-        String token = await storage.read("AccessToken");
-        String id = await storage.read('company_id');
-        update();
-        var res = await http.get(
-            Uri.parse(ApiData.baseUrl + ApiData.companyuser + id),
-            headers: {
-              'Authorization': "Bearer $token",
-            });
-        var data = json.decode(res.body);
-        data['users'].forEach((e) {
-          companyUser.add(e);
-        });
-        Get.log("Company data from base url is $data");
-        isLoading = false;
-        update();
-      }
+      String token = await storage.read("AccessToken");
+      String id = await storage.read('company_id');
+      update();
+      var res = await http.get(
+          Uri.parse(baseUrlService.baseUrl + ApiData.companyuser + id),
+          headers: {
+            'Authorization': "Bearer $token",
+          });
+      var data = json.decode(res.body);
+      data['users'].forEach((e) {
+        companyUser.add(e);
+      });
+      Get.log("Company data from base url is $data");
+      isLoading = false;
+      update();
     } on SocketException catch (e) {
       print('Inter Connection Failed');
       isLoading = false;
@@ -151,65 +135,36 @@ class ClippingController extends GetxController
   }
 
   Future<void> sharing(String jobId) async {
-    var c = {"sharing": sharingUser};
+    var c = {"sharing": sharingUser , "share" : "true"};
     Get.log("Check Sharing data $c");
     isBottomLoading.value = true;
     try {
-      if (storage.hasData("Url") == true) {
-        String url = storage.read("Url");
-        String token = await storage.read("AccessToken");
-        var res = await http.patch(Uri.parse(url + ApiData.shareJobs + jobId),
-            headers: {
-              'Authorization': "Bearer $token",
-              "Content-type": "application/json",
-              "Accept": "application/json"
-            },
-            body: json.encode(c));
-        var data = json.decode(res.body);
-        if (res.statusCode == 200) {
-          sharingUser.clear();
-          homeScreenController.isLoading.value = true;
-          await homeScreenController.getSentJobs();
-          homeScreenController.isLoading.value = false;
-          isBottomLoading.value = false;
-          Get.back();
-          Get.back();
-          CustomSnackBar.showSnackBar(
-              title: "Job shared successfully",
-              message: "",
-              isWarning: false,
-              backgroundColor: CommonColor.greenColor);
-        }
-        Get.log('Result is $data');
-      } else {
-        String token = await storage.read("AccessToken");
-
-        var res = await http.patch(
-            Uri.parse(ApiData.baseUrl + ApiData.shareJobs + jobId),
-            headers: {
-              'Authorization': "Bearer $token",
-              "Content-type": "application/json",
-              "Accept": "application/json"
-            },
-            body: json.encode(c));
-        var data = json.decode(res.body);
-        Get.log('Shared Job Result is $data');
-        if (res.statusCode == 200) {
-          // await sharing();
-          sharingUser.clear();
-          searchContact.clear();
-          homeScreenController.isLoading.value = true;
-          await homeScreenController.getSentJobs();
-          homeScreenController.isLoading.value = false;
-          isBottomLoading.value = false;
-          Get.back();
-          Get.back();
-          CustomSnackBar.showSnackBar(
-              title: "Job shared successfully",
-              message: "",
-              isWarning: false,
-              backgroundColor: CommonColor.greenColor);
-        }
+      String token = await storage.read("AccessToken");
+      var res = await http.patch(
+          Uri.parse(baseUrlService.baseUrl + ApiData.shareJobs + jobId),
+          headers: {
+            'Authorization': "Bearer $token",
+            "Content-type": "application/json",
+            "Accept": "application/json"
+          },
+          body: json.encode(c));
+      var data = json.decode(res.body);
+      Get.log('Shared Job Result is $data');
+      if (res.statusCode == 200) {
+        // await sharing();
+        sharingUser.clear();
+        searchContact.clear();
+        homeScreenController.isLoading.value = true;
+        await homeScreenController.getSentJobs();
+        homeScreenController.isLoading.value = false;
+        isBottomLoading.value = false;
+        Get.back();
+        Get.back();
+        CustomSnackBar.showSnackBar(
+            title: "Job shared successfully",
+            message: "",
+            isWarning: false,
+            backgroundColor: CommonColor.greenColor);
       }
     } on SocketException catch (e) {
       print('Inter Connection Failed');

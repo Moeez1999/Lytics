@@ -8,8 +8,8 @@ import '../Constants/app_strrings.dart';
 import '../Constants/common_color.dart';
 import '../Controllers/reports_controller.dart';
 import '../Models/simplechartmodel.dart';
-import '../widget/common_snackbar.dart';
-import '../widget/internetconnectivity_screen.dart';
+import '../widget/snackbar/common_snackbar.dart';
+import '../widget/internet_connectivity/internetconnectivity_screen.dart';
 
 class ReportsScreen extends StatelessWidget {
   @override
