@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
-import '../Constants/common_color.dart';
+import '../../Constants/common_color.dart';
 
 class HeadlineContainer extends StatelessWidget {
   final int? colorCode;
