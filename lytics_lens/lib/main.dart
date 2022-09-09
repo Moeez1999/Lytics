@@ -11,7 +11,6 @@ import 'package:lytics_lens/Services/pushNotificationSevice.dart';
 import 'package:lytics_lens/views/dashboard_screen.dart';
 import 'package:lytics_lens/views/login_screen.dart';
 import 'package:resize/resize.dart';
-import 'Controllers/global_controller.dart';
 import 'Services/baseurl_service.dart';
 
 void main() async {
@@ -65,9 +64,7 @@ Future<void> initServices() async {
 class LensApp extends StatelessWidget {
   static final FirebaseMessaging _firebaseMessaging =
       FirebaseMessaging.instance;
-
   final storage = new GetStorage();
-  final GlobalController globalController = Get.put(GlobalController());
 
   @override
   Widget build(BuildContext context) {

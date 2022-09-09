@@ -1,19 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:lytics_lens/Constants/constants.dart';
-import 'package:lytics_lens/Controllers/account_controller.dart';
 import 'package:lytics_lens/Controllers/playerController.dart';
 import 'package:lytics_lens/Models/jobsmodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:lytics_lens/utils/api.dart';
 import 'package:lytics_lens/views/player_Screen.dart';
 
+import '../Constants/common_color.dart';
 import '../Services/baseurl_service.dart';
 
 class HomeScreenController extends GetxController {
@@ -75,6 +77,51 @@ class HomeScreenController extends GetxController {
 
   @override
   void onInit() async {
+
+    FirebaseMessaging.onMessage.listen(
+          (RemoteMessage message) {
+        FlutterAppBadger.updateBadgeCount(message.data.length);
+        print("Notification message Body ${message.data}");
+        print("Notification message Body ${message.notification!.title}");
+        print("Notification message Body ${message.notification!.body}");
+        print("Notification message Body length${message.data.length}");
+
+        Get.snackbar(
+            "${message.notification!.title}", "${message.notification!.body}",
+            backgroundColor: CommonColor.snackbarColour, onTap: (value) {
+          Get.to(() => PlayerScreen(),
+              arguments: {"id": message.data["jobID"]});
+        });
+        if (message.data["jobID"] != '') {
+          getSingleJobForNotification(message.data["jobID"]);
+        }
+      },
+    );
+
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("Notification message Body ${message.data}");
+      print("Notification message Body length${message.data.length}");
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 1234,
+          channelKey: 'basic_channel',
+          title: "${message.notification!.title}",
+          body: "${message.notification!.body}",
+          notificationLayout: NotificationLayout.BigPicture,
+          //bigPicture: 'https://www.fluttercampus.com/img/logo_small.webp'),
+          bigPicture: '${message.data["thumbnailPath"]}',
+        ),
+      );
+      if (message.data["jobID"].toString().isNotEmpty ||
+          message.data["jobID"].toString() != '') {
+        print('JOB ID FOUND');
+        getSingleJobForNotification(message.data["jobID"]);
+      } else {
+        print('Not Job Id Found');
+      }
+    });
+
     super.onInit();
   }
 
@@ -661,5 +708,40 @@ class HomeScreenController extends GetxController {
       arguments: {"id": id},
     );
 
+  }
+
+  Future<void> getSingleJobForNotification(String jobId) async {
+    print("Check This Function calling");
+    print("Check Job Id is $jobId");
+    await storage.write("notificationId", jobId);
+    try {
+      String token = await storage.read("AccessToken");
+      print("Bearer $token");
+      var res = await http.get(
+          Uri.parse(baseUrlService.baseUrl + ApiData.singleJob + jobId),
+          headers: {
+            'Authorization': "Bearer $token",
+          });
+      var data = json.decode(res.body);
+      Get.log("Check Data $data");
+      print("Check Share Data ${data['share']}");
+      if(data['share'] == 'true')
+      {
+        print("Data insert in Received List");
+        receivedJobsList.insert(0, data);
+      }
+      else
+      {
+        print("Data insert in Home List");
+        job.insert(0, data);
+      }
+    } on SocketException catch (e) {
+      getSingleJob(storage.read('notificationId'));
+      print('Inter Connection Failed');
+      update();
+      print(e);
+    } catch (e) {
+      print('Global Controller Error occurred ${e.toString()}');
+    }
   }
 }

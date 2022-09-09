@@ -8,13 +8,11 @@ import 'package:http/http.dart' as http;
 import 'package:lytics_lens/Constants/app_strrings.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/global_controller.dart';
-import 'package:lytics_lens/Controllers/home_controller.dart';
 import 'package:lytics_lens/widget/snackbar/common_snackbar.dart';
 import 'package:lytics_lens/Services/internetcheck.dart';
 import 'package:lytics_lens/utils/api.dart';
 import 'package:lytics_lens/views/dashboard_screen.dart';
 import 'package:local_auth/local_auth.dart';
-
 import '../Services/baseurl_service.dart';
 
 class LoginScreenController extends GetxController {
@@ -22,7 +20,6 @@ class LoginScreenController extends GetxController {
 
   late NetworkController networkController;
   BaseUrlService baseUrlService = Get.find<BaseUrlService>();
-  GlobalController globalController = Get.find<GlobalController>();
 
   bool isLoading = false;
   bool isAuth = false;
@@ -112,8 +109,6 @@ class LoginScreenController extends GetxController {
           await storage.write("lastName", userdata['lastName']);
           await storage.write("company_id", userdata['company']['id']);
           print('Password is Storage ${storage.read('pass')}');
-          Get.delete<HomeScreenController>();
-          Get.delete<GlobalController>();
           Get.offAll(() => Dashboard());
         } else {
           await storage.write("id", userdata['id']);
@@ -121,8 +116,6 @@ class LoginScreenController extends GetxController {
           await storage.write("lastName", userdata['lastName']);
           await storage.write("email", userNameController.text);
           await storage.write("company_id", userdata['company']['id']);
-          Get.delete<HomeScreenController>();
-          Get.delete<GlobalController>();
           Get.offAll(() => Dashboard());
         }
       } on SocketException catch (e) {

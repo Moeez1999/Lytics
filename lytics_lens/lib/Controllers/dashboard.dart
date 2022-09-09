@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:get/get.dart';
-import 'package:lytics_lens/Controllers/global_controller.dart';
 import 'package:lytics_lens/Controllers/home_controller.dart';
 import 'package:lytics_lens/views/player_Screen.dart';
 
@@ -9,7 +8,6 @@ class DashboardController extends GetxController {
 
   int currentindex=0;
   ListQueue<int> navigationQueue =ListQueue();
-  GlobalController g = Get.put(GlobalController());
 
   @override
   void onInit() {
