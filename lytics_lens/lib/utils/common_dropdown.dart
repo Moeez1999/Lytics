@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lytics_lens/Views/Components/Global_TextField.dart';
+import 'package:lytics_lens/widget/textFields/Global_TextField.dart';
 
 class CommonDropDownField extends StatefulWidget {
   final TextEditingController controller;
