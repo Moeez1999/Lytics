@@ -7,7 +7,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:lytics_lens/Constants/app_strrings.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
-import 'package:lytics_lens/Controllers/global_controller.dart';
 import 'package:lytics_lens/widget/snackbar/common_snackbar.dart';
 import 'package:lytics_lens/Services/internetcheck.dart';
 import 'package:lytics_lens/utils/api.dart';

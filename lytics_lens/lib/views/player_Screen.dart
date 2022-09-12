@@ -327,6 +327,7 @@ class PlayerScreen extends StatelessWidget {
                                             () => ClippingScreen(
                                               fileurl: _.videoPath,
                                               jobId: _.jobId,
+                                              videoDuration: _.betterPlayerController.videoPlayerController!.value.duration!.inSeconds,
                                             ),
                                           );
                                           // _.betterPlayerController

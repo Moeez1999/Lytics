@@ -141,11 +141,7 @@ class HomeScreen extends StatelessWidget {
                                               );
                                             },
                                             itemBuilder: (ctx, index) {
-                                              // print('Job Index ${index + 1}');
-                                              // print('Created At Date ${_.job[index]['programDate']}');
-                                              // print('UTC Date ${_.convertDateUtc(_.job[index]['programDate'])}');
-                                              print(
-                                                  'Job Index ${_.tpageno.value}');
+
                                               if (_.job.length != 0) {
                                                 if (_.job.length == index + 1) {
                                                   _.tpageno.value =
@@ -711,6 +707,7 @@ class HomeScreen extends StatelessWidget {
                                                               _.receivedJobsList[
                                                                       index]
                                                                   ['sharing']),
+                                                      isSend: true,
                                                       title: _.receivedJobsList[
                                                                       index]
                                                                   ['title'] !=
@@ -832,7 +829,6 @@ class HomeScreen extends StatelessWidget {
 
   Widget showSubTopic(List subtopic) {
     List c = [];
-    print('Sub Topic ${subtopic[0]['topics']['topic2']}');
     c.add(subtopic[0]['topics']['topic2']);
     List<Widget> g = [];
     if (c.length == 0) {

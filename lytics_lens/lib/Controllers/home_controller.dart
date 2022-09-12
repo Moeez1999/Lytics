@@ -40,6 +40,8 @@ class HomeScreenController extends GetxController {
 
   int totalPages = 0;
 
+  RxBool isFound = false.obs;
+
   // late NetworkController networkController;
 
   DateTime now = DateTime.now();
@@ -79,7 +81,7 @@ class HomeScreenController extends GetxController {
   void onInit() async {
 
     FirebaseMessaging.onMessage.listen(
-          (RemoteMessage message) {
+          (RemoteMessage message) async {
         FlutterAppBadger.updateBadgeCount(message.data.length);
         print("Notification message Body ${message.data}");
         print("Notification message Body ${message.notification!.title}");
@@ -93,13 +95,12 @@ class HomeScreenController extends GetxController {
               arguments: {"id": message.data["jobID"]});
         });
         if (message.data["jobID"] != '') {
-          getSingleJobForNotification(message.data["jobID"]);
+          await getSingleJobForNotification(message.data["jobID"]);
         }
       },
     );
 
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       print("Notification message Body ${message.data}");
       print("Notification message Body length${message.data.length}");
       AwesomeNotifications().createNotification(
@@ -116,7 +117,7 @@ class HomeScreenController extends GetxController {
       if (message.data["jobID"].toString().isNotEmpty ||
           message.data["jobID"].toString() != '') {
         print('JOB ID FOUND');
-        getSingleJobForNotification(message.data["jobID"]);
+        await getSingleJobForNotification(message.data["jobID"]);
       } else {
         print('Not Job Id Found');
       }
@@ -226,11 +227,9 @@ class HomeScreenController extends GetxController {
   //  For Notification
 
   Future<void> sendDeviceToken() async {
-    print('check Send Device Token');
-    print('Token ${Constants.token}');
     String token = await storage.read("AccessToken");
     String id = await storage.read('id');
-    var res = await http.post(
+    await http.post(
       Uri.parse(baseUrlService.baseUrl + ApiData.deviceToken),
       headers: {
         'Authorization': 'Bearer $token',
@@ -242,8 +241,6 @@ class HomeScreenController extends GetxController {
         "addToken": "true",
       }),
     );
-    var data = json.decode(res.body);
-    print("response of device token api" + data.toString());
   }
 
   searchFunction(String v) {
@@ -277,37 +274,27 @@ class HomeScreenController extends GetxController {
       });
       if (searchjob.length == 0) {
         isSearchData.value = true;
-        print("is CHeck Data ${searchjob.length}");
       } else {
         isSearchData.value = false;
-        print("is CHeck Data else ${searchjob.length}");
       }
-      // searchjob.forEach((element) {
-      //   print("check Data $element");
-      // });
     }
   }
 
   List<int> indexAdress = [];
 
   Future<void> getJobs(int p) async {
-    print("Page No is $p");
     try {
       isSocketError.value = false;
       isDataFailed.value = false;
       // update();
       String id = await storage.read('id');
-      print("User Id is $id");
       String token = await storage.read("AccessToken");
-      print("Bearer $token");
       if (p == 1) {
         isLoading.value = true;
         job.clear();
         update();
         tpageno.value = 1;
-        print("Page No is $p");
         String token = await storage.read("AccessToken");
-        print("Bearer $token");
         var res = await http.get(
           Uri.parse(
               '${baseUrlService.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
@@ -322,20 +309,16 @@ class HomeScreenController extends GetxController {
           totalPages = data['totalPages'];
           update();
         }
-        print('Total Pages ${data['totalPages']}');
-        print('Total Pages ${tpageno.value}');
         job.addAll(data['results']);
         // job.assignAll(List.from(job.reversed));
         // job.toList().sort((b ,a) => b['programDate'].compareTo(a))
         // job.sort((a,b) => a['programDate'].compareTo(b['programDate']));
         isLoading.value = false;
-      } else {
+      }
+      else {
         if (tpageno.value <= totalPages) {
           isMore.value = true;
-          // update();
-          print("Page No is $p");
           String token = await storage.read("AccessToken");
-          print("Bearer $token");
           var res = await http.get(
             Uri.parse(
                 '${baseUrlService.baseUrl}${ApiData.jobs}?start_date=${sixmonth.year}/${sixmonth.month}/${sixmonth.day}&end_date=${now.year}/${now.month}/${now.day}&limit=30&page=$p&source=All&device=mobile&escalation=$id'),
@@ -344,20 +327,15 @@ class HomeScreenController extends GetxController {
               "Content-type": 'application/json',
             },
           );
-          print('Home Api ${res.body}');
           var data = json.decode(res.body);
           if (p == 1) {
             totalPages = data['totalPages'];
             update();
           }
-          print('Total Pages ${data['totalPages']}');
-          // job.assignAll(List.from(job.reversed));
           job.addAll(data['results']);
-          // job.assignAll(List.from(job.reversed));
           isMore.value = false;
         } else {
           isMore.value = false;
-          print('Result Not Found');
         }
       }
     } on SocketException catch (e) {
@@ -402,8 +380,6 @@ class HomeScreenController extends GetxController {
     } catch (e) {
       isSendLoading.value = false;
       isDataFailed.value = true;
-
-      print(e.toString());
       // Get.snackbar("Error", e.toString(), backgroundColor: Colors.red);
     }
   }
@@ -414,7 +390,6 @@ class HomeScreenController extends GetxController {
     try {
       String token = await storage.read("AccessToken");
       String id = await storage.read('id');
-      print("User Id is $id");
       var res = await http.get(
         Uri.parse(baseUrlService.baseUrl + ApiData.receiveJobs + id),
         headers: {
@@ -451,7 +426,6 @@ class HomeScreenController extends GetxController {
         break;
       }
     }
-    match ? print("Matched") : print("Not matched");
     return indexAdress.length;
   }
 
@@ -462,7 +436,6 @@ class HomeScreenController extends GetxController {
     String updatedDt = newFormat.format(convertLocal);
     String q = updatedDt.split(' ').last;
     String a = updatedDt.split(' ').first;
-    print(updatedDt);
     return a + convertIntoDateTime(q);
   }
 
@@ -524,7 +497,6 @@ class HomeScreenController extends GetxController {
     // Get.log('Segments $segment');
     //_.job[index]['segments'][0]['topics']['topic1']
     segment.forEach((element) {
-      print('Segment is ${element['topics']['topic2']}');
       if (element['topics']['topic2'].toString().length != 2) {
         element['topics']['topic2'].forEach((q) {
           topic2.add(q);
@@ -568,7 +540,6 @@ class HomeScreenController extends GetxController {
   }
 
   String getSharePerson(List r) {
-    print("True data Reciver $r");
     List rec = [];
     for (int i = 0; i < r.length; i++) {
       if (id == r[i]['recieverId']) {
@@ -576,12 +547,10 @@ class HomeScreenController extends GetxController {
             '${r[i]['senderFirstName']} ${r[i]['senderLastName']}');
       }
     }
-    print("The data of reviever api is ${rec.toString()}");
     return rec.join(', ');
   }
 
   String getReceivedPerson(List r) {
-    print("True data  $r");
     List sen = [];
     for (int i = 0; i < r.length; i++) {
       if (id == r[i]['senderId']) {
@@ -589,15 +558,12 @@ class HomeScreenController extends GetxController {
             '${r[i]['recieverFirstName']} ${r[i]['recieverLastName']}');
       }
     }
-    print("The data of Sender api is ${sen.toString()}");
     return sen.join(', ');
   }
 
   Future<void> getSingleJob(String jobId) async {
     isLoading.value = true;
     String token = await storage.read("AccessToken");
-    print("Bearer $token");
-    print("Bearer $jobId");
     var res = await http.get(
         Uri.parse(baseUrlService.baseUrl + ApiData.singleJob + jobId),
         headers: {
@@ -619,20 +585,14 @@ class HomeScreenController extends GetxController {
     // Get.log('check $c');
 
     var name = '${storage.read("firstName")} ${storage.read("lastName")}';
-    print('CHekc Name $name');
     escalation.forEach((e) {
-      print('Escalation job for usser $e');
       if (e['to'].toString().toLowerCase() == name.toLowerCase()) {
-        print('Is Available');
         isAvailable.value = true;
       } else {
         s.add(e);
       }
     });
     update();
-    s.forEach((element) {
-      print('Check Job Escalation $element');
-    });
     var res = await http.patch(
       Uri.parse(baseUrlService.baseUrl + ApiData.singleJob + id),
       body: {'escalations': json.encode(s), 'device': 'mobile'},
@@ -640,7 +600,6 @@ class HomeScreenController extends GetxController {
         'Authorization': "Bearer $token",
       },
     );
-    print('Job Request is ${res.body}');
     tpageno.value = 1;
     // await receivedJobsList();
     await getJobs(1);
@@ -652,7 +611,6 @@ class HomeScreenController extends GetxController {
     for (int i = 0; i < escalationsList.length; i++) {
       if (escalationsList[i]['to'].toString().toLowerCase() ==
           name.toLowerCase()) {
-        print('Is Available read value check ${escalationsList[i]}');
         c = escalationsList[i]['read'].toString();
       }
     }
@@ -661,22 +619,18 @@ class HomeScreenController extends GetxController {
 
   Future<void> getDeleteJob(List sharingId , String Jobid) async
   {
-    print("List of Sharing $sharingId");
-    print("JobId of Sharing $Jobid");
     isSendLoading.value = true;
     String token = await storage.read("AccessToken");
     try
     {
       for(int i =0 ; i < sharingId.length ; i++)
       {
-        print("Job Type Id is ${sharingId[i]['_id']}");
-        var d = await http.patch(
+        await http.patch(
           Uri.parse(baseUrlService.baseUrl + ApiData.deleteSharedJob + sharingId[i]['_id']),
           headers: {
             'Authorization': "Bearer $token",
           },
         );
-        print("Check Data is delete${d.body}");
       }
       await getSentJobs();
       isSendLoading.value = false;
@@ -688,18 +642,14 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> jobStatus(String id) async {
-    print('Job Function Call');
-
     String token = await storage.read("AccessToken");
-    var res = await http.post(
+    await http.post(
       Uri.parse(baseUrlService.baseUrl + ApiData.escalationsread),
       body: {'id': id},
       headers: {
         'Authorization': "Bearer $token",
       },
     );
-
-    print('Job Read Request is ${res.body}');
     await getJobs(1);
     // await receivedJobsList();
     Get.delete<VideoController>();
@@ -711,37 +661,73 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> getSingleJobForNotification(String jobId) async {
-    print("Check This Function calling");
-    print("Check Job Id is $jobId");
-    await storage.write("notificationId", jobId);
-    try {
-      String token = await storage.read("AccessToken");
-      print("Bearer $token");
-      var res = await http.get(
-          Uri.parse(baseUrlService.baseUrl + ApiData.singleJob + jobId),
-          headers: {
-            'Authorization': "Bearer $token",
-          });
-      var data = json.decode(res.body);
-      Get.log("Check Data $data");
-      print("Check Share Data ${data['share']}");
-      if(data['share'] == 'true')
+    storage.write("nId", jobId);
+    if(storage.read('nId') != storage.read('npId'))
       {
-        print("Data insert in Received List");
-        receivedJobsList.insert(0, data);
+        try {
+          String token = await storage.read("AccessToken");
+          var res = await http.get(
+              Uri.parse(baseUrlService.baseUrl + ApiData.singleJob + jobId),
+              headers: {
+                'Authorization': "Bearer $token",
+              });
+          var data = json.decode(res.body);
+          Get.log("Check Data $data");
+          if(data['share'] == 'true')
+          {
+            print("Data insert in Received List");
+            receivedJobsList.insert(0, data);
+            storage.write("npId", jobId);
+          }
+          else
+          {
+            job.insert(0, data);
+            print("Data insert in Home List");
+            storage.write("npId", jobId);
+          }
+          print("Job Found ${job.length}");
+        } on SocketException catch (e) {
+          print(e);
+          getSingleJob(storage.read('notificationId'));
+          update();
+        } catch (e) {
+          print('Global Controller Error occurred ${e.toString()}');
+        }
       }
-      else
-      {
-        print("Data insert in Home List");
-        job.insert(0, data);
-      }
-    } on SocketException catch (e) {
-      getSingleJob(storage.read('notificationId'));
-      print('Inter Connection Failed');
-      update();
-      print(e);
-    } catch (e) {
-      print('Global Controller Error occurred ${e.toString()}');
-    }
+
   }
+
+  bool findJob(String jobId){
+    bool v = false;
+    job.forEach((element) {
+      if(element['id'] == jobId)
+        {
+          v = true;
+        }
+      else
+        {
+          v = false;
+        }
+      update();
+    });
+    print("Check Result is $v");
+    return v;
+  }
+
+  Future<void> checkFoundJob(String jobid) async
+  {
+    for(int i=0 ; i < job.length ; i ++)
+      {
+        if(job[i]['id'] == jobid)
+          {
+            isFound.value = true;
+            update();
+          }
+      }
+    if(isFound.value == false)
+      {
+        await getSingleJobForNotification(jobid);
+      }
+  }
+
 }

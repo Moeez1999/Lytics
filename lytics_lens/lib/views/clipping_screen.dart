@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,13 +21,15 @@ import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform
 import 'package:path_provider/path_provider.dart';
 
 import '../Services/baseurl_service.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class ClippingScreen extends StatefulWidget {
-  const ClippingScreen({Key? key, required this.fileurl, required this.jobId})
+  const ClippingScreen({Key? key, required this.fileurl, required this.jobId , required this.videoDuration})
       : super(key: key);
 
   final String fileurl;
   final String jobId;
+  final int videoDuration;
 
   @override
   State<ClippingScreen> createState() => _ClippingScreenState();
@@ -42,7 +43,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
   ClippingController clippingController = Get.put(ClippingController());
   ClippingController clipController = Get.find<ClippingController>();
   BaseUrlService baseUrlService = Get.find<BaseUrlService>();
-  var audioFile;
+  var audioFile = null;
   final storage = new GetStorage();
   dynamic start;
   dynamic end;
@@ -142,7 +143,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
           });
           await file.writeAsBytes(bytes);
           _controller = VideoEditorController.file(file,
-              maxDuration: const Duration(seconds: 30))
+              maxDuration: Duration(seconds: widget.videoDuration))
             ..initialize().then((_) => setState(() {}));
           initRecorder();
           betterPlayerController.pause();
@@ -270,8 +271,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
           ..fields['startDuration'] = s.toString()
           ..fields['endDuration'] = e.toString()
           ..fields['sharing'] = json.encode(clipController.sharingUser)
-          ..files.add(
-              await http.MultipartFile.fromPath('videoPath', vpath.path));
+          ..files
+              .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
         var response = await res.send();
         print('Check Response ${response.statusCode}');
         var result = await response.stream.bytesToString();
@@ -293,8 +294,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
           Get.back();
           clipController.isBottomLoading.value = false;
         }
-      }
-      else {
+      } else {
         Map<String, String> h = {'Authorization': 'Bearer $token'};
         var uri = Uri.parse(baseUrlService.baseUrl + ApiData.createClipJob);
         var res = http.MultipartRequest('POST', uri)
@@ -308,11 +308,10 @@ class _ClippingScreenState extends State<ClippingScreen> {
           ..fields['sharing'] = json.encode(clipController.sharingUser)
           ..files
               .add(await http.MultipartFile.fromPath('audio', audioFile.path))
-          ..files.add(
-              await http.MultipartFile.fromPath('videoPath', vpath.path));
+          ..files
+              .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
         var response = await res.send();
-        print(
-            'Check Response audio/video status code ${response.statusCode}');
+        print('Check Response audio/video status code ${response.statusCode}');
         var result = await response.stream.bytesToString();
         Get.log('Check Response audio/video ${result}');
         clipController.sharingUser.clear();
@@ -565,26 +564,30 @@ class _ClippingScreenState extends State<ClippingScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: _trimSlider(),
                       )
-                    : Container(
-                        width: double.infinity,
-                        height: 40.0,
-                        padding: EdgeInsets.symmetric(horizontal: 24.0),
-                        child: LiquidLinearProgressIndicator(
-                          value: progress,
-                          backgroundColor: Colors.transparent,
-                          valueColor: AlwaysStoppedAnimation(
-                              CommonColor.greenBorderColor),
-                          borderRadius: 5.0,
-                          center: Text(
-                            "${(progress * 100).toStringAsFixed(0)}%",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
+                    : Center(
+                        child: Container(
+                          // width: double.infinity,
+                          height: 40.0,
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: LinearPercentIndicator(
+                            // width: Get.width / 1.5,
+                            // animation: true,
+                            // animationDuration: 1000,
+                            backgroundColor: Colors.transparent,
+                            lineHeight: 40.0,
+                            percent: progress,
+                            center: Text(
+                              "${(progress * 100).toStringAsFixed(0)}%",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
+                            progressColor: Color(0xff28c66e),
                           ),
-                        ),
-                      ).marginOnly(bottom: 20.0),
+                        ).marginOnly(bottom: 20.0),
+                      ),
                 MaterialButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(9.0),
@@ -788,17 +791,23 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                 color: CommonColor.greenColorWithOpacity,
                                 shape: RoundedRectangleBorder(
                                     side: BorderSide(
-                                      color:_.sharingUser.length == 0 ? Colors.grey : Color(0xff23B662),
+                                      color: _.sharingUser.length == 0
+                                          ? Colors.grey
+                                          : Color(0xff23B662),
                                     ),
                                     borderRadius: BorderRadius.circular(9.0)),
-                                onPressed:_.sharingUser.length == 0 ? null : () async {
-                                  shareDialougebox(context, _);
-                                },
+                                onPressed: _.sharingUser.length == 0
+                                    ? null
+                                    : () async {
+                                        shareDialougebox(context, _);
+                                      },
                                 child: Text(
                                   "SHARE",
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
-                                      color:_.sharingUser.length == 0 ? Colors.grey : CommonColor.greenButtonTextColor,
+                                      color: _.sharingUser.length == 0
+                                          ? Colors.grey
+                                          : CommonColor.greenButtonTextColor,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700),
                                 ),
@@ -1157,7 +1166,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
                       onPressed: () async {
                         print("Start Time $start");
                         print("Start Time $end");
-                        print("Start Time ${_controller.video.value.duration.inSeconds}");
+                        print(
+                            "Start Time ${_controller.video.value.duration.inSeconds}");
                         print("End Time $audioFile");
                         if (_.title.text.isEmpty &&
                             _.des.text.isEmpty &&

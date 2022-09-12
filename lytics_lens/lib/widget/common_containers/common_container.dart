@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lottie/lottie.dart';
-import 'dart:math' as math;
 
 class CommonContainer extends StatelessWidget {
   final Function() onPressed;
@@ -25,6 +24,7 @@ class CommonContainer extends StatelessWidget {
   final bool isRead;
   final bool isShare;
   final bool isSend;
+  final bool isReceived;
   final int progressValue;
   final bool isAudio;
   final bool isClipped;
@@ -51,6 +51,7 @@ class CommonContainer extends StatelessWidget {
     this.isProgress = false,
     this.isRead = true,
     this.isClipped = false,
+    this.isReceived = false,
     this.isAudio = false,
     this.progressValue = 1,
 
@@ -74,7 +75,7 @@ class CommonContainer extends StatelessWidget {
           children: [
             // First Column Start here
             SizedBox(
-              width: 120,
+              width: 100,
               height: MediaQuery.of(context).size.height,
               child: Stack(
                 children: [
@@ -233,12 +234,10 @@ class CommonContainer extends StatelessWidget {
                     Row(
                       children: [
                         isSend
-                        ? Transform.rotate(
-                          angle: 180 * math.pi / 180,
-                          child: Image.asset(
-                            'assets/images/video-share.png',
-                            width: 15.0,
-                          ),
+                        ?
+                        Image.asset(
+                          'assets/images/receive.png',
+                          width: 15.0,
                         ) :
                         Image.asset(
                           'assets/images/video-share.png',

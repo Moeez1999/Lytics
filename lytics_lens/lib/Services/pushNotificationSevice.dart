@@ -1,4 +1,5 @@
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lytics_lens/Constants/constants.dart';
@@ -30,7 +31,28 @@ class PushNotificationService {
       sound: true,
     );
 
-    // onMessage: When the app is open and it receives a push notification
+    // replacement for onResume: When the app is in the background and opened directly from the push notification.
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      print("Notification message Body ${message.data}");
+      print("Notification message Body length${message.data.length}");
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 1234,
+          channelKey: 'basic_channel',
+          title: "${message.notification!.title}",
+          body: "${message.notification!.body}",
+          notificationLayout: NotificationLayout.BigPicture,
+          bigPicture: '${message.data["thumbnailPath"]}',
+        ),
+      );
+      if (message.data["jobID"].toString().isNotEmpty ||
+          message.data["jobID"].toString() != '') {
+        print('JOB ID FOUND');
+      } else {
+        print('Not Job Id Found');
+      }
+    });
 
   }
 }
