@@ -67,17 +67,23 @@ class ReportsScreen extends StatelessWidget {
                     ? InterConnectivity(
                         onPressed: () async {
                           _.getGraphData();
+                          await _.firstTimeGraphData('Top 10');
+
                         },
                       )
                     : _.isSocketFirstGraph2
                         ? InterConnectivity(
                             onPressed: () async {
                               _.getPieChartData();
+                              await _.firstTimeGraphData('Top 10');
+
                             },
                           )
                         : _.isSocketFirstGraph1 || _.isSocketFirstGraph2
                             ? InterConnectivity(
                                 onPressed: () async {
+                                  await _.firstTimeGraphData('Top 10');
+
                                   _.getGraphData();
                                   _.getPieChartData();
                                 },

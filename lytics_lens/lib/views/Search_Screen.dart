@@ -1551,20 +1551,22 @@ class SearchScreen extends StatelessWidget {
                                             () => Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Center(
-                                                  child: Text(
-                                                    _.filterGuests.length == 0
-                                                        ? 'Select Guest'
-                                                        : "${_.listToString(_.filterGuests)}",
-                                                    overflow: TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Roboto',
-                                                        color:
-                                                            CommonColor.filterColor,
-                                                        fontSize: 12.0),
-                                                  ).marginOnly(
-                                                      left: 5.0, right: 5.0),
+                                                Flexible(
+                                                  child: Center(
+                                                    child: Text(
+                                                      _.filterGuests.length == 0
+                                                          ? 'Select Guest'
+                                                          : "${_.listToString(_.filterGuests)}",
+                                                      overflow: TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          color:
+                                                              CommonColor.filterColor,
+                                                          fontSize: 12.0),
+                                                    ).marginOnly(
+                                                        left: 5.0, right: 5.0),
+                                                  ),
                                                 ),
                                                 Image.asset(
                                                     "assets/images/Vector.png")
