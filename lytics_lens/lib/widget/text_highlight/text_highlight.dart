@@ -163,8 +163,7 @@ class TextHighlighting extends StatelessWidget {
   RichText _richText(TextSpan text) {
     return RichText(
       key: key,
-      softWrap: true,
-      strutStyle: StrutStyle(fontSize: 12,fontStyle: FontStyle.normal,),
+
       text: text,
       textAlign: textAlign,
       overflow: overflow,

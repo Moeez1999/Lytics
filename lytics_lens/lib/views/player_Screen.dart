@@ -684,8 +684,7 @@ class PlayerScreen extends StatelessWidget {
                                                                             : TextDirection.rtl,
                                                                         child:
                                                                             Wrap(
-                                                                          clipBehavior:
-                                                                              Clip.none,
+
                                                                           children: [
                                                                             for (int i = 0;
                                                                                 i < _.transcriptionlistdir.length;
@@ -708,22 +707,25 @@ class PlayerScreen extends StatelessWidget {
                                                                                         highlights: [
                                                                                           _.urdusearchtext.text.isEmpty ? "ssadsauadnasjjwjeiweuywdsjandsakjdsad" : _.urdusearchtext.text
                                                                                         ],
-                                                                                        style: TextStyle(fontSize: 18.0, letterSpacing: 0.4, fontWeight: FontWeight.w400, fontFamily: "urdu", color: Colors.black),
+                                                                                        style: TextStyle(fontSize: 13.0, letterSpacing: 0.4, fontWeight: FontWeight.w400, fontFamily: "urdu", color: Colors.black),
                                                                                         textAlign: _.source.toLowerCase() == 'website' || _.source.toLowerCase() == 'print' || _.source.toLowerCase() == 'blog' ? TextAlign.start : TextAlign.center,
                                                                                       )
-                                                                                    : Container(
-                                                                                        height: 20.0,
-                                                                                        color: _.check(_.transcriptionlistdir[i]['duration'], _.playerTime!),
-                                                                                        child: TextHighlighting(
-                                                                                          textScaleFactor: 1.0,
-                                                                                          text: '${_.transcriptionlistdir[i]['line']}',
-                                                                                          highlights: [
-                                                                                            _.urdusearchtext.text.isEmpty ? "ssadsauadnasjjwjeiweuywdsjandsakjdsad" : _.urdusearchtext.text
-                                                                                          ],
-                                                                                          style: TextStyle(fontSize: 13.0, letterSpacing: 0.4, fontWeight: FontWeight.w400, fontFamily: "urdu", color: Colors.black),
-                                                                                          textAlign: TextAlign.center,
+                                                                                    : FittedBox(
+                                                                                  fit: BoxFit.none,
+                                                                                      child: Container(
+                                                                                          height: 20.0,
+                                                                                          color: _.check(_.transcriptionlistdir[i]['duration'], _.playerTime!),
+                                                                                          child: TextHighlighting(
+                                                                                            textScaleFactor: 1.0,
+                                                                                            text: '${_.transcriptionlistdir[i]['line']}',
+                                                                                            highlights: [
+                                                                                              _.urdusearchtext.text.isEmpty ? "ssadsauadnasjjwjeiweuywdsjandsakjdsad" : _.urdusearchtext.text
+                                                                                            ],
+                                                                                            style: TextStyle(fontSize: 13.0, letterSpacing: 0.4, fontWeight: FontWeight.w400, fontFamily: "urdu", color: Colors.black),
+                                                                                            textAlign: TextAlign.center,
+                                                                                          ),
                                                                                         ),
-                                                                                      ),
+                                                                                    ),
                                                                               )
                                                                           ],
                                                                         ),
