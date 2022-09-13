@@ -146,7 +146,7 @@ class AccountScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Ver 2.1.6',
+                          'Ver 2.1.7',
                           textScaleFactor: 1.0,
                           style: TextStyle(
                               fontSize: 11.0,

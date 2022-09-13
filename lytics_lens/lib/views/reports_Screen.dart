@@ -35,6 +35,10 @@ class ReportsScreen extends StatelessWidget {
                       _.isLoading = true;
                       _.isSocket = false;
                       _.update();
+                      _.filterlist.clear();
+                      _.filterlist1.clear();
+                      _.filterlist.add("All Channels");
+                      _.filterlist1.add("All Channels");
                       await _.getAllHost();
                       await _.getChannels();
                       await _.getProgram();

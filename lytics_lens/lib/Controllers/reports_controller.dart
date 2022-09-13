@@ -237,6 +237,9 @@ class ReportsController extends GetxController {
   }
 
   void getdates() {
+    alldatelist.clear();
+    alldatelist1.clear();
+    update();
     datelist.forEach((element) {
       print("All Dates $element");
       alldatelist.add(DatesModel.fromJSON(element));
@@ -427,6 +430,7 @@ class ReportsController extends GetxController {
     programType.clear();
     programType1.clear();
     responseprogramtyperesult.clear();
+    update();
     try {
       String token = await storage.read("AccessToken");
       var res = await http.get(
@@ -475,6 +479,7 @@ class ReportsController extends GetxController {
     topiclist.clear();
     responseTopic2result.clear();
     topic2list.clear();
+    update();
     try {
       String token = await storage.read("AccessToken");
       var res = await http
@@ -518,10 +523,13 @@ class ReportsController extends GetxController {
   Future<void> getChannels() async {
     print('Channel Function');
     responsechannellist.clear();
+    channellist.clear();
+    channellist2.clear();
     filterchannellist.clear();
     List reverse = [];
     // allChanelsList.clear();
     channelsAll.clear();
+    update();
     try {
       String token = await storage.read("AccessToken");
       var res = await http

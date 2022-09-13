@@ -1359,7 +1359,8 @@ class SearchScreen extends StatelessWidget {
                                           child: Obx(
                                             () => Row(
                                               children: [
-                                                Center(
+                                                SizedBox(
+                                                  width: Get.width / 3.5,
                                                   child: Text(
                                                     _.filterHost.length == 0
                                                         ? 'Select Host'
@@ -1456,23 +1457,23 @@ class SearchScreen extends StatelessWidget {
                                             () => Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Flexible(
-                                                  child: Center(
-                                                    child: Text(
-                                                      _.filterGuests.length == 0
-                                                          ? 'Select Guest'
-                                                          : "${_.listToString(_.filterGuests)}",
-                                                      overflow: TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          color:
-                                                              CommonColor.filterColor,
-                                                          fontSize: 12.0),
-                                                    ).marginOnly(
-                                                        left: 5.0, right: 5.0),
-                                                  ),
+                                                SizedBox(
+                                                  width: Get.width / 3.5,
+                                                  child: Text(
+                                                    _.filterGuests.length == 0
+                                                        ? 'Select Guest'
+                                                        : "${_.listToString(_.filterGuests)}",
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        color:
+                                                            CommonColor.filterColor,
+                                                        fontSize: 12.0),
+                                                  ).marginOnly(
+                                                      left: 5.0, right: 5.0),
                                                 ),
+                                                Spacer(),
                                                 Image.asset(
                                                     "assets/images/Vector.png")
                                                     .marginOnly(right: 8),
