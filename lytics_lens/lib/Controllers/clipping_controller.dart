@@ -73,7 +73,15 @@ class ClippingController extends GetxController
         });
 
         data['users'].forEach((e) {
-          companyUser.add(e);
+          if(e['role']=="Reviewer"){
+            companyUser.insert(0, e);
+
+
+          }
+          else{
+            companyUser.add(e);
+
+          }
         });
         Get.log("Company data is $data");
         isLoading = false;
@@ -95,7 +103,15 @@ class ClippingController extends GetxController
           "lastName" : "Everyone",
         });
         data['users'].forEach((e) {
-          companyUser.add(e);
+          if(e['role']=="Reviewer"){
+            companyUser.insert(0, e);
+
+
+          }
+          else{
+            companyUser.add(e);
+
+          }
         });
         Get.log("Company data from base url is $data");
         isLoading = false;

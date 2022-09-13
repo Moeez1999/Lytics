@@ -173,73 +173,77 @@ class AccountScreen extends StatelessWidget {
 
   Widget options(
       {String? text, String? subTitle, String? imagename, Function()? onTap}) {
-    return InkWell(
-      child: Container(
-          height: 60.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 60.0,
-                width: 60.0,
-                child: Image.asset(
-                  imagename!,
-                  height: 24,
-                  width: 24,
-                ),
-              ).marginOnly(left: 20.0),
-              SizedBox(
-                width: 5.0,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: Get.width / 1.4,
-                    child: Text(
-                      text!,
-                      textScaleFactor: 1.0,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        child: Container(
+            height: 60.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: 60.0,
+                  width: 60.0,
+                  child: Image.asset(
+                    imagename!,
+                    height: 24,
+                    width: 24,
                   ),
-                  subTitle == ''
-                      ? SizedBox()
-                      : SizedBox(
-                          height: 5.0,
-                        ),
-                  subTitle == ''
-                      ? SizedBox()
-                      : Container(
-                          width: Get.width / 1.4,
-                          child: Text(
-                            subTitle!,
-                            textScaleFactor: 1.0,
-                            maxLines: 2,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w300,
-                            ),
+                ).marginOnly(left: 20.0),
+                SizedBox(
+                  width: 5.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: Get.width / 1.4,
+                      child: Text(
+                        text!,
+                        textScaleFactor: 1.0,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      ),
+                    ),
+                    subTitle == ''
+                        ? SizedBox()
+                        : SizedBox(
+                            height: 5.0,
                           ),
-                        )
-                ],
-              )
-            ],
-          )),
-      onTap: onTap,
-      splashColor: Colors.white,
-      hoverColor: Colors.white,
-      focusColor: Colors.white,
-    ).marginOnly(bottom: 30.0);
+                    subTitle == ''
+                        ? SizedBox()
+                        : Container(
+                            width: Get.width / 1.4,
+                            child: Text(
+                              subTitle!,
+                              textScaleFactor: 1.0,
+                              maxLines: 2,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          )
+                  ],
+                )
+              ],
+            )),
+        onTap: onTap,
+        highlightColor:CommonColor.greenColor ,
+        splashColor: CommonColor.greenColor,
+        hoverColor: CommonColor.greenColor,
+        focusColor: CommonColor.greenColor,
+      ).marginOnly(bottom: 30.0),
+    );
   }
 
   void versionBox(context, AccountController _) async {

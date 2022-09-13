@@ -1033,16 +1033,16 @@ class PlayerScreen extends StatelessWidget {
                                                     ).marginOnly(bottom: 11),
                                                     Row(
                                                       children: [
-                                                        Text(
-                                                          "Anchor - ",
-                                                          style: TextStyle(
-                                                              color: Color(
-                                                                  0xffC4C4C4),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300,
-                                                              fontSize: 10),
-                                                        ),
+                                                        // Text(
+                                                        //   "Anchor - ",
+                                                        //   style: TextStyle(
+                                                        //       color: Color(
+                                                        //           0xffC4C4C4),
+                                                        //       fontWeight:
+                                                        //           FontWeight
+                                                        //               .w300,
+                                                        //       fontSize: 10),
+                                                        // ),
                                                         Flexible(
                                                           child: Text(
                                                             _.anchor.length == 0
@@ -1057,23 +1057,23 @@ class PlayerScreen extends StatelessWidget {
                                                                 fontSize: 10),
                                                           ),
                                                         ),
-                                                        Container(
+                                                        _.guest.length != 0? Container(
                                                           height: 10,
                                                           width: 1,
                                                           color:
                                                               Color(0xffC4C4C4),
                                                         ).marginSymmetric(
-                                                            horizontal: 8),
-                                                        Text(
-                                                          "Guests - ",
-                                                          style: TextStyle(
-                                                              color: Color(
-                                                                  0xffC4C4C4),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300,
-                                                              fontSize: 10),
-                                                        ),
+                                                            horizontal: 8):SizedBox(),
+                                                        // Text(
+                                                        //   "Guests - ",
+                                                        //   style: TextStyle(
+                                                        //       color: Color(
+                                                        //           0xffC4C4C4),
+                                                        //       fontWeight:
+                                                        //           FontWeight
+                                                        //               .w300,
+                                                        //       fontSize: 10),
+                                                        // ),
                                                         Flexible(
                                                           child: Text(
                                                             _.guest.length == 0
@@ -1505,8 +1505,10 @@ class PlayerScreen extends StatelessWidget {
                           );
                         },
                         itemBuilder: (c, i) {
+
+                          print( 'First name is ${user[i]['recieverFirstName']}',);
                           return Text(
-                            '${user[i]['recieverFirstName']} ${user[i]['recieverLastName']}',
+                            '${user[i]['recieverFirstName']}',
                             style:
                                 TextStyle(color: Colors.white, fontSize: 15.0),
                           );
