@@ -321,35 +321,53 @@ class PlayerScreen extends StatelessWidget {
                                       ),
                                       //------------Add share icon---------------
                                       InkWell(
-                                        onTap: () async {
-                                          _.betterPlayerController.pause();
-                                          Get.to(
-                                            () => ClippingScreen(
-                                              fileurl: _.videoPath,
-                                              jobId: _.jobId,
-                                              videoDuration: _
+                                        onTap: _
+                                                    .betterPlayerController
+                                                    .videoPlayerController!
+                                                    .value
+                                                    .isBuffering ==
+                                                true
+                                            ? null
+                                            : () async {
+                                                _.betterPlayerController
+                                                    .pause();
+                                                Get.to(
+                                                  () => ClippingScreen(
+                                                    fileurl: _.videoPath,
+                                                    jobId: _.jobId,
+                                                    videoDuration: _
+                                                        .betterPlayerController
+                                                        .videoPlayerController!
+                                                        .value
+                                                        .duration!
+                                                        .inSeconds,
+                                                  ),
+                                                );
+                                              },
+                                        child: Column(children: [
+                                          _
                                                   .betterPlayerController
                                                   .videoPlayerController!
                                                   .value
-                                                  .duration!
-                                                  .inSeconds,
-                                            ),
-                                          );
-                                          // _.betterPlayerController
-                                          //     .pause();
-                                          // shareVideoWithContact(
-                                          //     context, _);
-                                        },
-                                        child: Column(children: [
-                                          Image.asset(
-                                              "assets/images/shareicon.png"),
+                                                  .isBuffering
+                                              ? Image.asset(
+                                                  "assets/images/greyshare.png",
+                                                  width: 22)
+                                              : Image.asset(
+                                                  "assets/images/shareicon.png"),
                                           SizedBox(
                                             height: 5,
                                           ),
                                           Text(
                                             "Share",
                                             style: TextStyle(
-                                              color: Color(0xff22B161),
+                                              color: _
+                                                      .betterPlayerController
+                                                      .videoPlayerController!
+                                                      .value
+                                                      .isBuffering
+                                                  ? Colors.grey
+                                                  : Color(0xff22B161),
                                               fontSize: 9,
                                               fontWeight: FontWeight.w400,
                                             ),

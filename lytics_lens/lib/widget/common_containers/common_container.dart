@@ -90,10 +90,10 @@ class CommonContainer extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: imgUrl!,
                         placeholder: (c, e) => Lottie.asset(
-                            "assets/images/imgload.json",
+                            "assets/images/circular_loader_image.json",
                             fit: BoxFit.cover),
                         errorWidget: (c, e, r) => Lottie.asset(
-                            "assets/images/imgload.json",
+                            "assets/images/circular_loader_image.json",
                             fit: BoxFit.cover),
                         fit: BoxFit.cover,
                       ),

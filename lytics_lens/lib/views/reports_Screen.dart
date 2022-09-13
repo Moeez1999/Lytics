@@ -25,21 +25,6 @@ class ReportsScreen extends StatelessWidget {
         return MediaQuery(
           data: mqDataNew,
           child: Scaffold(
-              // backgroundColor: Theme.of(context).primaryColor,
-              // appBar: AppBar(
-              //   backgroundColor: Color.fromRGBO(27, 29, 40, 1),
-              //   title: Align(
-              //       alignment: Alignment.centerLeft,
-              //       child: Text(
-              //         "Trending Topics",
-              //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              //       )).marginOnly(left: 15.0),
-              //   centerTitle: true,
-              //   elevation: 0.0,
-              //   automaticallyImplyLeading: false,
-              // ),
-              // bottomNavigationBar: GlobalBottomNav(),
-              // drawer: GlobalDrawer(),
               body: Container(
             width: Get.width,
             height: Get.height,
@@ -48,8 +33,7 @@ class ReportsScreen extends StatelessWidget {
                 ? InterConnectivity(
                     onPressed: () async {
                       _.isLoading = true;
-                      _.channellist2.clear();
-                      _.channellist.clear();
+                      _.isSocket = false;
                       _.update();
                       await _.getAllHost();
                       await _.getChannels();
@@ -63,174 +47,124 @@ class ReportsScreen extends StatelessWidget {
                       _.update();
                     },
                   )
-                : _.isSocketFirstGraph1
-                    ? InterConnectivity(
-                        onPressed: () async {
-                          _.getGraphData();
+                : _.isLoading
+                    ? Center(
+                        child: Image.asset(
+                          "assets/images/gif.gif",
+                          height: 300.0,
+                          width: 300.0,
+                        ),
+                      ).marginOnly(bottom: 50.0)
+                    : GestureDetector(
+                        onTap: () {
+                          FocusScopeNode currentFocus = FocusScope.of(context);
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
                         },
-                      )
-                    : _.isSocketFirstGraph2
-                        ? InterConnectivity(
-                            onPressed: () async {
-                              _.getPieChartData();
-                            },
-                          )
-                        : _.isSocketFirstGraph1 || _.isSocketFirstGraph2
-                            ? InterConnectivity(
-                                onPressed: () async {
-                                  _.getGraphData();
-                                  _.getPieChartData();
-                                },
-                              )
-                            : _.isDefaultGraph
-                                ? InterConnectivity(
-                                    onPressed: () async {
-                                      _.firstTimeGraphData('Top 10');
-                                    },
-                                  )
-                                : _.isLoading
-                                    ? Center(
-                                        child: Image.asset(
-                                          "assets/images/gif.gif",
-                                          height: 300.0,
-                                          width: 300.0,
-                                        ),
-                                      ).marginOnly(bottom: 50.0)
-                                    : GestureDetector(
-                                        onTap: () {
-                                          FocusScopeNode currentFocus =
-                                              FocusScope.of(context);
-                                          if (!currentFocus.hasPrimaryFocus) {
-                                            currentFocus.unfocus();
-                                          }
-                                        },
-                                        onVerticalDragCancel: () {
-                                          FocusScopeNode currentFocus =
-                                              FocusScope.of(context);
-                                          if (!currentFocus.hasPrimaryFocus) {
-                                            currentFocus.unfocus();
-                                          }
-                                        },
-                                        child: SafeArea(
-                                          child: SingleChildScrollView(
-                                            child: Column(
-                                              children: [
-                                                const SizedBox(
-                                                  height: 10.0,
-                                                ),
-                                                // <---------------- Trending Heading --------->
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      'Trending Topics',
-                                                      style: TextStyle(
-                                                          fontSize: 24,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Colors.white,
-                                                          letterSpacing: 0.4,
-                                                          fontFamily: 'Roboto'),
-                                                    ),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        showbottomsheet1(
-                                                            context, _);
-                                                      },
-                                                      icon: Image.asset(
-                                                        "assets/images/filter-green.png",
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    )
-                                                  ],
-                                                ).marginOnly(
-                                                    left: 16,
-                                                    right: 6,
-                                                    bottom: 0),
-                                                // <------------- Graph 1st COntainer ---------->
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 280,
-                                                  decoration: BoxDecoration(
-                                                    color: CommonColor
-                                                        .textFieldBackgrounfColour,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                  ),
-                                                  child: firstContainer(
-                                                      _, context),
-                                                ).marginOnly(left: 5, right: 5),
+                        onVerticalDragCancel: () {
+                          FocusScopeNode currentFocus = FocusScope.of(context);
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
+                        },
+                        child: SafeArea(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                // <---------------- Trending Heading --------->
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Trending Topics',
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                          letterSpacing: 0.4,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        showbottomsheet1(context, _);
+                                      },
+                                      icon: Image.asset(
+                                        "assets/images/filter-green.png",
+                                        fit: BoxFit.fill,
+                                      ),
+                                    )
+                                  ],
+                                ).marginOnly(left: 16, right: 6, bottom: 0),
+                                // <------------- Graph 1st COntainer ---------->
+                                Container(
+                                  width: double.infinity,
+                                  height: 280,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        CommonColor.textFieldBackgrounfColour,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: firstContainer(_, context),
+                                ).marginOnly(left: 5, right: 5),
 
-                                                // <---------------- 2nd Graph ----------->
-                                                Container(
-                                                  color: CommonColor
-                                                      .textFieldBackgrounfColour,
-                                                  //color: Color(0xff2d2f3a),
-                                                  width: double.infinity,
-                                                  //previously its 260
-                                                  // height: 260,
-                                                  child: Column(
-                                                    children: [
-                                                      //<------------- Heading ----------->
-                                                      Container(
-                                                        height: 50,
-                                                        color: CommonColor
-                                                            .appBarColor,
-                                                        child: Align(
-                                                          alignment:
-                                                              Alignment.topLeft,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                'Top 5 Guests',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      24.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ),
-                                                              IconButton(
-                                                                onPressed: () {
-                                                                  showbottomsheet(
-                                                                      context,
-                                                                      _);
-                                                                },
-                                                                icon:
-                                                                    Image.asset(
-                                                                  "assets/images/filter-green.png",
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ).marginOnly(
-                                                          left: 16,
-                                                          right: 0,
-                                                        ),
-                                                      ),
-                                                      // Todo Comment code 2nd graph
-                                                      seconContainer(
-                                                          _, context),
-                                                    ],
-                                                  ),
-                                                ).marginOnly(left: 5, right: 5),
-                                              ],
-                                            ),
+                                // <---------------- 2nd Graph ----------->
+                                Container(
+                                  color: CommonColor.textFieldBackgrounfColour,
+                                  //color: Color(0xff2d2f3a),
+                                  width: double.infinity,
+                                  //previously its 260
+                                  // height: 260,
+                                  child: Column(
+                                    children: [
+                                      //<------------- Heading ----------->
+                                      Container(
+                                        height: 50,
+                                        color: CommonColor.appBarColor,
+                                        child: Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Top 5 Guests',
+                                                style: TextStyle(
+                                                  fontSize: 24.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  showbottomsheet(context, _);
+                                                },
+                                                icon: Image.asset(
+                                                  "assets/images/filter-green.png",
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              )
+                                            ],
                                           ),
+                                        ).marginOnly(
+                                          left: 16,
+                                          right: 0,
                                         ),
                                       ),
+                                      // Todo Comment code 2nd graph
+                                      seconContainer(_, context),
+                                    ],
+                                  ),
+                                ).marginOnly(left: 5, right: 5),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
           )),
         );
       },
@@ -2000,7 +1934,8 @@ class ReportsScreen extends StatelessWidget {
                                           SizedBox(
                                             width: Get.width / 3.5,
                                             child: Text(
-                                              _.channelsearchlist.length == _.channellist.length - 1
+                                              _.channelsearchlist.length ==
+                                                      _.channellist.length - 1
                                                   ? 'All Channels'
                                                   : "${_.listToString(_.channelsearchlist)}",
                                               overflow: TextOverflow.ellipsis,
@@ -2157,14 +2092,12 @@ class ReportsScreen extends StatelessWidget {
                                             maxLines: 1,
                                             style: TextStyle(
                                                 fontFamily: 'Roboto',
-                                                color:
-                                                    CommonColor.filterColor,
+                                                color: CommonColor.filterColor,
                                                 fontSize: 12.0),
                                           ).marginOnly(left: 5.0, right: 5.0),
                                         ),
                                         Spacer(),
-                                        Image.asset(
-                                                "assets/images/Vector.png")
+                                        Image.asset("assets/images/Vector.png")
                                             .marginOnly(right: 8),
                                       ],
                                     ),
