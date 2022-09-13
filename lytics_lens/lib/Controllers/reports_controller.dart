@@ -224,7 +224,6 @@ class ReportsController extends GetxController {
     await firstTimeGraphData('Top 10');
     await firstTimePieChartData();
     selectedchannel.add('All Channels');
-
     getdates();
 
     isLoading = false;
@@ -411,6 +410,10 @@ class ReportsController extends GetxController {
       });
       update();
     } on SocketException catch (e) {
+      isLoading = false;
+      update();
+      isSocket = true;
+      update();
       print(e);
     } catch (e) {}
   }
@@ -456,15 +459,11 @@ class ReportsController extends GetxController {
       print(e);
       isLoading = false;
       update();
-      // CustomSnackBar.showSnackBar(
-      //     title: AppStrings.unable,
-      //     message: "",
-      //     backgroundColor: Color(0xff48beeb),
-      //     isWarning: true);
+      isSocket = true;
+      update();
     } catch (e) {
       isLoading = false;
       update();
-      // Get.snackbar("Catch Error", e.toString(), backgroundColor: Colors.red);
     }
   }
 
@@ -504,13 +503,9 @@ class ReportsController extends GetxController {
       update();
     } on SocketException catch (e) {
       isLoading = false;
-      print(e);
       update();
-      // CustomSnackBar.showSnackBar(
-      //     title: AppStrings.unable,
-      //     message: "",
-      //     backgroundColor: Color(0xff48beeb),
-      //     isWarning: true);
+      isSocket = true;
+      update();
     } catch (e) {
       isLoading = false;
       update();
@@ -570,19 +565,13 @@ class ReportsController extends GetxController {
       });
       update();
     } on SocketException catch (e) {
-      print(e);
       isLoading = false;
       update();
-
-      // CustomSnackBar.showSnackBar(
-      //     title: AppStrings.unable,
-      //     message: "",
-      //     backgroundColor: Color(0xff48beeb),
-      //     isWarning: true);
+      isSocket = true;
+      update();
     } catch (e) {
       isLoading = false;
       update();
-      // Get.snackbar("Catch Error", e.toString(), backgroundColor: Colors.red);
     }
   }
 
@@ -620,15 +609,10 @@ class ReportsController extends GetxController {
       });
       update();
     } on SocketException catch (e) {
-      print(e);
       isLoading = false;
       update();
-
-      // CustomSnackBar.showSnackBar(
-      //     title: AppStrings.unable,
-      //     message: "",
-      //     backgroundColor: Color(0xff48beeb),
-      //     isWarning: true);
+      isSocket = true;
+      update();
     } catch (e) {
       isLoading = false;
       update();
@@ -826,108 +810,122 @@ class ReportsController extends GetxController {
       isLoading = false;
       update();
     } on SocketException catch (e) {
-      isSocketFirstGraph2 = true;
       isLoading = false;
       update();
-      print(e);
+      isSocket = true;
+      update();;
     }
   }
 
   Future<void> firstTimePieChartData() async {
-    isLoading = true;
-    chartdata.clear();
-    piechartlist.clear();
-    graphchartlist.clear();
-    List selectedchannellist = [];
-    List selectedprogramresult = [];
-    selectedchannellist.add(channelselect.text);
-    selectedprogramresult.add(programselect.text);
-    update();
-    String token = await storage.read("AccessToken");
-    print("Bearer $token");
-    print('Date is ${endpaichartSearchDate.text}');
-    print('Date is ${startpaichartSearchDate.text}');
-    var res =
-        await http.post(Uri.parse(baseUrlService.baseUrl + ApiData.guestsgraph),
-            headers: {
-              'Authorization': 'Bearer $token',
-              'Content-type': 'application/json',
-              "Accept": "application/json",
-            },
-            body: json.encode({
-              "endDate": '${now.year}/${now.month}/${now.day}',
-              "startDate": now.month - 1 == 0
-                  ? '${now.year - 1}/12/${now.day}'
-                  : '${now.year}/${now.month - 1}/${now.day}',
-              "channel": filterchannellist,
-              "programType": programTypefilter,
-              "programName": [],
-              "anchor": anchorList,
-            }));
+    try
+    {
+      isLoading = true;
+      chartdata.clear();
+      piechartlist.clear();
+      graphchartlist.clear();
+      List selectedchannellist = [];
+      List selectedprogramresult = [];
+      selectedchannellist.add(channelselect.text);
+      selectedprogramresult.add(programselect.text);
+      update();
+      String token = await storage.read("AccessToken");
+      print("Bearer $token");
+      print('Date is ${endpaichartSearchDate.text}');
+      print('Date is ${startpaichartSearchDate.text}');
+      var res =
+      await http.post(Uri.parse(baseUrlService.baseUrl + ApiData.guestsgraph),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-type': 'application/json',
+            "Accept": "application/json",
+          },
+          body: json.encode({
+            "endDate": '${now.year}/${now.month}/${now.day}',
+            "startDate": now.month - 1 == 0
+                ? '${now.year - 1}/12/${now.day}'
+                : '${now.year}/${now.month - 1}/${now.day}',
+            "channel": filterchannellist,
+            "programType": programTypefilter,
+            "programName": [],
+            "anchor": anchorList,
+          }));
 
-    var data1 = json.decode(res.body);
-    Get.log('print All Map  for Graph is $data1');
-    piechartlist.addAll(data1);
-    update();
-    print("Check Data piechartlist $data1");
-    if (piechartlist.length >= 5) {
-      for (var i = 0; i < 5; i++) {
-        // chartdata.add(
-        //   ChartSampleData(
-        //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
-        // );
-        total += piechartlist[i]['count'];
-        print("The total value is $total ");
+      var data1 = json.decode(res.body);
+      Get.log('print All Map  for Graph is $data1');
+      piechartlist.addAll(data1);
+      update();
+      print("Check Data piechartlist $data1");
+      if (piechartlist.length >= 5) {
+        for (var i = 0; i < 5; i++) {
+          // chartdata.add(
+          //   ChartSampleData(
+          //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
+          // );
+          total += piechartlist[i]['count'];
+          print("The total value is $total ");
 
-        // data.add(
-        //   PieChartSectionData(
-        //       //title: piechartlist[i]['guest'],
-        //       titleStyle: TextStyle(color: Colors.white),
-        //       value: piechartlist[i]['count'].toDouble(),
-        //       color: Color(0xff22B161)),
-        // );
-      }
-      for (var i = 0; i < 5; i++) {
-        percentage = (piechartlist[i]['count'] * 100 / total);
-        update();
-        print("The total  $percentage ");
-        chartdata.add(
-          ChartSampleData(
-              x: piechartlist[i]['guest'], y: percentage!.roundToDouble()),
-        );
-        // chartdata.add(percentage);
-        // update();
-      }
-    } else {
-      for (var i = 0; i < piechartlist.length; i++) {
-        // chartdata.add(
-        //   ChartSampleData(
-        //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
-        // );
-        total += piechartlist[i]['count'];
-        print("The total value is $total ");
+          // data.add(
+          //   PieChartSectionData(
+          //       //title: piechartlist[i]['guest'],
+          //       titleStyle: TextStyle(color: Colors.white),
+          //       value: piechartlist[i]['count'].toDouble(),
+          //       color: Color(0xff22B161)),
+          // );
+        }
+        for (var i = 0; i < 5; i++) {
+          percentage = (piechartlist[i]['count'] * 100 / total);
+          update();
+          print("The total  $percentage ");
+          chartdata.add(
+            ChartSampleData(
+                x: piechartlist[i]['guest'], y: percentage!.roundToDouble()),
+          );
+          // chartdata.add(percentage);
+          // update();
+        }
+      } else {
+        for (var i = 0; i < piechartlist.length; i++) {
+          // chartdata.add(
+          //   ChartSampleData(
+          //       x: piechartlist[i]['guest'], y: piechartlist[i]['count']),
+          // );
+          total += piechartlist[i]['count'];
+          print("The total value is $total ");
 
-        // data.add(
-        //   PieChartSectionData(
-        //       //title: piechartlist[i]['guest'],
-        //       titleStyle: TextStyle(color: Colors.white),
-        //       value: piechartlist[i]['count'].toDouble(),
-        //       color: Color(0xff22B161)),
-        // );
+          // data.add(
+          //   PieChartSectionData(
+          //       //title: piechartlist[i]['guest'],
+          //       titleStyle: TextStyle(color: Colors.white),
+          //       value: piechartlist[i]['count'].toDouble(),
+          //       color: Color(0xff22B161)),
+          // );
+        }
+        for (var i = 0; i < 5; i++) {
+          percentage = piechartlist[i]['count'] * 100 / total;
+          update();
+          print("The total  $percentage ");
+          chartdata.add(
+            ChartSampleData(
+                x: piechartlist[i]['guest'], y: percentage!.roundToDouble()),
+          );
+          // chartdata.add(percentage);
+        }
       }
-      for (var i = 0; i < 5; i++) {
-        percentage = piechartlist[i]['count'] * 100 / total;
-        update();
-        print("The total  $percentage ");
-        chartdata.add(
-          ChartSampleData(
-              x: piechartlist[i]['guest'], y: percentage!.roundToDouble()),
-        );
-        // chartdata.add(percentage);
-      }
+      isLoading = false;
+      update();
+    }on SocketException catch(e)
+    {
+      isLoading = false;
+      update();
+      isSocket = true;
+      update();
     }
-    isLoading = false;
-    update();
+    catch(e){
+      isLoading = false;
+      update();
+    }
+
   }
 
   // <========== barChart =========>
@@ -994,10 +992,13 @@ class ReportsController extends GetxController {
       // print(body.toString());
     } on SocketException catch (e) {
       isLoading = false;
-      isDefaultGraph = true;
       update();
-      print(e.message.toString());
-    } catch (e) {}
+      isSocket = true;
+      update();
+    } catch (e) {
+      isLoading = false;
+      update();
+    }
   }
 
   //search from map
@@ -1121,9 +1122,9 @@ class ReportsController extends GetxController {
       update();
     } on SocketException catch (e) {
       isLoading = false;
-      isSocketFirstGraph1 = true;
       update();
-      print(e.message.toString());
+      isSocket = true;
+      update();
     } catch (e) {}
   }
 
