@@ -10,6 +10,7 @@ import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/clipping_controller.dart';
+import 'package:lytics_lens/Views/player_Screen.dart';
 import 'package:lytics_lens/utils/api.dart';
 import 'package:lytics_lens/widget/textFields/common_textfield.dart';
 import 'package:lytics_lens/widget/snackbar/common_snackbar.dart';
@@ -239,7 +240,15 @@ class _ClippingScreenState extends State<ClippingScreen> {
       clipController.isBottomLoading.value = false;
       print("Error on export video ");
     }, onCompleted: (videoFile) async {
-      await sendData(videoFile);
+      if(audioFile.path == null || audioFile.path == '')
+        {
+          await sendDataWithoutAudio(videoFile);
+        }
+      else
+        {
+          await sendData(videoFile);
+        }
+
       clipController.isBottomLoading.value = false;
     });
   }
@@ -258,76 +267,87 @@ class _ClippingScreenState extends State<ClippingScreen> {
       print("Start Time $e");
       // var c = json.encode(clipController.sharingUser);
       String token = await storage.read("AccessToken");
-      if (audioFile.path == null || audioFile.path == '') {
-        print("Audio Function Call");
-        Map<String, String> h = {'Authorization': 'Bearer $token'};
-        var uri = Uri.parse(baseUrlService.baseUrl + ApiData.createClipJob);
-        var res = http.MultipartRequest('POST', uri)
-          ..headers.addAll(h)
-          ..fields['id'] = widget.jobId
-          ..fields['title'] = clipController.title.text
-          ..fields['comments'] = clipController.des.text
-          ..fields['share'] = "true"
-          ..fields['startDuration'] = s.toString()
-          ..fields['endDuration'] = e.toString()
-          ..fields['sharing'] = json.encode(clipController.sharingUser)
-          ..files
-              .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
-        var response = await res.send();
-        print('Check Response ${response.statusCode}');
-        var result = await response.stream.bytesToString();
-        Get.log('Check Response ${result}');
-        if (response.statusCode == 200) {
-          clipController.sharingUser.clear();
-          clipController.homeScreenController.isLoading.value = true;
-          await clipController.homeScreenController.getSentJobs();
-          clipController.homeScreenController.isLoading.value = false;
-          clipController.isBottomLoading.value = false;
-          Get.back();
-          Get.back();
-          CustomSnackBar.showSnackBar(
-              title: "Job shared successfully",
-              message: "",
-              isWarning: false,
-              backgroundColor: CommonColor.greenColor);
-        } else {
-          Get.back();
-          clipController.isBottomLoading.value = false;
-        }
-      } else {
-        Map<String, String> h = {'Authorization': 'Bearer $token'};
-        var uri = Uri.parse(baseUrlService.baseUrl + ApiData.createClipJob);
-        var res = http.MultipartRequest('POST', uri)
-          ..headers.addAll(h)
-          ..fields['id'] = widget.jobId
-          ..fields['title'] = clipController.title.text
-          ..fields['comments'] = clipController.des.text
-          ..fields['startDuration'] = s.toString()
-          ..fields['endDuration'] = e.toString()
-          ..fields['share'] = "true"
-          ..fields['sharing'] = json.encode(clipController.sharingUser)
-          ..files
-              .add(await http.MultipartFile.fromPath('audio', audioFile.path))
-          ..files
-              .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
-        var response = await res.send();
-        print('Check Response audio/video status code ${response.statusCode}');
-        var result = await response.stream.bytesToString();
-        Get.log('Check Response audio/video ${result}');
-        clipController.sharingUser.clear();
-        clipController.homeScreenController.isLoading.value = true;
-        await clipController.homeScreenController.getSentJobs();
-        clipController.homeScreenController.isLoading.value = false;
-        clipController.isBottomLoading.value = false;
-        Get.back();
-        Get.back();
-        CustomSnackBar.showSnackBar(
+      Map<String, String> h = {'Authorization': 'Bearer $token'};
+      var uri = Uri.parse(baseUrlService.baseUrl + ApiData.createClipJob);
+      var res = http.MultipartRequest('POST', uri)
+        ..headers.addAll(h)
+        ..fields['id'] = widget.jobId
+        ..fields['title'] = clipController.title.text
+        ..fields['comments'] = clipController.des.text
+        ..fields['startDuration'] = s.toString()
+        ..fields['endDuration'] = e.toString()
+        ..fields['share'] = "true"
+        ..fields['sharing'] = json.encode(clipController.sharingUser)
+        ..files
+            .add(await http.MultipartFile.fromPath('audio', audioFile.path))
+        ..files
+            .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
+      var response = await res.send();
+      print('Check Response audio/video status code ${response.statusCode}');
+      var result = await response.stream.bytesToString();
+      Get.log('Check Response audio/video ${result}');
+      clipController.sharingUser.clear();
+      clipController.homeScreenController.isLoading.value = true;
+      await clipController.homeScreenController.getSentJobs();
+      clipController.homeScreenController.isLoading.value = false;
+      clipController.isBottomLoading.value = false;
+      Get.delete<ClippingController>();
+      Get.off(() => PlayerScreen());
+      CustomSnackBar.showSnackBar(
+        title: "Job shared successfully",
+        message: "",
+        isWarning: false,
+        backgroundColor: CommonColor.greenColor,
+      );
+    } catch (e) {
+      print("Error Uploading ${e.toString()}");
+    }
+  }
+
+  Future<void> sendDataWithoutAudio(File vpath) async {
+    print("Check This $audioFile");
+    try {
+      print("Start Time ${start.toString()}");
+      print("Start Time ${end.toString()}");
+      print("Start Time ${widget.jobId}");
+      var st = start.toStringAsFixed(2);
+      var ed = end.toStringAsFixed(2);
+      var s = '$st-$st';
+      var e = '$ed-$ed';
+      print("Start Time $s");
+      print("Start Time $e");
+      print("Audio Function Call");
+      String token = await storage.read("AccessToken");
+      Map<String, String> h = {'Authorization': 'Bearer $token'};
+      var uri = Uri.parse(baseUrlService.baseUrl + ApiData.createClipJob);
+      var res = http.MultipartRequest('POST', uri)
+        ..headers.addAll(h)
+        ..fields['id'] = widget.jobId
+        ..fields['title'] = clipController.title.text
+        ..fields['comments'] = clipController.des.text
+        ..fields['share'] = "true"
+        ..fields['startDuration'] = s.toString()
+        ..fields['endDuration'] = e.toString()
+        ..fields['sharing'] = json.encode(clipController.sharingUser)
+        ..files
+            .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
+      var response = await res.send();
+      print('Check Response ${response.statusCode}');
+      var result = await response.stream.bytesToString();
+      Get.log('Check Response ${result}');
+      clipController.sharingUser.clear();
+      audioFile = null;
+      clipController.homeScreenController.isLoading.value = true;
+      await clipController.homeScreenController.getSentJobs();
+      clipController.homeScreenController.isLoading.value = false;
+      clipController.isBottomLoading.value = false;
+      Get.delete<ClippingController>();
+      Get.off(() => PlayerScreen());
+      CustomSnackBar.showSnackBar(
           title: "Job shared successfully",
           message: "",
           isWarning: false,
-          backgroundColor: CommonColor.greenColor,
-        );
-      }
+          backgroundColor: CommonColor.greenColor);
     } catch (e) {
       print("Error Uploading ${e.toString()}");
     }

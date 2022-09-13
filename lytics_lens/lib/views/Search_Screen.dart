@@ -187,38 +187,6 @@ class SearchScreen extends StatelessWidget {
                                   )
                                 : Column(
                                     children: [
-                                      // SizedBox(
-                                      //   height: 6.0,
-                                      // ),
-                                      // Container(
-                                      //   height: 90,
-                                      //   width: Get.width,
-                                      //   child: ListView.builder(
-                                      //     shrinkWrap: true,
-                                      //     itemCount: _.headlinelist.length >= 10
-                                      //         ? 10
-                                      //         : _.headlinelist.length,
-                                      //     scrollDirection: Axis.horizontal,
-                                      //     itemBuilder: (BuildContext context,
-                                      //         int index) {
-                                      //       return HeadlineContainer(
-                                      //         isHeadline: _.isHeadline.value,
-                                      //         colorCode: _.headlinelist[index]
-                                      //             ['color'],
-                                      //         channelName: _.headlinelist[index]
-                                      //             ['channel'],
-                                      //         headlinetype:
-                                      //             _.headlinelist[index]
-                                      //                 ['headlinetype'],
-                                      //         title: _.headlinelist[index]
-                                      //             ['title'],
-                                      //       );
-                                      //     },
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   height: 7.0,
-                                      // ),
                                       Expanded(
                                         child: ListView.separated(
                                           shrinkWrap: true,
@@ -706,24 +674,6 @@ class SearchScreen extends StatelessWidget {
                                         fit: BoxFit.fill,
                                         child: GestureDetector(
                                           onTap: () {
-                                            // setState(() {
-                                            //   _.filterGuests.removeWhere(
-                                            //       (item) =>
-                                            //           item ==
-                                            //           _.filterlist[index]);
-                                            //   _.filterHost.removeWhere((item) =>
-                                            //       item == _.filterlist[index]);
-                                            // });
-                                            // _.deleteData(_.filterlist[index]);
-                                            // _.filterlist.removeWhere((item) =>
-                                            //     item == _.filterlist[index]);
-                                            // _.filterProgramType
-                                            //     .removeWhere((item) => _.filterlist[index]);
-                                            // _.filterChannelList
-                                            //     .removeWhere((item) => _.filterlist[index]);
-
-                                            // _.update();
-
                                             setState(() {
                                               _.filterGuests.removeWhere(
                                                   (item) =>
@@ -880,76 +830,33 @@ class SearchScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(2.0),
                               ),
                               child: Obx(
-                                () => Center(
-                                  child: Text(
-                                    _.filterChannelList.length == 0
-                                        ? 'All Channel'
-                                        : "${_.listToString(_.filterChannelList)}",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        color: CommonColor.filterColor,
-                                        fontSize: 12.0),
-                                  ).marginOnly(left: 5.0, right: 5.0),
+                                () => Row(
+                                  children: [
+                                    SizedBox(
+                                      width: Get.width / 3.5,
+                                      child: Text(
+                                        _.filterChannelList.length == _.channellist.length - 1
+                                            ? 'All Channels'
+                                            : "${_.listToString(_.filterChannelList)}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: CommonColor.filterColor,
+                                            fontSize: 12.0),
+                                      ).marginOnly(left: 5.0, right: 5.0),
+                                    ),
+                                    Spacer(),
+                                    Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.white,
+                                    )
+                                  ],
                                 ),
                               ),
-
-                              //       DropDownMultiSelect(
-                              //     filterlist: _.filterlist,
-                              //     onChanged: (List<String> x) {
-                              //       setState(() {
-                              //         _.selectedchannel = x;
-                              //         print('Length is ${x.length}');
-                              //         if (x.length >= 2) {
-                              //           if (x.last == 'All Channels') {
-                              //             x.forEach((element) {
-                              //               _.filterlist.removeWhere((item) =>
-                              //                   item.toString() == element);
-                              //             });
-                              //             x.clear();
-                              //             _.selectedchannel.clear();
-                              //             _.update();
-                              //             _.selectedchannel.add('All Channels');
-                              //             _.update();
-                              //             _.filterlist.add('All Channels');
-                              //           } else {
-                              //             x.removeWhere(
-                              //                 (item) => item == 'All Channels');
-                              //             _.selectedchannel.removeWhere(
-                              //                 (item) => item == 'All Channels');
-                              //             _.update();
-                              //             _.filterlist.removeWhere(
-                              //                 (item) => item == 'All Channels');
-                              //           }
-                              //           _.selectedchannel.forEach((element) {
-                              //             print(
-                              //                 'Check All Channel in List $element');
-                              //           });
-                              //           // x.forEach((element) {
-
-                              //           //   print('Channel All Channel $element');
-                              //           //   print("CHeck Data is Last Node ${x.last}");
-                              //           // });
-                              //         } else if (x.length == 0) {
-                              //           _.selectedchannel.add('All Channels');
-                              //           _.update();
-                              //           _.filterlist.add('All Channels');
-                              //         }
-                              //       });
-                              //     },
-                              //     options: _.channellistonly,
-                              //     selectedValues: _.selectedchannel,
-                              //     whenEmpty: 'Select Channel',
-                              //   ),
                             ),
                           ),
                         ),
-
-                        // Container(
-                        //   width: Get.width,
-                        //   child: showchannel(_),
-                        // ),
                         SizedBox(
                           height: 10.0,
                         ),
@@ -1451,25 +1358,23 @@ class SearchScreen extends StatelessWidget {
                                           ),
                                           child: Obx(
                                             () => Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Flexible(
-                                                  child: Center(
-                                                    child: Text(
-                                                      _.filterHost.length == 0
-                                                          ? 'Select Host'
-                                                          : "${_.listToString(_.filterHost)}",
-                                                      overflow: TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          color:
-                                                              CommonColor.filterColor,
-                                                          fontSize: 12.0),
-                                                    ).marginOnly(
-                                                        left: 5.0, right: 5.0),
-                                                  ),
+                                                Center(
+                                                  child: Text(
+                                                    _.filterHost.length == 0
+                                                        ? 'Select Host'
+                                                        : "${_.listToString(_.filterHost)}",
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        color:
+                                                            CommonColor.filterColor,
+                                                        fontSize: 12.0),
+                                                  ).marginOnly(
+                                                      left: 5.0, right: 5.0),
                                                 ),
+                                                Spacer(),
                                                 Image.asset(
                                                     "assets/images/Vector.png")
                                                     .marginOnly(right: 8),

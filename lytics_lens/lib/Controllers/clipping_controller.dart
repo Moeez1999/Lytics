@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lytics_lens/Controllers/home_controller.dart';
+import 'package:lytics_lens/Views/player_Screen.dart';
 import 'package:lytics_lens/utils/api.dart';
 import 'package:http/http.dart' as http;
 
@@ -158,8 +159,8 @@ class ClippingController extends GetxController
         await homeScreenController.getSentJobs();
         homeScreenController.isLoading.value = false;
         isBottomLoading.value = false;
-        Get.back();
-        Get.back();
+        Get.delete<ClippingController>();
+        Get.off(() => PlayerScreen());
         CustomSnackBar.showSnackBar(
             title: "Job shared successfully",
             message: "",

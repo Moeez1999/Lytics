@@ -376,9 +376,9 @@ class ReportsScreen extends StatelessWidget {
                                 });
                                 _.update();
                               },
-                              child: Image.asset("assets/images/trash_full.png").marginOnly(left: 5,bottom: 5),
-
-                  )
+                              child: Image.asset("assets/images/trash_full.png")
+                                  .marginOnly(left: 5, bottom: 5),
+                            )
                           ],
                         ),
                         Row(
@@ -673,18 +673,30 @@ class ReportsScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(2.0),
                               ),
                               child: Obx(
-                                () => Center(
-                                  child: Text(
-                                    _.channelsearchlist.length == 0
-                                        ? 'All Channel'
-                                        : "${_.listToString(_.channelsearchlist)}",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        color: CommonColor.filterColor,
-                                        fontSize: 12.0),
-                                  ).marginOnly(left: 5.0, right: 5.0),
+                                () => Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: Get.width / 3.5,
+                                      child: Text(
+                                        _.channelsearchlist.length ==
+                                                _.channellist2.length - 1
+                                            ? 'All Channels'
+                                            : "${_.listToString(_.channelsearchlist)}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: CommonColor.filterColor,
+                                            fontSize: 12.0),
+                                      ).marginOnly(left: 5.0, right: 5.0),
+                                    ),
+                                    Spacer(),
+                                    Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.white,
+                                    )
+                                  ],
                                 ),
                               ),
                               // DropDownMultiSelect(
@@ -1644,21 +1656,6 @@ class ReportsScreen extends StatelessWidget {
                     }
                     print('All Value Is ${_.programslist[index].check}');
                   });
-                  // if(_.programSelect.value.text == _.programslist[index]['name'])
-                  // {
-                  //   _.filterlist1.add(_.programslist[index]['name']);
-                  //   _.filterlist1
-                  //       .removeWhere((item) => item == _.programslist[index]['name']);
-                  //   _.programsearchlist
-                  //       .removeWhere((item) => item == _.programslist[index]['name']);
-                  // }
-                  // else
-                  // {
-                  //   _.programSelect.value.text = _.programslist[index]['name'];
-                  //   _.programsearchlist.add(_.programslist[index]['name']);
-                  //   _.filterlist1.add(_.programslist[index]['name']);
-                  //   print('Selected program name ${_.programSelect.value.text}');
-                  // }
                 },
                 child: Container(
                   height: 32,
@@ -1691,75 +1688,6 @@ class ReportsScreen extends StatelessWidget {
         );
       });
     });
-    // print("check ${_.programslist.length}");
-    // List<Widget> g = [];
-    // for (int i = 0; i < _.programslist.length; i++) {
-    //   // print('All Program list is ${_.programslist[i]}');
-    //   g.add(SizedBox(
-    //     width: Get.width /3.8,
-    //     child: Obx(() => GestureDetector(
-    //       onTap: () {
-    //         // _.programType.forEach((e) {
-    //         //   e.check.value = false;
-    //         // });
-    //         if(_.programSelect.value.text == _.programslist[i]['name'])
-    //           {
-    //             _.filterlist1.add(_.programslist[i]['name']);
-    //             _.filterlist1
-    //                 .removeWhere((item) => item == _.programslist[i]['name']);
-    //             _.programsearchlist
-    //                 .removeWhere((item) => item == _.programslist[i]['name']);
-    //           }
-    //         else
-    //           {
-    //             _.programSelect.value.text = _.programslist[i]['name'];
-    //             _.programsearchlist.add(_.programslist[i]['name']);
-    //             _.filterlist1.add(_.programslist[i]['name']);
-    //           }
-    //         if (_.programslist[i].check.value == false) {
-    //           _.programslist[i].check.value = true;
-    //           _.programsearchlist.add(_.programslist[i].name);
-    //           _.filterlist1.add(_.programslist[i].name);
-    //           _.update();
-    //         } else {
-    //           _.programslist[i].check.value = false;
-    //           _.filterlist1
-    //               .removeWhere((item) => item == _.programslist[i].name);
-    //           _.programsearchlist
-    //               .removeWhere((item) => item == _.programslist[i].name);
-    //           _.update();
-    //         }
-    //       },
-    //       child: Container(
-    //           height: 32,
-    //           decoration: BoxDecoration(
-    //               color: _.programSelect.value.text == _.programslist[i]['name']
-    //                   ? Color(0xff22B161)
-    //                   : Colors.transparent,
-    //               borderRadius: BorderRadius.circular(5.0),
-    //               border: Border.all(
-    //                   color: _.programSelect.value.text == _.programslist[i]['name']
-    //                       ? Color(0xff22B161)
-    //                       : Colors.white)),
-    //           child: Center(
-    //             child: Text(
-    //               "${_.programslist[i]['name']}",
-    //               overflow: TextOverflow.ellipsis,
-    //               maxLines: 1,
-    //               style: TextStyle(
-    //                   fontSize: 11.0,
-    //                   fontWeight: _.programSelect.value.text == _.programslist[i]['name']
-    //                       ? FontWeight.w500
-    //                       : FontWeight.w300,
-    //                   color: Colors.white),
-    //             ),
-    //           )),
-    //     )),
-    //   ).marginAll(5.0));
-    // }
-    // return Wrap(
-    //   children: g,
-    // );
   }
 
   Widget firstContainer(ReportsController _, context) {
@@ -1973,7 +1901,8 @@ class ReportsScreen extends StatelessWidget {
                                 _.filterlist.add('All Channels');
                                 _.update();
                               },
-                              child: Image.asset("assets/images/trash_full.png").marginOnly(left: 5,bottom: 5),
+                              child: Image.asset("assets/images/trash_full.png")
+                                  .marginOnly(left: 5, bottom: 5),
                             )
                           ],
                         ),
@@ -2050,17 +1979,6 @@ class ReportsScreen extends StatelessWidget {
                             ),
                           ).marginOnly(bottom: 7),
                         ),
-
-                        // _.channellist.length == 1 || _.channellist.length == 0
-                        //     ? Align(
-                        //         alignment: Alignment.topLeft,
-                        //         child: Text(
-                        //           'No Channel Available',
-                        //           style: TextStyle(
-                        //               letterSpacing: 0.4, color: Colors.white),
-                        //         ),
-                        //       )
-                        //     :
                         Align(
                             alignment: Alignment.topLeft,
                             child: GestureDetector(
@@ -2077,18 +1995,29 @@ class ReportsScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(2.0),
                                     ),
                                     child: Obx(
-                                      () => Center(
-                                        child: Text(
-                                          _.channelsearchlist.length == 0
-                                              ? 'All Channel'
-                                              : "${_.listToString(_.channelsearchlist)}",
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              color: CommonColor.filterColor,
-                                              fontSize: 12.0),
-                                        ).marginOnly(left: 5.0, right: 5.0),
+                                      () => Row(
+                                        children: [
+                                          SizedBox(
+                                            width: Get.width / 3.5,
+                                            child: Text(
+                                              _.channelsearchlist.length == _.channellist.length - 1
+                                                  ? 'All Channels'
+                                                  : "${_.listToString(_.channelsearchlist)}",
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color:
+                                                      CommonColor.filterColor,
+                                                  fontSize: 12.0),
+                                            ).marginOnly(left: 5.0, right: 5.0),
+                                          ),
+                                          Spacer(),
+                                          Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: Colors.white,
+                                          )
+                                        ],
                                       ),
                                     )))),
                         Align(
@@ -2216,31 +2145,28 @@ class ReportsScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(2.0),
                                   ),
                                   child: Obx(
-                                    () => Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Container(
-                                            width: Get.width / 2.9,
-                                            child: Text(
-                                              _.filterHost.length == 0
-                                                  ? 'Select Host'
-                                                  : "${_.listToString(_.filterHost)}",
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color:
-                                                      CommonColor.filterColor,
-                                                  fontSize: 12.0),
-                                            ).marginOnly(left: 5.0, right: 5.0),
-                                          ),
-                                          Image.asset(
-                                                  "assets/images/Vector.png")
-                                              .marginOnly(right: 8),
-                                        ],
-                                      ),
+                                    () => Row(
+                                      children: [
+                                        Container(
+                                          width: Get.width / 2.9,
+                                          child: Text(
+                                            _.filterHost.length == 0
+                                                ? 'Select Host'
+                                                : "${_.listToString(_.filterHost)}",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color:
+                                                    CommonColor.filterColor,
+                                                fontSize: 12.0),
+                                          ).marginOnly(left: 5.0, right: 5.0),
+                                        ),
+                                        Spacer(),
+                                        Image.asset(
+                                                "assets/images/Vector.png")
+                                            .marginOnly(right: 8),
+                                      ],
                                     ),
                                   ),
                                   // DropDownMultiSelect(
