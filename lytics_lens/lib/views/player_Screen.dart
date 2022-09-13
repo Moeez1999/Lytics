@@ -327,7 +327,12 @@ class PlayerScreen extends StatelessWidget {
                                             () => ClippingScreen(
                                               fileurl: _.videoPath,
                                               jobId: _.jobId,
-                                              videoDuration: _.betterPlayerController.videoPlayerController!.value.duration!.inSeconds,
+                                              videoDuration: _
+                                                  .betterPlayerController
+                                                  .videoPlayerController!
+                                                  .value
+                                                  .duration!
+                                                  .inSeconds,
                                             ),
                                           );
                                           // _.betterPlayerController
@@ -661,6 +666,8 @@ class PlayerScreen extends StatelessWidget {
                                                                             : TextDirection.rtl,
                                                                         child:
                                                                             Wrap(
+                                                                          clipBehavior:
+                                                                              Clip.none,
                                                                           children: [
                                                                             for (int i = 0;
                                                                                 i < _.transcriptionlistdir.length;
@@ -678,26 +685,25 @@ class PlayerScreen extends StatelessWidget {
                                                                                 },
                                                                                 child: _.source.toLowerCase() == 'website' || _.source.toLowerCase() == 'print' || _.source.toLowerCase() == 'blog'
                                                                                     ? TextHighlighting(
+                                                                                        textScaleFactor: 1.0,
                                                                                         text: '${_.transcriptionlistdir[i]['line']}',
                                                                                         highlights: [
                                                                                           _.urdusearchtext.text.isEmpty ? "ssadsauadnasjjwjeiweuywdsjandsakjdsad" : _.urdusearchtext.text
                                                                                         ],
-                                                                                        style: TextStyle(fontSize: 13.0, letterSpacing: 0.4, fontWeight: FontWeight.w400, fontFamily: "urdu"),
+                                                                                        style: TextStyle(fontSize: 18.0, letterSpacing: 0.4, fontWeight: FontWeight.w400, fontFamily: "urdu", color: Colors.black),
                                                                                         textAlign: _.source.toLowerCase() == 'website' || _.source.toLowerCase() == 'print' || _.source.toLowerCase() == 'blog' ? TextAlign.start : TextAlign.center,
                                                                                       )
-                                                                                    : FittedBox(
-                                                                                        fit: BoxFit.fill,
-                                                                                        child: Container(
-                                                                                          height: 20.0,
-                                                                                          color: _.check(_.transcriptionlistdir[i]['duration'], _.playerTime!),
-                                                                                          child: TextHighlighting(
-                                                                                            text: '${_.transcriptionlistdir[i]['line']}',
-                                                                                            highlights: [
-                                                                                              _.urdusearchtext.text.isEmpty ? "ssadsauadnasjjwjeiweuywdsjandsakjdsad" : _.urdusearchtext.text
-                                                                                            ],
-                                                                                            style: TextStyle(fontSize: 13.0, letterSpacing: 0.4, fontWeight: FontWeight.w400, fontFamily: "urdu"),
-                                                                                            textAlign: TextAlign.center,
-                                                                                          ),
+                                                                                    : Container(
+                                                                                        height: 20.0,
+                                                                                        color: _.check(_.transcriptionlistdir[i]['duration'], _.playerTime!),
+                                                                                        child: TextHighlighting(
+                                                                                          textScaleFactor: 1.0,
+                                                                                          text: '${_.transcriptionlistdir[i]['line']}',
+                                                                                          highlights: [
+                                                                                            _.urdusearchtext.text.isEmpty ? "ssadsauadnasjjwjeiweuywdsjandsakjdsad" : _.urdusearchtext.text
+                                                                                          ],
+                                                                                          style: TextStyle(fontSize: 13.0, letterSpacing: 0.4, fontWeight: FontWeight.w400, fontFamily: "urdu", color: Colors.black),
+                                                                                          textAlign: TextAlign.center,
                                                                                         ),
                                                                                       ),
                                                                               )

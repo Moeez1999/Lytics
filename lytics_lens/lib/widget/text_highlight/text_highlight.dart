@@ -127,6 +127,7 @@ class TextHighlighting extends StatelessWidget {
       return TextSpan(
         text: value,
         style: style.copyWith(
+          fontSize: 12,
           color: Colors.black,
           backgroundColor: color,
         ),
@@ -135,6 +136,7 @@ class TextHighlighting extends StatelessWidget {
       return TextSpan(
         text: value,
         style: style.copyWith(
+          fontSize: 12,
           backgroundColor: color,
         ),
       );
@@ -146,6 +148,7 @@ class TextHighlighting extends StatelessWidget {
       return TextSpan(
         text: value,
         style: style.copyWith(
+          fontSize: 12,
           color: Colors.black,
         ),
       );
@@ -160,6 +163,8 @@ class TextHighlighting extends StatelessWidget {
   RichText _richText(TextSpan text) {
     return RichText(
       key: key,
+      softWrap: true,
+      strutStyle: StrutStyle(fontSize: 12,fontStyle: FontStyle.normal,),
       text: text,
       textAlign: textAlign,
       overflow: overflow,
