@@ -345,18 +345,16 @@ class PlayerScreen extends StatelessWidget {
                                                 );
                                               },
                                         child: Column(children: [
-                                          _
-                                                  .betterPlayerController
+                                          _.betterPlayerController
                                                   .videoPlayerController!
                                                   .value
                                                   .isBuffering
                                               ? Image.asset(
-                                                  "assets/images/greyshare.png",
-                                                  width: 22)
+                                                  "assets/images/greyshare.png",)
                                               : Image.asset(
                                                   "assets/images/shareicon.png"),
                                           SizedBox(
-                                            height: 5,
+                                             height: 5,
                                           ),
                                           Text(
                                             "Share",

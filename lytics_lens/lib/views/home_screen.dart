@@ -599,7 +599,7 @@ class HomeScreen extends StatelessWidget {
                   width: 300.0,
                 ),
               ).marginOnly(bottom: 50.0)
-            : _.isSocketError.value
+            : _.isSocketError1.value
                 ? InterConnectivity(
                     onPressed: () {
                       _.getReceiveJob();

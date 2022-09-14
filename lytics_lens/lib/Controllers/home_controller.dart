@@ -37,6 +37,7 @@ class HomeScreenController extends GetxController {
   var isDataFailed = false.obs;
 
   var isSocketError = false.obs;
+  var isSocketError1 = false.obs;
 
   int totalPages = 0;
 
@@ -164,63 +165,6 @@ class HomeScreenController extends GetxController {
               fontSize: 10, fontWeight: FontWeight.w400, color: Colors.white),
         )
       ],
-    );
-  }
-
-  Widget showSourceOfInfoContainer() {
-    List<Widget> g = [];
-
-    for (int i = 0; i < sourceOfInformation.length; i++) {
-      g.add(FittedBox(
-        alignment: Alignment.center,
-        fit: BoxFit.fill,
-        child: Container(
-          height: 27,
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(
-              color: sourceOfInformation[i] == 'Online video'
-                  ? Color(0xffFD8894)
-                  : sourceOfInformation[i] == 'TV'
-                      ? Color(0xff33C6B0)
-                      : sourceOfInformation[i] == 'Web'
-                          ? Color(0xffFFD76F)
-                          : sourceOfInformation[i] == 'Print'
-                              ? Color(0xffB48AE8)
-                              : Color(0xffF26A32),
-            ),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          child: Center(
-            child: Text(
-              "${sourceOfInformation[i]}",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12.0,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w400,
-                color: sourceOfInformation[i] == 'Online video'
-                    ? Color(0xffFD8894)
-                    : sourceOfInformation[i] == 'TV'
-                        ? Color(0xff33C6B0)
-                        : sourceOfInformation[i] == 'Web'
-                            ? Color(0xffFFD76F)
-                            : sourceOfInformation[i] == 'Print'
-                                ? Color(0xffB48AE8)
-                                : Color(0xffF26A32),
-              ),
-            ).marginOnly(left: 15.0, right: 15.0),
-          ),
-        ),
-      ).marginOnly(top: 15, left: 8, right: 8));
-    }
-
-    return Wrap(
-      alignment: WrapAlignment.center,
-      // crossAxisAlignment: WrapCrossAlignment.center,
-      children: g,
     );
   }
 
@@ -386,6 +330,7 @@ class HomeScreenController extends GetxController {
 
   Future<void> getReceiveJob() async {
     isLoading1.value = true;
+    isSocketError1.value = false;
     receivedJobsList.clear();
     try {
       String token = await storage.read("AccessToken");
@@ -404,7 +349,7 @@ class HomeScreenController extends GetxController {
     } on SocketException catch (e) {
       print(e);
       isLoading1.value = false;
-      isSocketError.value = true;
+      isSocketError1.value = true;
     } catch (e) {
       isLoading1.value = false;
       isDataFailed.value = true;
