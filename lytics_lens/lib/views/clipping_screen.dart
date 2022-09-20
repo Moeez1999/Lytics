@@ -12,6 +12,7 @@ import 'package:lytics_lens/Constants/common_color.dart';
 import 'package:lytics_lens/Controllers/clipping_controller.dart';
 import 'package:lytics_lens/Views/player_Screen.dart';
 import 'package:lytics_lens/utils/api.dart';
+import 'package:lytics_lens/views/dashboard_screen.dart';
 import 'package:lytics_lens/widget/textFields/common_textfield.dart';
 import 'package:lytics_lens/widget/snackbar/common_snackbar.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -25,7 +26,11 @@ import '../Services/baseurl_service.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class ClippingScreen extends StatefulWidget {
-  const ClippingScreen({Key? key, required this.fileurl, required this.jobId , required this.videoDuration})
+  const ClippingScreen(
+      {Key? key,
+      required this.fileurl,
+      required this.jobId,
+      required this.videoDuration})
       : super(key: key);
 
   final String fileurl;
@@ -52,6 +57,8 @@ class _ClippingScreenState extends State<ClippingScreen> {
   File? videoFilePath;
   dynamic duration;
   Codec _codec = Codec.aacMP4;
+  StreamedResponse ? response;
+  bool isAudioAvailable = false;
   String _mPath = '${DateTime.now().millisecondsSinceEpoch.toString()}.mp4';
 
   FlutterSoundPlayer? mPlayer = FlutterSoundPlayer();
@@ -105,6 +112,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
   @override
   void dispose() {
     _exportingProgress.dispose();
+    betterPlayerController.pause();
     _isExporting.dispose();
     _controller.dispose();
     recorder.closeRecorder();
@@ -121,15 +129,15 @@ class _ClippingScreenState extends State<ClippingScreen> {
         progress = 0.0;
       });
       final request = Request('GET', Uri.parse(widget.fileurl));
-      final StreamedResponse response = await Client().send(request);
-      final contentLength = response.contentLength;
+      response = await Client().send(request);
+      final contentLength = response!.contentLength;
       setState(() {
         progress = 0.000001;
       });
       List<int> bytes = [];
       var rng = new Random();
       final file = await getFile((rng.nextInt(100)).toString() + '.mp4');
-      response.stream.listen(
+      response!.stream.listen(
         (List<int> newBytes) {
           bytes.addAll(newBytes);
           final downloadedLength = bytes.length;
@@ -213,7 +221,6 @@ class _ClippingScreenState extends State<ClippingScreen> {
       audioFile = File(path!);
     });
     print("Audio File Path is $audioFile");
-    print("Audio File Path is ${File(path!).runtimeType}");
   }
 
   Future<void> initRecorder() async {
@@ -227,10 +234,19 @@ class _ClippingScreenState extends State<ClippingScreen> {
   }
 
   Future<void> exportVideo() async {
+    print("Audio Available $isAudioAvailable");
     if (isPlay.value = true) {
       isPlay.value = false;
       stop();
     }
+    if (isAudioAvailable == true)
+      {
+        await recorder.deleteRecord(fileName: audioFile.path);
+        setState((){
+          audioFile = null;
+          isAudioAvailable = true;
+        });
+      }
     // clippingController.isLoading = true;
     // clippingController.update();
     clipController.isBottomLoading.value = true;
@@ -240,14 +256,11 @@ class _ClippingScreenState extends State<ClippingScreen> {
       clipController.isBottomLoading.value = false;
       print("Error on export video ");
     }, onCompleted: (videoFile) async {
-      if(audioFile.path == null || audioFile.path == '')
-        {
-          await sendDataWithoutAudio(videoFile);
-        }
-      else
-        {
-          await sendData(videoFile);
-        }
+      if (audioFile == null || audioFile == 'null') {
+        await sendDataWithoutAudio(videoFile);
+      } else {
+        await sendData(videoFile);
+      }
 
       clipController.isBottomLoading.value = false;
     });
@@ -255,6 +268,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
 
   Future<void> sendData(File vpath) async {
     print("Check This $audioFile");
+    print("Audio Function Call");
     try {
       print("Start Time ${start.toString()}");
       print("Start Time ${end.toString()}");
@@ -278,21 +292,22 @@ class _ClippingScreenState extends State<ClippingScreen> {
         ..fields['endDuration'] = e.toString()
         ..fields['share'] = "true"
         ..fields['sharing'] = json.encode(clipController.sharingUser)
-        ..files
-            .add(await http.MultipartFile.fromPath('audio', audioFile.path))
-        ..files
-            .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
+        ..files.add(await http.MultipartFile.fromPath('audio', audioFile.path))
+        ..files.add(await http.MultipartFile.fromPath('videoPath', vpath.path));
       var response = await res.send();
       print('Check Response audio/video status code ${response.statusCode}');
       var result = await response.stream.bytesToString();
       Get.log('Check Response audio/video ${result}');
       clipController.sharingUser.clear();
+      setState(() {
+        isAudioAvailable = false;
+      });
       clipController.homeScreenController.isLoading.value = true;
       await clipController.homeScreenController.getSentJobs();
       clipController.homeScreenController.isLoading.value = false;
       clipController.isBottomLoading.value = false;
       Get.delete<ClippingController>();
-      Get.off(() => PlayerScreen());
+      Get.off(() => Dashboard());
       CustomSnackBar.showSnackBar(
         title: "Job shared successfully",
         message: "",
@@ -306,6 +321,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
 
   Future<void> sendDataWithoutAudio(File vpath) async {
     print("Check This $audioFile");
+    print("Video Function Call");
     try {
       print("Start Time ${start.toString()}");
       print("Start Time ${end.toString()}");
@@ -316,7 +332,6 @@ class _ClippingScreenState extends State<ClippingScreen> {
       var e = '$ed-$ed';
       print("Start Time $s");
       print("Start Time $e");
-      print("Audio Function Call");
       String token = await storage.read("AccessToken");
       Map<String, String> h = {'Authorization': 'Bearer $token'};
       var uri = Uri.parse(baseUrlService.baseUrl + ApiData.createClipJob);
@@ -329,8 +344,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
         ..fields['startDuration'] = s.toString()
         ..fields['endDuration'] = e.toString()
         ..fields['sharing'] = json.encode(clipController.sharingUser)
-        ..files
-            .add(await http.MultipartFile.fromPath('videoPath', vpath.path));
+        ..files.add(await http.MultipartFile.fromPath('videoPath', vpath.path));
       var response = await res.send();
       print('Check Response ${response.statusCode}');
       var result = await response.stream.bytesToString();
@@ -342,7 +356,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
       clipController.homeScreenController.isLoading.value = false;
       clipController.isBottomLoading.value = false;
       Get.delete<ClippingController>();
-      Get.off(() => PlayerScreen());
+      Get.off(() => Dashboard());
       CustomSnackBar.showSnackBar(
           title: "Job shared successfully",
           message: "",
@@ -473,11 +487,14 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                 width: 25,
                               )
                             : GestureDetector(
-                                onTap: () {
-                                  stopPlayer();
-                                  setState(() {
+                                onTap: ()async{
+                                  // stopPlayer();
+                                  await recorder.deleteRecord(fileName: audioFile.path);
+                                  setState((){
                                     audioFile = null;
+                                    isAudioAvailable = true;
                                   });
+                                  print("check Path Audio ${audioFile}");
                                 },
                                 child: Container(
                                   height: 25,
@@ -556,8 +573,10 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                   height: 41,
                                   width: 41,
                                   decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: Color(0xff23b662)),
+                                    border: Border.all(
+                                        color: progress == 1
+                                            ? Color(0xff23b662)
+                                            : Colors.grey),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Center(
@@ -565,7 +584,9 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                       recorder.isRecording
                                           ? Icons.stop
                                           : Icons.mic,
-                                      color: Color(0xff23b662),
+                                      color: progress == 1
+                                          ? Color(0xff23b662)
+                                          : Colors.grey,
                                     ),
                                   ),
                                 ),
@@ -1207,6 +1228,7 @@ class _ClippingScreenState extends State<ClippingScreen> {
                                   isWarning: true,
                                   backgroundColor: CommonColor.greenColor);
                             } else {
+                              print("check Path Audio ${audioFile}");
                               print("check ${_.sharingUser.toString()}");
                               Get.back();
                               _.searchContact.clear();
